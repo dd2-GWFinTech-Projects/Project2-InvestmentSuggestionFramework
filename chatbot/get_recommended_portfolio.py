@@ -34,10 +34,10 @@ def get_recommended_portfolio_intent_handler(intent_request):
     Performs dialog management and fulfillment for recommending a portfolio.
     """
 
-    investingDuration = get_slots(intent_request)["​investingDuration"]
-    investmentAmount = get_slots(intent_request)["​investmentAmount"]
-    risk = get_slots(intent_request)["​risk"]
-    investingExperienceLevel = get_slots(intent_request)["​investingExperienceLevel"]
+    investingDuration = get_slots(intent_request)["investingDuration"]
+    investmentAmount = get_slots(intent_request)["investingAmount"]
+    risk = get_slots(intent_request)["risk"]
+    investingExperienceLevel = get_slots(intent_request)["investingExperienceLevel"]
     source = intent_request["invocationSource"]
 
     if source == "DialogCodeHook":
@@ -222,10 +222,11 @@ def get_recommended_portfolio(
 
 
 def get_recommended_portfolio_report(recommended_portfolio):
-    recommended_portfolio_report = ""
-    return "\n\n--------------------\n\n{}\n\n--------------------\n".format(
-        recommended_portfolio.
-    )
+    recommended_portfolio_report = "\n\n--------------------\n\n"
+    for stock, quantity in recommended_portfolio.items():
+        recommended_portfolio_report += f"\t{stock} - {quantity} shares\n"
+    recommended_portfolio_report += "\n--------------------\n"
+    return recommended_portfolio_report
 
 
 # Service functions
