@@ -1,6 +1,7 @@
 ### Required Libraries ###
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from portfoliobuilderlib.test import Test
 
 
 ### Main Handler ###
@@ -35,7 +36,7 @@ def get_recommended_portfolio_intent_handler(intent_request):
     """
 
     investingDuration = get_slots(intent_request)["investingDuration"]
-    investmentAmount = get_slots(intent_request)["investingAmount"]
+    investmentAmount = get_slots(intent_request)["investmentAmount"]
     risk = get_slots(intent_request)["risk"]
     investingExperienceLevel = get_slots(intent_request)["investingExperienceLevel"]
     source = intent_request["invocationSource"]
@@ -207,26 +208,37 @@ def get_recommended_portfolio(
     # TODO Call price and volatility analysis/prediction code
     # TODO Call company valuation prediction
     # TODO Call portfolio builder to assemble information into coherent portfolio
+    # df = pd.DataFrame()  # pd.read_csv("../data/1000_days_alpaca_stock_data_sp_500.csv")
+    # pb = PortfolioBuilder(df, investmentAmount, risk, n_stocks=5, dev=False)
+    # pb.get_shares()[0]
+
+    t = Test()
+    return t.test_fcn()
     # TODO Call function to add hedge positions
-    return {
-        "NOC": 10,
-        "BA": 10,
-        "XROLF": 10,
-        "PYPL": 10,
-        "JNJ": 10,
-        "PFE": 10,
-        "TSLA": 10,
-        "AAPL": 10,
-        "BTC": 10,
-    }
+    # return {
+    #     "NOC": 10,
+    #     "BA": 10,
+    #     "XROLF": 10,
+    #     "PYPL": 10,
+    #     "JNJ": 10,
+    #     "PFE": 10,
+    #     "TSLA": 10,
+    #     "AAPL": 10,
+    #     "BTC": 10,
+    # }
 
 
 def get_recommended_portfolio_report(recommended_portfolio):
-    recommended_portfolio_report = "\n\n--------------------\n\n"
+    recommended_portfolio_report = ""
     for stock, quantity in recommended_portfolio.items():
-        recommended_portfolio_report += f"\t{stock} - {quantity} shares\n"
-    recommended_portfolio_report += "\n--------------------\n"
+        recommended_portfolio_report += f" {stock} ({quantity})"
     return recommended_portfolio_report
+
+    # recommended_portfolio_report = "\n\n--------------------\n\n"
+    # for stock, quantity in recommended_portfolio.items():
+    #     recommended_portfolio_report += f"\t{stock} - {quantity} shares\n"
+    # recommended_portfolio_report += "\n--------------------\n"
+    # return recommended_portfolio_report
 
 
 # Service functions
