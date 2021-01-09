@@ -1,7 +1,7 @@
 ### Required Libraries ###
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from portfoliobuilderlib.test import Test
+from lib.pricegetter.PriceGetter import PriceGetter
 
 
 ### Main Handler ###
@@ -198,11 +198,13 @@ def delegate(session_attributes, slots):
     }
 
 
-def get_recommended_portfolio(
-    investingDuration, investmentAmount, risk, investingExperienceLevel
-):
+# Option 1: Build portfolio.
+# Option 2: Modify portfolio based on: Filter output; combine with pre-defined sectors; or pre-defined map.
+def get_recommended_portfolio(investingDuration, investmentAmount, risk, investingExperienceLevel):
     # TODO Retrieve stock list
+    stock_name_list = ["AAPL", "TSLA"]
     # TODO Retrieve price histories
+    stock_prices = PriceGetter().get_prices(stock_name_list)
     # TODO Retrieve company financial information (and metadata)
     # TODO Apply filter
     # TODO Call price and volatility analysis/prediction code
@@ -211,21 +213,8 @@ def get_recommended_portfolio(
     # df = pd.DataFrame()  # pd.read_csv("../data/1000_days_alpaca_stock_data_sp_500.csv")
     # pb = PortfolioBuilder(df, investmentAmount, risk, n_stocks=5, dev=False)
     # pb.get_shares()[0]
-
-    t = Test()
-    return t.test_fcn()
     # TODO Call function to add hedge positions
-    # return {
-    #     "NOC": 10,
-    #     "BA": 10,
-    #     "XROLF": 10,
-    #     "PYPL": 10,
-    #     "JNJ": 10,
-    #     "PFE": 10,
-    #     "TSLA": 10,
-    #     "AAPL": 10,
-    #     "BTC": 10,
-    # }
+    return
 
 
 def get_recommended_portfolio_report(recommended_portfolio):
@@ -233,12 +222,6 @@ def get_recommended_portfolio_report(recommended_portfolio):
     for stock, quantity in recommended_portfolio.items():
         recommended_portfolio_report += f" {stock} ({quantity})"
     return recommended_portfolio_report
-
-    # recommended_portfolio_report = "\n\n--------------------\n\n"
-    # for stock, quantity in recommended_portfolio.items():
-    #     recommended_portfolio_report += f"\t{stock} - {quantity} shares\n"
-    # recommended_portfolio_report += "\n--------------------\n"
-    # return recommended_portfolio_report
 
 
 # Service functions

@@ -7,7 +7,7 @@ import alpaca_trade_api as tradeapi
 
 
 class PriceGetter:
-    def __init__(self, debug=false):
+    def __init__(self, debug=False):
         self.debug = debug
 
     def get_prices(self, stock_name_list):
