@@ -54,17 +54,17 @@ class ValuationCalculator:
     # TODO Correlate industries to changing dividends
     def compute_value__dividend_discount_model(self,
         ticker,
-        dividend_yield_fractional, # Dividend yield
-        npv, # Net present value
-        wacc, # Weighted cost of capital
-        eps, # Earnings per share
-        market_cap
+        #dividend_yield_fractional, # Dividend yield
+        #npv, # Net present value
+        #wacc, # Weighted cost of capital
+        #eps, # Earnings per share
+        #market_cap,
+        r,  # Cost of equity capital == interest rate
+        g  # Growth rate == eps growth
     ):
-        r = cost of equity capital
-        g = growth rate
         npv = dividend_next_year / (r - g)
-        return
-    
+        return npv
+
 
     # Capitalization of earnings business valuation
     # Mostly for real estate
