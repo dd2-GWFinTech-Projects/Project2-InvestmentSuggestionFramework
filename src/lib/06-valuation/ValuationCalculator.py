@@ -35,6 +35,20 @@ class ValuationCalculator:
         #     Wireless telecommunications services
         #     6.64
         # }
+    
+
+    def compute_value(self,
+        industry,
+        ):
+        if industry_info[industry].has_dividend:
+            return compute_value__dividend_discount_model()
+        else if industry_info[industry].use_dcf:
+            return compute_value__dcf()
+        else if industry_info[industry].use_cap_rate_market_model:  # Need cap rate; prefer real estate industry
+            return compute_value__cap_rate_market_model
+        else:
+            return compute_value__relative_valuation_market_model()
+
 
 
     # TODO Correlate industries to changing dividends
@@ -54,7 +68,7 @@ class ValuationCalculator:
 
     # Capitalization of earnings business valuation
     # Mostly for real estate
-    def compute_value__market_model_1(self,
+    def compute_value__cap_rate_market_model(self,
         industry_multiples,  # Dictionary of industry multiples
         market_cap,
         capitalization_rate  # net operating income / value
@@ -62,12 +76,11 @@ class ValuationCalculator:
         return npv / capitalization_rate
 
 
-    def compute_value__market_model_2(self,
+    def compute_value__relative_valuation_market_model(self,
         industry,
-        industry_multiples,  # Dictionary of industry multiples
         ebitda
         ):
-        return ebitda * multiple
+        return ebitda * self.industry_multiples[industry]
 
 
     # Discount cashflow model
