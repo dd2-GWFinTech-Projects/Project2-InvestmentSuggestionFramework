@@ -50,6 +50,10 @@ class ValuationCalculator:
             return compute_value__relative_valuation_market_model()
 
 
+    # --------------------------------------------------------------------------
+    # Dividend Discount Model
+    # --------------------------------------------------------------------------
+
 
     # TODO Correlate industries to changing dividends
     def compute_value__dividend_discount_model(self,
@@ -66,6 +70,11 @@ class ValuationCalculator:
         return npv
 
 
+    # --------------------------------------------------------------------------
+    # Cap-M Model
+    # --------------------------------------------------------------------------
+
+
     # Capitalization of earnings business valuation
     # Mostly for real estate
     def compute_value__cap_rate_market_model(self,
@@ -76,21 +85,54 @@ class ValuationCalculator:
         return npv / capitalization_rate
 
 
+    # --------------------------------------------------------------------------
+    # Market Relative Model
+    # --------------------------------------------------------------------------
+
+
     def compute_value__relative_valuation_market_model(self,
         industry,
         ebitda
         ):
         return ebitda * self.industry_multiples[industry]
 
+    
+    # --------------------------------------------------------------------------
+    # DCF Model
+    # --------------------------------------------------------------------------
+    
+
+    def compute_cost_of_equity(
+        risk_free_rate,
+        market_rate_of_return,
+        beta
+    ):
+        return risk_free_rate + beta * (market_rate_of_return - risk_free_rate)
+
+
+    def compute_wacc(cost_of_equity):
+        wacc = (cost_of_equity) * ( (value_of_equity) / (equity + debt) )
+        wacc += (debt / (equity + debt)) * cost_of_debt * (1 - corporate_tax_rate)
+        return wacc
+
 
     # Discount cashflow model
     def compute_value__dcf(self,
-        ebitda_projection,
-        r,  # Discount rate
-        cashflow_multiple,
+        ebitda_projection,  # 5-year projection
+        wacc,  # Discount rate r == wacc
+        # cashflow_multiple,
         ):
         
-        for y in year_count:
-            dcf = cashflow / (1 + r)
+        year_count = len(ebitda_projection)
+        for y in range(0, year_count):
+            ebitda = ebitda_projection[y]
+            npv += ebitda / (1 + r)
         
-        return cashflow_forecast - future_loss_discount
+        return npv
+
+    def test__compute_value__dcf():
+        npv_actual = compute_value__dcf(
+            ebitda_projection = [ -645000.00, 189430.00, 183115.00, 187266.00, 191375.00, 195432.00, 199427.00, 203348.00, 207184.00, 210923.00, 214550.00 ],
+            r=0.08)
+        npv_expected = 621178.98 
+
