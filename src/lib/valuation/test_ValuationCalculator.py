@@ -1,9 +1,12 @@
 from unittest import TestCase
-# import ValuationCalculator
+
+from lib.valuation.ValuationCalculator import ValuationCalculator
 
 class TestValuationCalculator(TestCase):
-    def __init__(self):
+    def __init__(self, methodName='runTest'):
+        super(methodName='runTest')
         self.valuation_calculator = ValuationCalculator()
+
     def test_compute_value__dcf(self):
         npv_actual = self.valuation_calculator.compute_value__dcf(
             ebitda_projection=[-645000.00, 189430.00, 183115.00, 187266.00, 191375.00, 195432.00, 199427.00,

@@ -11,7 +11,7 @@ class IndustryInfo:
 class ValuationCalculator:
 
 
-    def __init__(self, debug_level):
+    def __init__(self, debug_level=0):
         self.debug_level = 0
         self.industry_multiples = {
             "Healthcare information and technology": 24.81,
