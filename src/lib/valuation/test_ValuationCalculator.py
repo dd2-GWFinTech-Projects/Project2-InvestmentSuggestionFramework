@@ -11,4 +11,4 @@ class TestValuationCalculator(TestCase):
                                203348.00, 207184.00, 210923.00, 214550.00],
             wacc=0.08)
         npv_expected = 621178.98
-        self.assertTrue(npv_expected == npv_actual)
+        self.assertAlmostEqual(npv_expected, npv_actual, 1)

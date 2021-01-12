@@ -151,6 +151,6 @@ class ValuationCalculator:
         npv = 0
         for y in range(0, year_count):
             ebitda = ebitda_projection[y]
-            npv += ebitda / (1 + wacc)
+            npv += ebitda / (1 + wacc) ** (y+1)
         
         return npv
