@@ -1,53 +1,50 @@
+import numpy as np
+
+
+class IndustryInfo:
+    def __init__(self, has_dividend, use_dcf, use_cap_rate_market_model):
+        self.has_dividend = has_dividend
+        self.use_dcf = use_dcf
+        self.use_cap_rate_market_model = use_cap_rate_market_model
+
+
 class ValuationCalculator:
 
 
     def __init__(self, debug_level):
         self.debug_level = 0
-        # self.industry_multiples = {
-        #     Industry
-        #     EBITDA Average Multiple
-        #     Healthcare information and technology
-        #     24.81
-        #     Airlines
-        #     8.16
-        #     Drugs, biotechnology
-        #     13.29
-        #     Hotels and casinos
-        #     12.74
-        #     Retail, general
-        #     12.21
-        #     Retail, food
-        #     8.93
-        #     Utilities, excluding water
-        #     14.13
-        #     Homebuilding
-        #     10.95
-        #     Medical equipment and supplies
-        #     22.67
-        #     Oil and gas, exploration and production
-        #     4.89
-        #     Telecom, equipment (phones & handheld devices)
-        #     13.42
-        #     Professional information services (big data)
-        #     26.35
-        #     Software, system & application
-        #     24.00
-        #     Wireless telecommunications services
-        #     6.64
-        # }
+        self.industry_multiples = {
+            "Healthcare information and technology": 24.81,
+            "Airlines": 8.16,
+            "Drugs, biotechnology": 13.29,
+            "Hotels and casinos": 12.74,
+            "Retail, general": 12.21,
+            "Retail, food": 8.93,
+            "Utilities, excluding water": 14.13,
+            "Homebuilding": 10.95,
+            "Medical equipment and supplies": 22.67,
+            "Oil and gas, exploration and production": 4.89,
+            "Telecom, equipment (phones & handheld devices)": 13.42,
+            "Professional information services (big data)": 26.35,
+            "Software, system & application": 24.00,
+            "Wireless telecommunications services": 6.64
+        }
+        self.industry_info = {
+            "Technology": IndustryInfo(False, True, False)
+        }
     
 
     def compute_value(self,
         industry,
         ):
-        if industry_info[industry].has_dividend:
-            return compute_value__dividend_discount_model()
-        else if industry_info[industry].use_dcf:
-            return compute_value__dcf()
-        else if industry_info[industry].use_cap_rate_market_model:  # Need cap rate; prefer real estate industry
-            return compute_value__cap_rate_market_model
+        if self.industry_info[industry].has_dividend:
+            return self.compute_value__dividend_discount_model()
+        elif self.industry_info[industry].use_dcf:
+            return self.compute_value__dcf()
+        elif self.industry_info[industry].use_cap_rate_market_model:  # Need cap rate; prefer real estate industry
+            return self.compute_value__cap_rate_market_model()
         else:
-            return compute_value__relative_valuation_market_model()
+            return self.compute_value__relative_valuation_market_model()
 
 
     # --------------------------------------------------------------------------
@@ -66,6 +63,7 @@ class ValuationCalculator:
         r,  # Cost of equity capital == interest rate
         g  # Growth rate == eps growth
     ):
+        dividend_next_year = np.nan
         npv = dividend_next_year / (r - g)
         return npv
 
@@ -82,6 +80,7 @@ class ValuationCalculator:
         market_cap,
         capitalization_rate  # net operating income / value
         ):
+        npv = np.nan
         return npv / capitalization_rate
 
 
@@ -129,6 +128,13 @@ class ValuationCalculator:
 
 
     def compute_wacc(cost_of_equity):
+
+        value_of_equity = np.nan
+        equity = np.nan
+        debt = np.nan
+        cost_of_debt = np.nan
+        corporate_tax_rate = np.nan
+
         wacc = (cost_of_equity) * ( (value_of_equity) / (equity + debt) )
         wacc += (debt / (equity + debt)) * cost_of_debt * (1 - corporate_tax_rate)
         return wacc
@@ -142,15 +148,9 @@ class ValuationCalculator:
         ):
         
         year_count = len(ebitda_projection)
+        npv = 0
         for y in range(0, year_count):
             ebitda = ebitda_projection[y]
-            npv += ebitda / (1 + r)
+            npv += ebitda / (1 + wacc)
         
         return npv
-
-    def test__compute_value__dcf():
-        npv_actual = compute_value__dcf(
-            ebitda_projection = [ -645000.00, 189430.00, 183115.00, 187266.00, 191375.00, 195432.00, 199427.00, 203348.00, 207184.00, 210923.00, 214550.00 ],
-            wacc=0.08)
-        npv_expected = 621178.98 
-
