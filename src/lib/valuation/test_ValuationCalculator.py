@@ -5,7 +5,7 @@ from lib.valuation.ValuationCalculator import ValuationCalculator
 class TestValuationCalculator(TestCase):
 
     def test_compute_value__dcf(self):
-        valuation_calculator = 0# ValuationCalculator()
+        valuation_calculator = ValuationCalculator()
         npv_actual = valuation_calculator.compute_value__dcf(
             ebitda_projection=[-645000.00, 189430.00, 183115.00, 187266.00, 191375.00, 195432.00, 199427.00,
                                203348.00, 207184.00, 210923.00, 214550.00],
