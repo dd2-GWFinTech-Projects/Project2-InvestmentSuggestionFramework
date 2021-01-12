@@ -88,17 +88,35 @@ class ValuationCalculator:
     # --------------------------------------------------------------------------
     # Market Relative Model
     # --------------------------------------------------------------------------
+    
+    def equity_value(
+        market_value_of_equity,
+        market_value_of_debt,
+        cash
+    ):
+        return market_value_of_equity + market_value_of_debt - cash
 
 
-    def compute_value__relative_valuation_market_model(self,
-        industry,
+    # Enterprise-Based Approach
+    def compute_market_value(
+        equity_value,
+        expected_ebitda,
         ebitda
-        ):
-        return ebitda * self.industry_multiples[industry]
+    ):
+        return (equity_value)/(ebitda) * expected_ebitda
+
+
+    # def compute_value__relative_valuation_market_model(self,
+    #     industry,
+    #     ebitda
+    #     ):
+    #     return ebitda * self.industry_multiples[industry]
 
     
     # --------------------------------------------------------------------------
     # DCF Model
+    # Assuming the dividend doesnt grow: price = (DIV_1)/(1+R) + (DIV_2)/(1+R)...
+    # Assuming dividend is expected to grow: price = (DIV)/(R-g)
     # --------------------------------------------------------------------------
     
 
