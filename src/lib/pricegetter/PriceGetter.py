@@ -17,7 +17,7 @@ class PriceGetter:
         return None
 
 
-    def get_prices(self, stock_ticker_list):
+    def get_prices(self, stock_ticker_list, trailing_n_days):
 
         # api.list_assets(status='active')
 
@@ -29,15 +29,17 @@ class PriceGetter:
         alpaca = tradeapi.REST(alpaca_api_key, alpaca_secret_key, api_version="v2")
 
         # Format current date as ISO format
-        now = pd.Timestamp("2020-10-28", tz="America/New_York").isoformat()
+        # Trailing n days
+        now = pd.Timestamp("2020-10-28", tz="America/New_York")#.isoformat()
+        start = now - trailing_n_days
 
         # Set timeframe to '1D' for Alpaca API
         timeframe = "1D"
 
         stock_closing_prices = pd.DataFrame()
-        for stock_name in stock_ticker_list:
+        for stock_ticker in stock_ticker_list:
             # Get current closing prices and append to dataset
-            data = alpaca.get_barset([stock_name], timeframe, start=now, end=now).df
-            stock_closing_prices[stock_name] = data[stock_name]["close"]
+            data = alpaca.get_barset([stock_ticker], timeframe, start=now, end=now).df
+            stock_closing_prices[stock_ticker] = data[stock_ticker]["close"]
 
         return stock_closing_prices

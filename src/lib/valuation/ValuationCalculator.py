@@ -34,6 +34,8 @@ class ValuationCalculator:
         }
 
     def compute_value_list(self, stock_info_container):
+        for analysis in stock_info_container.keys():
+            for stock in
         return None
 
     def compute_value(self,
