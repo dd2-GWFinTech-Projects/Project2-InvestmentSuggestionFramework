@@ -7,5 +7,5 @@ class BalanceSheetGetter:
         self.debug_level = 0
 
 
-    def get_financial_info(self, stock_ticker_list):
+    def get_financial_info(self, stock_info_container):
         return None

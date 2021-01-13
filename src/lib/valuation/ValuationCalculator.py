@@ -32,7 +32,9 @@ class ValuationCalculator:
         self.industry_info = {
             "Technology": IndustryInfo(False, True, False)
         }
-    
+
+    def compute_value_list(self, stock_info_container):
+        return None
 
     def compute_value(self,
         industry

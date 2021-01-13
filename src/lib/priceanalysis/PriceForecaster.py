@@ -35,6 +35,9 @@ class PriceForecaster:
         Kraken_Public_Key = os.getenv("KRAKEN_API_KEY")
         Kraken_Secret_Key = os.getenv("KRAKEN_SECRET_KEY")
 
+    def generate_price_prediction(self, stock_info_container):
+        return None
+
     def run(self):
 
         # Set the public and private keys for the API

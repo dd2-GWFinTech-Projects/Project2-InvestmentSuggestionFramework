@@ -9,24 +9,23 @@ class PortfolioBuilder:
         self.weighting = { "Price": 0.5, "Valuation": 0.5 }
 
 
-    def build_suggested_portfolio(self, customer_metrics, stock_score_container):
+    def build_suggested_portfolio(self, customer_metrics, stock_info_container):
         """
         Construct a suggested portfolio based on scores assigned to stocks through various analysis techniques.
 
         :param customer_metrics: CustomerMetrics instance containing high-level portfolio design requirements from the customer.
-        :param stock_score_container: StockInfoContainer containing stocks with associated score.
+        :param stock_info_container: StockInfoContainer containing stocks with associated score.
         :return:
         """
 
         # Compute composite score and sort
-        stock_score_list = self.compute_composite_scores(customer_metrics, stock_score_container)
+        stock_score_list = self.compute_composite_scores(customer_metrics, stock_info_container)
         stock_score_list = self.sort_stock_score_list(stock_score_list)
 
         # Compute number of shares
         stock_shares_list = self.compute_shares(customer_metrics, stock_score_list)
-
+        return stock_shares_list
         # Transform to string representation
-        return self.generate_recommendation_string(stock_shares_list)
 
 
     def compute_composite_scores(self, customer_metrics, stock_score_container):
@@ -67,7 +66,7 @@ class PortfolioBuilder:
         return stock_shares_list
 
 
-    def generate_recommendation_string(self, stock_shares_list):
+    def transform_suggested_portfolio_str(self, stock_shares_list):
         recommendation_string = ""
         i = 0
         for share_count in stock_shares_list:

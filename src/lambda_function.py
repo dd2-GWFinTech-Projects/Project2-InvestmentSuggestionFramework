@@ -2,6 +2,12 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from lib.pricegetter.PriceGetter import PriceGetter
+from lib.balancesheetgetter.BalanceSheetGetter import BalanceSheetGetter
+from lib.stockfilter.StockFilter import StockFilter
+from lib.priceanalysis.PriceForecaster import PriceForecaster
+from lib.valuation.ValuationCalculator import ValuationCalculator
+from lib.portfoliobuilder.PortfolioBuilder import PortfolioBuilder
+from lib.datastructures.CustomerMetrics import CustomerMetrics
 
 
 ### Main Handler ###
@@ -200,29 +206,41 @@ def delegate(session_attributes, slots):
 
 # Option 1: Build portfolio.
 # Option 2: Modify portfolio based on: Filter output; combine with pre-defined sectors; or pre-defined map.
+
+
+
 def get_recommended_portfolio(investingDuration, investmentAmount, risk, investingExperienceLevel):
 
+    price_getter = PriceGetter()
+    balance_sheet_getter = BalanceSheetGetter()
+    stock_filter = StockFilter()
+    price_forecaster = PriceForecaster()
+    valuation_calculator = ValuationCalculator()
+    portfolio_builder = PortfolioBuilder()
+
+    customer_metrics = CustomerMetrics(investingDuration, investmentAmount, risk, investingExperienceLevel)
+
     # TODO Retrieve stock list
+    # stock_ticker_list = price_getter.get_tickers()
     stock_ticker_list = ["AAPL", "TSLA"]
 
     # TODO Retrieve price histories
-    stock_info = PriceGetter().get_prices(stock_ticker_list)
+    stock_info_container = price_getter.get_prices(stock_ticker_list)
 
     # TODO Retrieve company financial information (and metadata)
-    stock_info = BalanceSheetGetter().get_financial_info(stock_info)
+    stock_info_container = balance_sheet_getter.get_financial_info(stock_info_container)
 
     # TODO Apply filter
-    stock_info = StockFilter().filter(stock_info)
+    stock_info_container = stock_filter.filter(stock_info_container)
 
     # TODO Call price and volatility analysis/prediction code
-    stock_info = PriceForecaster().generate_price_prediction(stock_info)
+    stock_info_container = price_forecaster.generate_price_prediction(stock_info_container)
 
     # TODO Call company valuation prediction
-    stock_info = ValuationCalculator().compute_value_list(stock_info)
+    stock_info_container = valuation_calculator.compute_value_list(stock_info_container)
 
     # TODO Call portfolio builder to assemble information into coherent portfolio
-    portfolio_builder = PortfolioBuilder()
-    suggested_portfolio = portfolio_builder.build_suggested_portfolio(customer_metrics, stock_score_container)
+    suggested_portfolio = portfolio_builder.build_suggested_portfolio(customer_metrics, stock_info_container)
     suggested_portfolio_str = portfolio_builder.transform_suggested_portfolio_str(suggested_portfolio)
 
     # df = pd.DataFrame()  # pd.read_csv("../data/1000_days_alpaca_stock_data_sp_500.csv")

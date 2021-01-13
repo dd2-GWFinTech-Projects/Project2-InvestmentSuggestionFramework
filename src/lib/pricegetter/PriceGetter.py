@@ -8,10 +8,16 @@ import alpaca_trade_api as tradeapi
 
 class PriceGetter:
 
+
     def __init__(self, debug_level=0):
         self.debug_level = debug_level
 
-    def get_prices(self, stock_name_list):
+
+    def get_tickers(self):
+        return None
+
+
+    def get_prices(self, stock_ticker_list):
 
         # api.list_assets(status='active')
 
@@ -29,7 +35,7 @@ class PriceGetter:
         timeframe = "1D"
 
         stock_closing_prices = pd.DataFrame()
-        for stock_name in stock_name_list:
+        for stock_name in stock_ticker_list:
             # Get current closing prices and append to dataset
             data = alpaca.get_barset([stock_name], timeframe, start=now, end=now).df
             stock_closing_prices[stock_name] = data[stock_name]["close"]
