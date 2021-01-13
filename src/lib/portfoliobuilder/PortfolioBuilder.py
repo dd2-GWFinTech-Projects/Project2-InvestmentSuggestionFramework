@@ -57,7 +57,7 @@ class PortfolioBuilder:
         return score_list
 
 
-    def compute_shares(self, stock_score_list):
+    def compute_shares(self, customer_metrics, stock_score_list):
         total_nbr_shares = 400 #customer_metrics.investmentAmount
         stock_shares_list = []
         for stock_score in stock_score_list:
@@ -78,4 +78,4 @@ class PortfolioBuilder:
             recommendation_string += f"{ticker} ({nshares})"
             i += 1
 
-        return
+        return recommendation_string
