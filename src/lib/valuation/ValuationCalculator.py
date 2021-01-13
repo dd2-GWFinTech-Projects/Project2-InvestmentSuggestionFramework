@@ -35,7 +35,7 @@ class ValuationCalculator:
     
 
     def compute_value(self,
-        industry,
+        industry
         ):
         if self.industry_info[industry].has_dividend:
             return self.compute_value__dividend_discount_model()

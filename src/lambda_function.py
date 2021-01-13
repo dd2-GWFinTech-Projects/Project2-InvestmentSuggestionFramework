@@ -201,20 +201,33 @@ def delegate(session_attributes, slots):
 # Option 1: Build portfolio.
 # Option 2: Modify portfolio based on: Filter output; combine with pre-defined sectors; or pre-defined map.
 def get_recommended_portfolio(investingDuration, investmentAmount, risk, investingExperienceLevel):
+
     # TODO Retrieve stock list
-    stock_name_list = ["AAPL", "TSLA"]
+    stock_ticker_list = ["AAPL", "TSLA"]
+
     # TODO Retrieve price histories
-    stock_prices = PriceGetter().get_prices(stock_name_list)
+    stock_prices = PriceGetter().get_prices(stock_ticker_list)
+
     # TODO Retrieve company financial information (and metadata)
+    stock_financial_data = BalanceSheetGetter().get_financial_info(stock_ticker_list)
+
     # TODO Apply filter
+
     # TODO Call price and volatility analysis/prediction code
+
     # TODO Call company valuation prediction
+    ValuationCalculator().compute_value_list()
+
     # TODO Call portfolio builder to assemble information into coherent portfolio
+    suggested_portfolio_str = PortfolioBuilder().build_suggested_portfolio(customer_metrics, stock_score_container)
+
     # df = pd.DataFrame()  # pd.read_csv("../data/1000_days_alpaca_stock_data_sp_500.csv")
     # pb = PortfolioBuilder(df, investmentAmount, risk, n_stocks=5, dev=False)
     # pb.get_shares()[0]
+
     # TODO Call function to add hedge positions
-    return
+
+    return suggested_portfolio_str
 
 
 def get_recommended_portfolio_report(recommended_portfolio):
