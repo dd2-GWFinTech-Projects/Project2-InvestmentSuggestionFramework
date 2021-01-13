@@ -1,4 +1,4 @@
-from ..datastructures.StockScore import StockScore
+from ..datastructures.StockInfo import StockInfo
 
 
 class PortfolioBuilder:
@@ -14,7 +14,7 @@ class PortfolioBuilder:
         Construct a suggested portfolio based on scores assigned to stocks through various analysis techniques.
 
         :param customer_metrics: CustomerMetrics instance containing high-level portfolio design requirements from the customer.
-        :param stock_score_container: StockScoreContainer containing stocks with associated score.
+        :param stock_score_container: StockInfoContainer containing stocks with associated score.
         :return:
         """
 
@@ -41,10 +41,10 @@ class PortfolioBuilder:
                 ticker = stock_score.ticker
                 raw_score = stock_score.score
                 if not (ticker in portfolio_composite_scores):
-                    portfolio_composite_scores[ticker] = StockScore(ticker, w * raw_score)
+                    portfolio_composite_scores[ticker] = StockInfo(ticker, w * raw_score)
                 else:
                     old_score = portfolio_composite_scores[ticker]
-                    portfolio_composite_scores[ticker] = StockScore(ticker, w * raw_score + old_score.score)
+                    portfolio_composite_scores[ticker] = StockInfo(ticker, w * raw_score + old_score.score)
 
         # Sort
         return list(portfolio_composite_scores.values())
@@ -63,7 +63,7 @@ class PortfolioBuilder:
         for stock_score in stock_score_list:
             ticker = stock_score.ticker
             score = stock_score.score
-            stock_shares_list.append(StockScore(ticker, 100))
+            stock_shares_list.append(StockInfo(ticker, 100))
         return stock_shares_list
 
 

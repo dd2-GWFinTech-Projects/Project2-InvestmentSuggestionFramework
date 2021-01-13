@@ -1,7 +1,7 @@
 from unittest import TestCase
 from ..portfoliobuilder.PortfolioBuilder import PortfolioBuilder
 from ..datastructures.CustomerMetrics import CustomerMetrics
-from ..datastructures.StockScoreContainer import StockScoreContainer
+from ..datastructures.StockInfoContainer import StockInfoContainer
 
 class TestPortfolioBuilder(TestCase):
 
@@ -10,7 +10,7 @@ class TestPortfolioBuilder(TestCase):
 
         portfolio_builder = PortfolioBuilder()
         customer_metrics = self.build_customer_metrics()
-        stock_score_container = StockScoreContainer()
+        stock_score_container = StockInfoContainer()
         self.build_container(stock_score_container)
 
         portfolio_actual = portfolio_builder.build_suggested_portfolio(customer_metrics, stock_score_container)

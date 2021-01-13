@@ -206,20 +206,24 @@ def get_recommended_portfolio(investingDuration, investmentAmount, risk, investi
     stock_ticker_list = ["AAPL", "TSLA"]
 
     # TODO Retrieve price histories
-    stock_prices = PriceGetter().get_prices(stock_ticker_list)
+    stock_info = PriceGetter().get_prices(stock_ticker_list)
 
     # TODO Retrieve company financial information (and metadata)
-    stock_financial_data = BalanceSheetGetter().get_financial_info(stock_ticker_list)
+    stock_info = BalanceSheetGetter().get_financial_info(stock_info)
 
     # TODO Apply filter
+    stock_info = StockFilter().filter(stock_info)
 
     # TODO Call price and volatility analysis/prediction code
+    stock_info = PriceForecaster().generate_price_prediction(stock_info)
 
     # TODO Call company valuation prediction
-    ValuationCalculator().compute_value_list()
+    stock_info = ValuationCalculator().compute_value_list(stock_info)
 
     # TODO Call portfolio builder to assemble information into coherent portfolio
-    suggested_portfolio_str = PortfolioBuilder().build_suggested_portfolio(customer_metrics, stock_score_container)
+    portfolio_builder = PortfolioBuilder()
+    suggested_portfolio = portfolio_builder.build_suggested_portfolio(customer_metrics, stock_score_container)
+    suggested_portfolio_str = portfolio_builder.transform_suggested_portfolio_str(suggested_portfolio)
 
     # df = pd.DataFrame()  # pd.read_csv("../data/1000_days_alpaca_stock_data_sp_500.csv")
     # pb = PortfolioBuilder(df, investmentAmount, risk, n_stocks=5, dev=False)

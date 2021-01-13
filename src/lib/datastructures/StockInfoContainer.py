@@ -1,6 +1,6 @@
-from ..datastructures.StockScore import StockScore
+from ..datastructures.StockInfo import StockInfo
 
-class StockScoreContainer:
+class StockInfoContainer:
 
     def __init__(self):
         self.stock_score_map = {}
@@ -8,7 +8,7 @@ class StockScoreContainer:
     def add(self, ticker, score, analysis_source):
         if not (analysis_source in self.stock_score_map):
             self.stock_score_map[analysis_source] = []
-        self.stock_score_map[analysis_source].append(StockScore(ticker, score))
+        self.stock_score_map[analysis_source].append(StockInfo(ticker, score))
 
     def get_all_stockscores(self):
         values_nested_list = self.stock_score_map.values()

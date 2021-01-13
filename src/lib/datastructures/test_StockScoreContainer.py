@@ -1,16 +1,16 @@
 from unittest import TestCase
-from ..datastructures.StockScoreContainer import StockScoreContainer
+from ..datastructures.StockInfoContainer import StockInfoContainer
 
 class TestStockScoreContainer(TestCase):
 
     def test_add(self):
-        container = StockScoreContainer()
+        container = StockInfoContainer()
         self.assertEqual(len(container.stock_score_map), 0)
         self.build_container(container)
         self.assertEqual(len(container.stock_score_map), 2)
 
     def test_get_all_stockscores(self):
-        container = StockScoreContainer()
+        container = StockInfoContainer()
         self.build_container(container)
         all_stockscores = container.get_all_stockscores()
         self.assertEqual(len(all_stockscores), 5)
