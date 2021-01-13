@@ -36,6 +36,7 @@ class PriceForecaster:
         Kraken_Secret_Key = os.getenv("KRAKEN_SECRET_KEY")
 
     def run(self):
+        
 
         # Set the public and private keys for the API
         exchange = ccxt.kraken({
