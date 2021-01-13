@@ -7,10 +7,13 @@ import alpaca_trade_api as tradeapi
 
 
 class PriceGetter:
-    def __init__(self, debug=False):
-        self.debug = debug
+
+    def __init__(self, debug_level=0):
+        self.debug_level = debug_level
 
     def get_prices(self, stock_name_list):
+
+        # api.list_assets(status='active')
 
         # Set Alpaca API key and secret
         alpaca_api_key = os.getenv("ALPACA_API_KEY")

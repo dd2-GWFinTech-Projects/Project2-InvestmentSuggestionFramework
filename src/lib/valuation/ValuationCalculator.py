@@ -142,7 +142,7 @@ class ValuationCalculator:
 
     # Discount cashflow model
     def compute_value__dcf(self,
-        ebitda_projection,  # 5-year projection
+        ebitda_projection,  # 5-year projection # TODO use a MA
         wacc,  # Discount rate r == wacc
         # cashflow_multiple,
         ):
