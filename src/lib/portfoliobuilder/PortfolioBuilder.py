@@ -1,10 +1,13 @@
 from ..datastructures.StockScore import StockScore
 
+
 class PortfolioBuilder:
+
 
     def __init__(self, debug_level=0):
         self.debug_level = debug_level
         self.weighting = { "Price": 0.5, "Valuation": 0.5 }
+
 
     def build_suggested_portfolio(self, customer_metrics, stock_score_container):
         """
@@ -14,6 +17,19 @@ class PortfolioBuilder:
         :param stock_score_container: StockScoreContainer containing stocks with associated score.
         :return:
         """
+
+        # Compute composite score and sort
+        stock_score_list = self.compute_composite_scores(customer_metrics, stock_score_container)
+        stock_score_list = self.sort_stock_score_list(stock_score_list)
+
+        # Compute number of shares
+        stock_shares_list = self.compute_shares(customer_metrics, stock_score_list)
+
+        # Transform to string representation
+        return self.generate_recommendation_string(stock_shares_list)
+
+
+    def compute_composite_scores(self, customer_metrics, stock_score_container):
 
         portfolio_composite_scores = {}
         for analysis_source in stock_score_container.stock_score_map.keys():
@@ -31,8 +47,35 @@ class PortfolioBuilder:
                     portfolio_composite_scores[ticker] = StockScore(ticker, w * raw_score + old_score.score)
 
         # Sort
-        score_list = list(portfolio_composite_scores.values())
+        return list(portfolio_composite_scores.values())
+
+
+    def sort_stock_score_list(self, score_list):
         def score_sort(stock_score):
             return stock_score.score
         score_list.sort(reverse=True, key=score_sort)
         return score_list
+
+
+    def compute_shares(self, stock_score_list):
+        total_nbr_shares = 400 #customer_metrics.investmentAmount
+        stock_shares_list = []
+        for stock_score in stock_score_list:
+            ticker = stock_score.ticker
+            score = stock_score.score
+            stock_shares_list.append(StockScore(ticker, 100))
+        return stock_shares_list
+
+
+    def generate_recommendation_string(self, stock_shares_list):
+        recommendation_string = ""
+        i = 0
+        for share_count in stock_shares_list:
+            ticker = share_count.ticker
+            nshares = share_count.score
+            if i > 0:
+                recommendation_string += " - "
+            recommendation_string += f"{ticker} ({nshares})"
+            i += 1
+
+        return

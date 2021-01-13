@@ -4,6 +4,8 @@ from ..datastructures.CustomerMetrics import CustomerMetrics
 from ..datastructures.StockScoreContainer import StockScoreContainer
 
 class TestPortfolioBuilder(TestCase):
+
+
     def test_build_suggested_portfolio(self):
 
         portfolio_builder = PortfolioBuilder()
