@@ -1,4 +1,4 @@
-from StockScore import StockScore
+from ..datastructures.StockScore import StockScore
 
 class StockScoreContainer:
 

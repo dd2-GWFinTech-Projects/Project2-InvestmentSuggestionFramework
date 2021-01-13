@@ -1,5 +1,5 @@
 from unittest import TestCase
-from StockScoreContainer import StockScoreContainer
+from ..datastructures.StockScoreContainer import StockScoreContainer
 
 class TestStockScoreContainer(TestCase):
 

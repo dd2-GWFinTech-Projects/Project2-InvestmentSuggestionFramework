@@ -1,5 +1,5 @@
 from unittest import TestCase
-from PortfolioBuilder import PortfolioBuilder
+from ..portfoliobuilder.PortfolioBuilder import PortfolioBuilder
 from ..datastructures.CustomerMetrics import CustomerMetrics
 from ..datastructures.StockScoreContainer import StockScoreContainer
 
