@@ -10,23 +10,26 @@ class PriceGetter:
 
 
     def __init__(self, debug_level=0):
+
         self.debug_level = debug_level
+
+        # Set Alpaca API key and secret
+        self.alpaca_api_key = os.getenv("ALPACA_API_KEY")
+        self.alpaca_secret_key = os.getenv("ALPACA_SECRET_KEY")
+
+        # Create the Alpaca API object
+        self.alpaca = tradeapi.REST(self.alpaca_api_key, self.alpaca_secret_key, api_version="v2")
 
 
     def get_tickers(self):
+
+        # api.list_assets(status='active')
+        # /v2/assets
+
         return None
 
 
     def get_prices(self, stock_ticker_list, trailing_n_days):
-
-        # api.list_assets(status='active')
-
-        # Set Alpaca API key and secret
-        alpaca_api_key = os.getenv("ALPACA_API_KEY")
-        alpaca_secret_key = os.getenv("ALPACA_SECRET_KEY")
-
-        # Create the Alpaca API object
-        alpaca = tradeapi.REST(alpaca_api_key, alpaca_secret_key, api_version="v2")
 
         # Format current date as ISO format
         # Trailing n days
@@ -39,7 +42,7 @@ class PriceGetter:
         stock_closing_prices = pd.DataFrame()
         for stock_ticker in stock_ticker_list:
             # Get current closing prices and append to dataset
-            data = alpaca.get_barset([stock_ticker], timeframe, start=now, end=now).df
+            data = self.alpaca.get_barset([stock_ticker], timeframe, start=now, end=now).df
             stock_closing_prices[stock_ticker] = data[stock_ticker]["close"]
 
         return stock_closing_prices

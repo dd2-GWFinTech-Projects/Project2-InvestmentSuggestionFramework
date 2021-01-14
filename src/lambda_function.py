@@ -221,8 +221,8 @@ def get_recommended_portfolio(investingDuration, investmentAmount, risk, investi
     customer_metrics = CustomerMetrics(investingDuration, investmentAmount, risk, investingExperienceLevel)
 
     # TODO Retrieve stock list
-    # stock_ticker_list = price_getter.get_tickers()
-    stock_ticker_list = ["AAPL", "TSLA"]
+    stock_ticker_list = price_getter.get_tickers()
+    # stock_ticker_list = ["AAPL", "TSLA"]
 
     # TODO Retrieve price histories
     stock_info_list = price_getter.get_prices(stock_ticker_list)

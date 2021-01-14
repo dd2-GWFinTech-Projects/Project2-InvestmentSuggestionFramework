@@ -10,3 +10,6 @@ The following components are being implemented:
 - Price history analysis
 - Portfolio suggestion function
 - Website
+
+
+TODO list out the packages an individual would need to download in order to run your code
