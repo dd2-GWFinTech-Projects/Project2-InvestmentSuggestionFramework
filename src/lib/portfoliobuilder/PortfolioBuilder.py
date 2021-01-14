@@ -57,6 +57,7 @@ class PortfolioBuilder:
 
 
     def compute_shares(self, customer_metrics, stock_score_list):
+        # TODO Calculate price * nshares to equal investment
         total_nbr_shares = 400 #customer_metrics.investmentAmount
         stock_shares_list = []
         for stock_score in stock_score_list:

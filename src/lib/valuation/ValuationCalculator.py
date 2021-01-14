@@ -13,6 +13,7 @@ class ValuationCalculator:
 
     def __init__(self, debug_level=0):
         self.debug_level = 0
+        # TODO Source
         self.industry_multiples = {
             "Healthcare information and technology": 24.81,
             "Airlines": 8.16,

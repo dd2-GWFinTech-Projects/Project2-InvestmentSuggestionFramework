@@ -22,11 +22,8 @@ class PriceGetter:
 
 
     def get_tickers(self):
-
-        # api.list_assets(status='active')
-        # /v2/assets
-
-        return None
+        ticker_list = self.alpaca.list_assets(status="active")
+        return ticker_list
 
 
     def get_prices(self, stock_ticker_list, trailing_n_days):
