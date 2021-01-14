@@ -22,7 +22,19 @@ class PriceGetter:
 
 
     def get_tickers(self):
-        ticker_list = self.alpaca.list_assets(status="active")
+
+        # now = pd.Timestamp("2020-10-28", tz="America/New_York").isoformat()
+        # tickers = ["AGG", "SPY"]
+        # timeframe = "1D"
+        # data = self.alpaca.get_barset(
+        #     tickers,
+        #     timeframe,
+        #     start=now,
+        #     end=now
+        # ).df
+        # return data
+
+        ticker_list = self.alpaca.list_assets()#status="active")
         return ticker_list
 
 
