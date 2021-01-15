@@ -22,20 +22,46 @@ class PriceGetter:
 
 
     def get_tickers(self):
+        now = pd.Timestamp("2020-10-28", tz="America/New_York").isoformat()
+        tickers = ["AGG", "SPY"]
+        timeframe = "1D"
+        data = self.alpaca.get_barset(
+            tickers,
+            timeframe,
+            start=now,
+            end=now
+        ).df
+        return data
 
-        # now = pd.Timestamp("2020-10-28", tz="America/New_York").isoformat()
-        # tickers = ["AGG", "SPY"]
-        # timeframe = "1D"
-        # data = self.alpaca.get_barset(
-        #     tickers,
-        #     timeframe,
-        #     start=now,
-        #     end=now
-        # ).df
-        # return data
+        # ticker_list = self.alpaca.list_assets()#status="active")
+        # return ticker_list
 
-        ticker_list = self.alpaca.list_assets()#status="active")
+    def get_tickers_2(self):
+        from alpaca_trade_api import REST
+        rest_object = REST(key_id='PKA0PKYDPIZRN5Q6EKE0',
+                           secret_key='pNS3zeDdHxV4r4rctUHqanoshaTILhySqRVMvsD4',
+                           base_url=None,
+                           api_version='v2',
+                           oauth=None)
+
+        options = {
+            "header": {
+                "APCA-API-KEY-ID": 'PKA0PKYDPIZRN5Q6EKE0',
+                'APCA-API-SECRET-KEY': 'pNS3zeDdHxV4r4rctUHqanoshaTILhySqRVMvsD4',
+            },
+            'allow_redirects': False,
+            'params': {
+                'symbols': 'AGG,SPY',
+                'start': '2020-10-28T00:00:00-04:00',
+                'end': '2020-10-28T00:00:00-04:00'
+            }
+        }
+        ticker_list = rest_object._one_request(method="GET", url="https://data.alpaca.markets/v1/bars/1D", opts=options, retry=3)
         return ticker_list
+
+
+
+
 
 
     def get_prices(self, stock_ticker_list, trailing_n_days):

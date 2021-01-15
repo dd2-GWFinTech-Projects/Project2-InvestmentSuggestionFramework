@@ -2,10 +2,13 @@ from unittest import TestCase
 from ..pricegetter.PriceGetter import PriceGetter
 
 class TestPriceGetter(TestCase):
+
+
     def test_get_tickers(self):
         price_getter = PriceGetter()
-        ticker_list = price_getter.get_tickers()
+        ticker_list = price_getter.get_tickers_2()
         self.assertTrue(len(ticker_list) > 50)
+
 
     def test_2(self):
         import os
