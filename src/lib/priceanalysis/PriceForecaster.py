@@ -21,6 +21,9 @@ import ccxt
 from dotenv import load_dotenv
 from MCForecastTools import MCSimulation
 
+from ..datastructures.StockInfoContainer import StockInfoContainer
+
+
 class PriceForecaster:
 
     def __init__(self):
@@ -35,141 +38,22 @@ class PriceForecaster:
         Kraken_Public_Key = os.getenv("KRAKEN_API_KEY")
         Kraken_Secret_Key = os.getenv("KRAKEN_SECRET_KEY")
 
-    def generate_price_prediction(self, stock_info_container):
-        return None
+    def generate_price_prediction(self, stock_info_list):
 
-    def run(self):
-        
-
-        # Set the public and private keys for the API
-        exchange = ccxt.kraken({
-            'apiKey': Kraken_Public_Key,
-            'secret': Kraken_Secret_Key,
-        })
-
-
-        # Verify that environment variables were loaded
-        # print(f"Kraken key data type: {type(Kraken_Public_Key)}")
-        # print(f"Kraken secren data type: {type(Kraken_Secret_Key)}")
-
-        # Connect to Kraken and load the available cryptocurrencies
-        Crypto_Details = exchange.load_markets()
-
-        # Import data as a Pandas DataFrame
-        Crypto_df = pd.DataFrame(Crypto_Details)
-
-
-        # ## Fetch Historical Data for BTC/USD and ETH/USD
-
-        # Fetch daily candlestick bar data from `BTC/USD`
-        BTC_Historical_Prices = exchange.fetch_ohlcv("BTC/USD", "1d")
-        # Fetch daily candlestick bar data from `ETH/USD`
-        ETH_Historical_Prices = exchange.fetch_ohlcv("ETH/USD", "1d")
-        # Fetch daily candlestick bar data from `XRP/USD`
-        XRP_Historical_Prices = exchange.fetch_ohlcv("XRP/USD", "1d")
-
-        # Import the data as a Pandas DataFrame and set the columns
-        BTC_Historical_Prices_df = pd.DataFrame(
-            BTC_Historical_Prices, columns=["timestamp", "open", "high", "low", "close", "volume"]
-        )
-        ETH_Historical_Prices_df = pd.DataFrame(
-            ETH_Historical_Prices, columns=["timestamp", "open", "high", "low", "close", "volume"]
-        )
-        XRP_Historical_Prices_df = pd.DataFrame(
-            XRP_Historical_Prices, columns=["timestamp", "open", "high", "low", "close", "volume"]
-        )
-
-
-        # Convert epoch timestamp to date using the `to_datetime` function and `unit` parameter
-        BTC_Historical_Prices_df["date"] = pd.to_datetime(
-            BTC_Historical_Prices_df["timestamp"], unit="ms"
-        )
-        ETH_Historical_Prices_df["date"] = pd.to_datetime(
-            ETH_Historical_Prices_df["timestamp"], unit="ms"
-        )
-        XRP_Historical_Prices_df["date"] = pd.to_datetime(
-            XRP_Historical_Prices_df["timestamp"], unit="ms"
-        )
-
-
-        # Pick all Cryptos close prices
-        BTC_df = BTC_Historical_Prices_df.drop(columns=["timestamp", "open", "high", "low", "volume"])
-        ETH_df = ETH_Historical_Prices_df.drop(columns=["timestamp", "open", "high", "low", "volume"])
-        XRP_df = XRP_Historical_Prices_df.drop(columns=["timestamp", "open", "high", "low", "volume"])
-        # Use the `rename` function and set the `columns` parameter to a dictionary of new column names
-        BTC_df = BTC_df.rename(columns={
-            "close": "BTC Close",
-            "date": "Date"
-        })
-        ETH_df = ETH_df.rename(columns={
-            "close": "ETH Close",
-            "date": "Date 1"
-        })
-        XRP_df = XRP_df.rename(columns={
-            "close": "XRP Close",
-            "date": "Date 2"
-        })
-
-
-        # Use a list of re-ordered column names to alter the column order of the original DataFrame
-        BTC_df = BTC_df[["Date", "BTC Close"]]
-        ETH_df = ETH_df[["Date 1", "ETH Close"]]
-        XRP_df = XRP_df[["Date 2", "XRP Close"]]
+        stock_info_container = StockInfoContainer()
 
         # Concatenate all DataFrames into a single DataFrame
-        Combined_Cryptos = pd.concat([ BTC_df, ETH_df, XRP_df ], axis="columns", join="inner")
-        Combined_Cryptos.sort_index(inplace=True)
+        # stock_price_history = pd.concat([ BTC_df, ETH_df, XRP_df ], axis="columns", join="inner")
+        # stock_price_history.sort_index(inplace=True)
 
-
-        # Remove extra date columns
-        Combined_Cryptos = Combined_Cryptos.drop(columns=["Date 1", "Date 2"])
-
-
-        # Select all rows for 1 Day
-        Combined_price_1day = Combined_Cryptos.loc['2021-01-07':'2021-01-11']
-
-        # --------------------------------------------------------------------------
-        # Portfolio Analysis
-        # --------------------------------------------------------------------------
-
-        # Set Alpaca API key and secret
-        Alpaca_API_Key = os.getenv("ALPACA_API_KEY")
-        Alpaca_Secret_Key = os.getenv("ALPACA_SECRET_KEY")
-
-        # Create the Alpaca API object
-        Alpaca = tradeapi.REST(
-            Alpaca_API_Key,
-            Alpaca_Secret_Key,
-            api_version="v2")
-
-        # Format current date as ISO format
-        #Start_Date = pd.to_datetime('2016-01-1', parse_dates=True)
-        #End_Date = pd.to_datetime('2021-01-11', parse_dates=True)
-        Start_Date = pd.Timestamp("2016-01-1").isoformat()
-        End_Date = pd.Timestamp("2021-01-11").isoformat()
-
-        # Set the tickers
-        tickers = ["AAPL"]
-
-        #"BXP", "PLD", "NOC", "BA", "PYPL", "SQ", "JNJ", "PFE", "TSLA",
-        # Set timeframe to '1D' for Alpaca API
-        timeframe = "1D"
-
-        # Get current closing prices for all Stocks
-        Data = Alpaca.get_barset(
-            tickers,
-            timeframe,
-            start = Start_Date,
-            end = End_Date
-        ).df
-
+        # stock_price_history
 
         # Format the DateTime to remove Time
-        Data.index = Data.index.strftime("%Y-%m-%d")
+        stock_price_history.index = stock_price_history.index.strftime("%Y-%m-%d")
 
 
         # Pick all Stocks volumes
-        AAPL_volume_df = Data["AAPL"]["volume"]
+        AAPL_volume_df = stock_price_history["AAPL"]["volume"]
 
 
         # Rename Column
@@ -192,66 +76,34 @@ class PriceForecaster:
         volume_1Year = AAPL_volume_df.loc['2019-12-11':'2021-01-11']
 
         # Pick all Stocks close prices
-        AAPL_close_df = Data["AAPL"]["close"]
+        AAPL_close_df = stock_price_history["AAPL"]["close"]
+
         # Rename Column
         AAPL_close_df.columns = ["Apple"]
 
-        # Select all rows for 5 Days
-        price_5days = AAPL_close_df.loc['2021-01-05':'2021-01-11']
-        # Select all rows for 1 Month
-        price_1Month = AAPL_close_df.loc['2020-12-11':'2021-01-11']
-        # Select all rows for 6 Months
-        price_6Months = AAPL_close_df.loc['2020-06-11':'2021-01-11']
-        # Select all rows for 1 Year
-        price_1Year = AAPL_close_df.loc['2019-12-11':'2021-01-11']
 
 
-        # Calculate Daily Returns for all the stocks
-        BXP_df = BXP_df.pct_change()
-        PLD_df = PLD_df.pct_change()
-        NOC_df = NOC_df.pct_change()
-        BA_df = BA_df.pct_change()
-        PYPL_df = PYPL_df.pct_change()
-        SQ_df = SQ_df.pct_change()
-        JNJ_df = JNJ_df.pct_change()
-        PFE_df = PFE_df.pct_change()
-        TSLA_df = TSLA_df.pct_change()
-        AAPL_df = AAPL_df.pct_change()
-        SPY_df = SPY_df.pct_change()
+
 
         # --------------------------------------------------------------------------
         # ## Combining Daily Returns
         # --------------------------------------------------------------------------
 
-        # Concatenate all DataFrames into a single DataFrame
-        Combined_PCT_Returns = pd.concat([ BXP_df, PLD_df, NOC_df, BA_df, PYPL_df, SQ_df, JNJ_df, PFE_df, TSLA_df, AAPL_df, SPY_df ], axis="columns", join="inner")
-        Combined_PCT_Returns.sort_index(inplace=True)
-
-
-        # Count nulls
-        Combined_PCT_Returns.isnull().sum()
+        # Calculate Daily Returns for all the stocks
+        stock_price_history_pctchange = stock_price_history.pct_change()  #pd.concat([ BXP_df, PLD_df, NOC_df, BA_df, PYPL_df, SQ_df, JNJ_df, PFE_df, TSLA_df, AAPL_df, SPY_df ], axis="columns", join="inner")
+        stock_price_history_pctchange.sort_index(inplace=True)
 
         # Drop nulls
-        Combined_PCT_Returns.dropna(inplace=True)
+        stock_price_history_pctchange.dropna(inplace=True)
 
 
         # Rename Column
-        Combined_PCT_Returns.columns = ["Boston Properties", "Prologis", "Northrop Grumman", "Boeing", "Paypal Holdings", "Square", "Johnson & Johnson", "Pfizer", "Tesla", "Apple", "S&P 500"]
-        Combined_PCT_Returns.tail()
+        # stock_price_history_pctchange.columns = ["Boston Properties", "Prologis", "Northrop Grumman", "Boeing", "Paypal Holdings", "Square", "Johnson & Johnson", "Pfizer", "Tesla", "Apple", "S&P 500"]
+        stock_price_history_pctchange.tail()
 
         # --------------------------------------------------------------------------
         # ## Daily Returns
         # --------------------------------------------------------------------------
-
-        # Plot the closing prices using a line plot
-        # Combined_PCT_Returns
-
-        # --------------------------------------------------------------------------
-        # ### Cumulative Returns
-        # --------------------------------------------------------------------------
-
-        # Plot cumulative returns??????????????
-        Cumulative_Returns = (1 + Combined_PCT_Returns).cumprod()
 
         # --------------------------------------------------------------------------
         # ## Risk
@@ -262,7 +114,7 @@ class PriceForecaster:
         # --------------------------------------------------------------------------
 
         # Daily Standard Deviations for each portfolio.
-        Combined_PCT_Returns_STD = pd.DataFrame(Combined_PCT_Returns.std())
+        Combined_PCT_Returns_STD = pd.DataFrame(stock_price_history_pctchange.std())
         Combined_PCT_Returns_STD.columns = ["Daily Standard Deviation"]
 
 
@@ -275,54 +127,136 @@ class PriceForecaster:
         # --------------------------------------------------------------------------
 
         # Calculate a rolling window using the exponentially weighted moving average.
-        Combined_PCT_Returns.ewm(halflife = 21).std()
+        stock_price_history_pctchange.ewm(halflife = 21).std()
 
         # --------------------------------------------------------------------------
-        # ## Analysis
+        # ## ARMA Analysis
         # --------------------------------------------------------------------------
 
-        # print("Our analysis includes the following:")
-        # print("==========================================================================")
-        # # The annualized standard deviation (252 trading days) for all portfolios:
-        # print("The annualized standard deviation (252 trading days) for all portfolios:")
-        # Annualized = Combined_PCT_Returns.rolling(window=252).std()
-        # Annualized.dropna(inplace=True)
-        # print(Annualized.tail())
+        # Import the ARMA model
+        from statsmodels.tsa.arima_model import ARMA
+        # Create the ARMA model using the return values and the order
+        # For the order parameter, the first 1 indicates the number of AR lags
+        # For the order parameter, the second 1 indicates the number of MA lags
+        model = ARMA(AAPL_close_df_pct.values, order=(1, 1))
+        # Fit the model to the data
+        results = model.fit()
+        # Create the ARMA model using the return values and the order
+        # For the order parameter, the first 1 indicates the number of AR lags
+        # For the order parameter, the second 1 indicates the number of MA lags
+        model_ARMA_2 = ARMA(AAPL_close_df.values, order=(1, 1))
+        # Fit the model to the data
+        results_close = model_ARMA_2.fit()
 
-        # The plotted rolling standard deviation using a 21 trading day window for all portfolios:
-        # print()
-        # print("The plotted rolling standard deviation using a 21 trading day window for all portfolios:")
-        # Combined_PCT_Returns.rolling(window=21).std().plot(
-        #     kind='line',
-        #     figsize=(20, 12),
-        #     title="The plotted rolling standard deviation using a 21 trading day",
-        #     fontsize=12,
-        #     #subplots=True,
-        #     grid=True);
+        results.forecast(steps=10)[0]
 
+        # --------------------------------------------------------------------------
+        # ARIMA Analysis
+        # --------------------------------------------------------------------------
 
-        # The calculated annualized Sharpe Ratios and the accompanying bar plot visualization:
-        # print("The calculated annualized Sharpe Ratios and the accompanying bar plot visualization:")
-        # print("====================================================================================")
-        # print()
-        # # Calculate annualized Sharpe Ratios
-        # Anunualized_Sharpe_Ratios = (Combined_PCT_Returns.mean() * 252) / (Combined_PCT_Returns.std() * np.sqrt(252))
-        # print(Anunualized_Sharpe_Ratios)
-        # print()
-        # print("Bar Plot for Sharp Ratio")
-        # # Visualize the sharpe ratios as a bar plot
-        # Anunualized_Sharpe_Ratios.plot(
-        #     kind='bar',
-        #     title="Sharpe Ratios - Return to Risk",
-        #     figsize=(18,12),
-        #     fontsize=12,
-        #     #subplots=True,
-        #     grid=True);
+        from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+        from statsmodels.tsa.arima_model import ARIMA
+        # Create an ARIMA model
+        model = ARIMA(AAPL_close_df.values, order=(1, 1, 1))
+        # Fit the model to the data
+        results_ARIMA = model.fit()
+        # Print the model summary
+        results_ARIMA.summary()
+
+        results_ARIMA.forecast(steps=10)[0]
 
 
-        # Construct a correlation table
-        # print("A correlation between portfolios")
-        # print("================================================================")
-        # Correlation = Combined_PCT_Returns.corr()
-        # Correlation
-        # sns.heatmap(Correlation, vmin=-1, vmax=1);
+
+
+        # --------------------------------------------------------------------------
+        # Linear Regression Analysis
+        # --------------------------------------------------------------------------
+
+        import arch as arch
+        import warnings
+        warnings.filterwarnings('ignore')
+        # Create a series using "Close" price percentage returns, drop any NaNs, and check the results:
+        # (Make sure to multiply the pct_change() results by *100)
+        BTC_csv['Return'] = BTC_csv.Close.pct_change() * 100
+        BTC_csv['Lagged_Return'] = BTC_csv['Return'].shift()
+        BTC_csv = BTC_csv.dropna()
+        BTC_csv.tail()
+
+        # Create a train/test split for the data using 2017-2018 for training and 2019 for testing
+        train = BTC_csv['2017':'2019']
+        test = BTC_csv['2020']
+        # Create four DataFrames:
+        # X_train (training set using just the independent variables), X_test (test set of of just the independent variables)
+        # Y_train (training set using just the "y" variable, i.e., "Futures Return"), Y_test (test set of just the "y" variable):
+        X_train = train["Lagged_Return"].to_frame()
+        y_train = train["Return"]
+        X_test = test["Lagged_Return"].to_frame()
+        y_test = test["Return"]
+
+        # Create a Linear Regression model and fit it to the training data
+        from sklearn.linear_model import LinearRegression
+
+        # Fit a SKLearn linear regression using just the training set (X_train, Y_train):
+        model_LR = LinearRegression()
+        model_LR.fit(X_train, y_train)
+
+        # Make a prediction of "y" values using just the test dataset
+        BTC_predictions = model_LR.predict(X_test)
+        # Assemble actual y data (Y_test) with predicted y data (from just above) into two columns in a DataFrame:
+        Predictions_Results = y_test.to_frame()
+        Predictions_Results["Predicted Return"] = BTC_predictions
+
+        # Plot the first 20 predictions vs the true values
+        Predictions_Results[:20].plot(
+            figsize=(20, 5),
+            fontsize=20,
+            rot=70,
+            subplots=True,
+            grid=True);
+        plt.title(label="BitCoin's Return vs. Predicted Returns for the next 20 Days", fontsize=25);
+
+
+
+
+        return stock_info_container
+
+
+
+
+
+
+    def calculate_adjusted_prices(Data, close):
+        """ Vectorized approach for calculating the adjusted prices for the
+        specified column in the provided DataFrame. This creates a new column
+        called 'adj_<column name>' with the adjusted prices. This function requires
+        that the DataFrame have columns with dividend and split_ratio values.
+
+        :param df: DataFrame with raw prices along with dividend and split_ratio
+            values
+        :param column: String of which price column should have adjusted prices
+            created for it
+        :return: DataFrame with the addition of the adjusted price column
+        """
+        adj_column = 'adj_' + close
+
+        # Reverse the DataFrame order, sorting by date in descending order
+        Data.sort_index(ascending=False, inplace=True)
+
+        price_col = Data[close].values
+        split_col = Data['split_ratio'].values
+        dividend_col = Data['dividend'].values
+        adj_price_col = np.zeros(len(Data.index))
+        adj_price_col[0] = price_col[0]
+
+        for i in range(1, len(price_col)):
+            adj_price_col[i] = round((adj_price_col[i - 1] + adj_price_col[i - 1] *
+                       (((price_col[i] * split_col[i - 1]) -
+                         price_col[i - 1] -
+                         dividend_col[i - 1]) / price_col[i - 1])), 4)
+
+        Data[adj_column] = adj_price_col
+
+        # Change the DataFrame order back to dates ascending
+        Data.sort_index(ascending=True, inplace=True)
+
+        return Data
