@@ -31,12 +31,12 @@ class PortfolioBuilder:
     def compute_composite_scores(self, customer_metrics, stock_score_container):
 
         portfolio_composite_scores = {}
-        for analysis_source in stock_score_container.stock_score_map.keys():
+        for analysis_source in stock_score_container.stock_info_map.keys():
 
             w = self.weighting[analysis_source]
 
             # Accumulate raw scores across all analysis methods
-            for stock_score in stock_score_container.stock_score_map[analysis_source]:
+            for stock_score in stock_score_container.stock_info_map[analysis_source]:
                 ticker = stock_score.ticker
                 raw_score = stock_score.score
                 if not (ticker in portfolio_composite_scores):
@@ -79,3 +79,8 @@ class PortfolioBuilder:
             i += 1
 
         return recommendation_string
+
+
+    def add_hedge_positions(self, suggested_portfolio):
+        # TODO
+        return suggested_portfolio

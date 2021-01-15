@@ -8,6 +8,8 @@ from lib.priceanalysis.PriceForecaster import PriceForecaster
 from lib.valuation.ValuationCalculator import ValuationCalculator
 from lib.portfoliobuilder.PortfolioBuilder import PortfolioBuilder
 from lib.datastructures.CustomerMetrics import CustomerMetrics
+from lib.datastructures.StockInfo import StockInfo
+from lib.datastructures.StockInfoContainer import StockInfoContainer
 
 
 ### Main Handler ###
@@ -80,12 +82,7 @@ def get_recommended_portfolio_intent_handler(intent_request):
 
     # Get the initial investment recommendation
 
-    recommended_portfolio = get_recommended_portfolio(
-        investingDuration, investmentAmount, risk, investingExperienceLevel
-    )
-    recommended_portfolio_report = get_recommended_portfolio_report(
-        recommended_portfolio
-    )
+    recommended_portfolio = get_recommended_portfolio(investingDuration, investmentAmount, risk, investingExperienceLevel)
 
     # Return a message with the initial recommendation based on the risk level.
     return close(
@@ -94,7 +91,7 @@ def get_recommended_portfolio_intent_handler(intent_request):
         {
             "contentType": "PlainText",
             "content": "Thank you for the information. Based on the inputs you provided, my recommendation is to invest the following portfolio: {}".format(
-                recommended_portfolio_report
+                recommended_portfolio
             ),
         },
     )
@@ -211,6 +208,7 @@ def delegate(session_attributes, slots):
 
 def get_recommended_portfolio(investingDuration, investmentAmount, risk, investingExperienceLevel):
 
+    # Construct helper objects
     price_getter = PriceGetter()
     balance_sheet_getter = BalanceSheetGetter()
     stock_filter = StockFilter()
@@ -218,38 +216,36 @@ def get_recommended_portfolio(investingDuration, investmentAmount, risk, investi
     valuation_calculator = ValuationCalculator()
     portfolio_builder = PortfolioBuilder()
 
+    # Build data structures
     customer_metrics = CustomerMetrics(investingDuration, investmentAmount, risk, investingExperienceLevel)
+    stock_info_container = StockInfoContainer()
 
-    # TODO Retrieve stock list
-    stock_ticker_list = price_getter.get_tickers()
+    # Retrieve stock list
+    stock_info_container.stock_ticker_list = price_getter.get_tickers()
     # stock_ticker_list = ["AAPL", "TSLA"]
 
-    # TODO Retrieve price histories
-    stock_info_list = price_getter.get_prices(stock_ticker_list)
+    # Retrieve price histories
+    stock_info_container = price_getter.get_prices(stock_info_container, 100)
 
-    # TODO Retrieve company financial information (and metadata)
-    stock_info_list = balance_sheet_getter.get_financial_info(stock_info_list)
+    # Retrieve company financial information (and metadata)
+    stock_info_container = balance_sheet_getter.get_financial_info(stock_info_container)
 
-    # TODO Apply filter
-    stock_info_list = stock_filter.filter(stock_info_list)
+    # Apply filter
+    stock_info_container = stock_filter.filter(stock_info_container)
 
-    # TODO Call price and volatility analysis/prediction code
-    stock_info_container = price_forecaster.generate_price_prediction(stock_info_list)
+    # Call price and volatility analysis/prediction code
+    stock_info_container = price_forecaster.generate_price_prediction(stock_info_container)
 
-    # TODO Call company valuation prediction
-    stock_info_container = valuation_calculator.compute_value_list(stock_info_list, stock_info_container)
+    # Call company valuation prediction
+    stock_info_container = valuation_calculator.compute_value_list(stock_info_container)
 
-    # TODO Call portfolio builder to assemble information into coherent portfolio
+    # Call portfolio builder to assemble information into coherent portfolio
     suggested_portfolio = portfolio_builder.build_suggested_portfolio(customer_metrics, stock_info_container)
-    suggested_portfolio_str = portfolio_builder.transform_suggested_portfolio_str(suggested_portfolio)
 
-    # df = pd.DataFrame()  # pd.read_csv("../data/1000_days_alpaca_stock_data_sp_500.csv")
-    # pb = PortfolioBuilder(df, investmentAmount, risk, n_stocks=5, dev=False)
-    # pb.get_shares()[0]
+    # Call function to add hedge positions
+    suggested_portfolio = portfolio_builder.add_hedge_positions(suggested_portfolio)
 
-    # TODO Call function to add hedge positions
-
-    return suggested_portfolio_str
+    return portfolio_builder.transform_suggested_portfolio_str(suggested_portfolio)
 
 
 # Service functions

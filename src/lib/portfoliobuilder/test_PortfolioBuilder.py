@@ -19,11 +19,11 @@ class TestPortfolioBuilder(TestCase):
 
 
     def build_container(self, container):
-        container.add("AAPL", 0.95, "Price")
-        container.add("TSLA", 0.98, "Price")
-        container.add("AAPL", 0.85, "Valuation")
-        container.add("TSLA", 0.84, "Valuation")
-        container.add("BNGO", 0.30, "Price")
+        container.add_stock_with_score("AAPL", 0.95, "Price")
+        container.add_stock_with_score("TSLA", 0.98, "Price")
+        container.add_stock_with_score("AAPL", 0.85, "Valuation")
+        container.add_stock_with_score("TSLA", 0.84, "Valuation")
+        container.add_stock_with_score("BNGO", 0.30, "Price")
 
     def build_customer_metrics(self):
         customer_metrics = CustomerMetrics("Long", 5000, "Medium", "Intermediate")
