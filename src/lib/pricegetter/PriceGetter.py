@@ -4,7 +4,9 @@ import requests
 import pandas as pd
 from dotenv import load_dotenv
 import alpaca_trade_api as tradeapi
-
+import requests
+import pandas as pd
+import requests
 
 class PriceGetter:
 
@@ -19,6 +21,9 @@ class PriceGetter:
 
         # Create the Alpaca API object
         self.alpaca = tradeapi.REST(self.alpaca_api_key, self.alpaca_secret_key, api_version="v2")
+
+        # Fmp Cloud API Key
+        self.fmp_cloud_key = '31853220bc5708a36155ca7f0481a5e0'
 
 
     # TODO Not working (api endpoint doesn't exist...)
@@ -54,19 +59,32 @@ class PriceGetter:
 
 
     # TODO Hack until api call working
+    # def get_tickers(self):
+    #     return [ "LRN", "ZYXI", "LMNX", "PETS", "AUDC", "HMI", "CEO", "HUYA", "SNDR", "TDS", "EQC", "LNTH", "SHLX",
+    #              "CAJ", "DOYU", "JNPR", "ORCC", "JNJ", "NVS", "CRSA", "TSCO", "STN", "CECE", "FLWS", "CERN", "SIMO",
+    #              "XOM", "MTRN", "LHX", "ODFL", "SCPL", "MAA", "HUBG", "CASY", "TRV", "TDY", "LCII", "ACTG", "CMG",
+    #              "HLI", "ECOM", "BMTC", "NOVT", "FLIR", "AVD", "WBK", "GLW", "NPTN", "MET", "KE", "FN", "ACLS", "IBOC",
+    #              "WRI", "PRGS", "MGPI", "CFR", "TSEM", "PCRX", "BXS", "BHP", "FMBI", "MRVL", "ASML", "HTLF", "TFC",
+    #              "ICHR", "SPXC", "BIG", "HEI", "BDGE", "FULT", "LORL", "COLB", "ACA", "VSH", "WSM", "SBNY", "SMTC",
+    #              "BOKF", "CRUS", "ALAC", "GNSS", "MKSI", "OFG", "AMKR", "DIOD", "KLAC", "PFC", "MIXT", "PJT", "FFG",
+    #              "UVSP", "FHB", "SFNC", "ITI", "SMSI", "TER", "RGEN", "AVAV", "RNST", "FORM", "FBMS", "APOG", "INMD",
+    #              "AUB", "IEC", "VRNT", "ACIA", "AEIS", "ONTO", "UCTT", "OLED", "AMAT", "WIT", "RADA", "BMI", "KLIC",
+    #              "HZO", "FFIC", "VMI", "RCII", "OMP", "FBP", "STL", "TSM", "ETH", "KTOS", "WBS", "MYRG", "LUNA", "MTZ",
+    #              "ABCB", "BIDU", "CLFD", "ORN", "SIVB", "SYX", "DY", "HIMX", "VCEL", "DAR", "HVT", "TIGR", "UMC",
+    #              "CTRN", "CELH", "MSTR" ]
+
+
     def get_tickers(self):
-        return [ "LRN", "ZYXI", "LMNX", "PETS", "AUDC", "HMI", "CEO", "HUYA", "SNDR", "TDS", "EQC", "LNTH", "SHLX",
-                 "CAJ", "DOYU", "JNPR", "ORCC", "JNJ", "NVS", "CRSA", "TSCO", "STN", "CECE", "FLWS", "CERN", "SIMO",
-                 "XOM", "MTRN", "LHX", "ODFL", "SCPL", "MAA", "HUBG", "CASY", "TRV", "TDY", "LCII", "ACTG", "CMG",
-                 "HLI", "ECOM", "BMTC", "NOVT", "FLIR", "AVD", "WBK", "GLW", "NPTN", "MET", "KE", "FN", "ACLS", "IBOC",
-                 "WRI", "PRGS", "MGPI", "CFR", "TSEM", "PCRX", "BXS", "BHP", "FMBI", "MRVL", "ASML", "HTLF", "TFC",
-                 "ICHR", "SPXC", "BIG", "HEI", "BDGE", "FULT", "LORL", "COLB", "ACA", "VSH", "WSM", "SBNY", "SMTC",
-                 "BOKF", "CRUS", "ALAC", "GNSS", "MKSI", "OFG", "AMKR", "DIOD", "KLAC", "PFC", "MIXT", "PJT", "FFG",
-                 "UVSP", "FHB", "SFNC", "ITI", "SMSI", "TER", "RGEN", "AVAV", "RNST", "FORM", "FBMS", "APOG", "INMD",
-                 "AUB", "IEC", "VRNT", "ACIA", "AEIS", "ONTO", "UCTT", "OLED", "AMAT", "WIT", "RADA", "BMI", "KLIC",
-                 "HZO", "FFIC", "VMI", "RCII", "OMP", "FBP", "STL", "TSM", "ETH", "KTOS", "WBS", "MYRG", "LUNA", "MTZ",
-                 "ABCB", "BIDU", "CLFD", "ORN", "SIVB", "SYX", "DY", "HIMX", "VCEL", "DAR", "HVT", "TIGR", "UMC",
-                 "CTRN", "CELH", "MSTR" ]
+        stock_ticker_str = requests.get(f'https://fmpcloud.io/api/v3/stock-screener?marketCapMoreThan=100000000000&limit=100&apikey={self.fmp_cloud_key}')
+        # stock_ticker_str = requests.get(f'https://fmpcloud.io/api/v3/stock-screener?sector=technology&marketCapMoreThan=100000000000&limit=100&apikey={self.fmp_cloud_key}')
+        stock_ticker_json = stock_ticker_str.json()
+        stock_ticker_list = []
+
+        for item in stock_ticker_json:
+            stock_ticker_list.append(item['symbol'])
+            # 'sector' 'industry'
+
+        return stock_ticker_list
 
 
     def get_prices(self, stock_info_container, trailing_n_days):
