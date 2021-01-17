@@ -14,3 +14,5 @@ The following components are being implemented:
 
 TODO list out the packages an individual would need to download in order to run your code
 TODO Document all functions
+TODO Check data types etc. for all functions
+TODO Bounds test unit tests
