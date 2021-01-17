@@ -221,30 +221,33 @@ def get_recommended_portfolio(investingDuration, investmentAmount, risk, investi
     stock_info_container = StockInfoContainer()
 
     # Retrieve stock list
-    stock_info_container.stock_ticker_list = price_getter.get_tickers()
+    stock_ticker_list = price_getter.get_tickers()
     # stock_ticker_list = ["AAPL", "TSLA"]
+    stock_info_container.add_ticker_list(stock_ticker_list)
 
     # Retrieve price histories
-    stock_info_container = price_getter.get_prices(stock_info_container, 100)
+    price_getter.get_prices(stock_info_container, trailing_n_days=100)
 
     # Retrieve company financial information (and metadata)
-    stock_info_container = balance_sheet_getter.get_financial_info(stock_info_container)
+    balance_sheet_getter.get_financial_info(stock_info_container)
 
     # Apply filter
-    stock_info_container = stock_filter.filter(stock_info_container)
+    stock_filter.filter(stock_info_container)
 
     # Call price and volatility analysis/prediction code
-    stock_info_container = price_forecaster.generate_price_prediction(stock_info_container)
+    price_forecaster.generate_price_prediction(stock_info_container)
 
     # Call company valuation prediction
-    stock_info_container = valuation_calculator.compute_value_list(stock_info_container)
+    valuation_calculator.compute_value_list(stock_info_container)
 
     # Call portfolio builder to assemble information into coherent portfolio
-    suggested_portfolio = portfolio_builder.build_suggested_portfolio(customer_metrics, stock_info_container)
+    portfolio_builder.build_suggested_portfolio(customer_metrics, stock_info_container)
 
     # Call function to add hedge positions
-    suggested_portfolio = portfolio_builder.add_hedge_positions(suggested_portfolio)
+    portfolio_builder.add_hedge_positions(stock_info_container)
 
+    # Generate string portfolio representation
+    suggested_portfolio = stock_info_container.get_portfolio()
     return portfolio_builder.transform_suggested_portfolio_str(suggested_portfolio)
 
 

@@ -26,6 +26,7 @@ from ..datastructures.StockInfoContainer import StockInfoContainer
 
 class PriceForecaster:
 
+
     def __init__(self):
 
         # --------------------------------------------------------------------------
@@ -35,8 +36,9 @@ class PriceForecaster:
         load_dotenv()
 
         # Import environment variables
-        Kraken_Public_Key = os.getenv("KRAKEN_API_KEY")
-        Kraken_Secret_Key = os.getenv("KRAKEN_SECRET_KEY")
+        self.__kraken_public_key = os.getenv("KRAKEN_API_KEY")
+        self.__kraken_secret_key = os.getenv("KRAKEN_SECRET_KEY")
+
 
     def generate_price_prediction(self, stock_info_list):
 

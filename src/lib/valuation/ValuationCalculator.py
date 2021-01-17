@@ -12,9 +12,9 @@ class ValuationCalculator:
 
 
     def __init__(self, debug_level=0):
-        self.debug_level = 0
+        self.__debug_level = 0
         # Source: https://www.valentiam.com/newsandinsights/ebitda-multiples-by-industry
-        self.industry_multiples = {
+        self.__industry_multiples = {
             "Healthcare information and technology": 24.81,
             "Airlines": 8.16,
             "Drugs, biotechnology": 13.29,
@@ -30,23 +30,25 @@ class ValuationCalculator:
             "Software, system & application": 24.00,
             "Wireless telecommunications services": 6.64
         }
-        self.industry_info = {
+        self.__industry_info = {
             "Technology": IndustryInfo(False, True, False)
         }
+
 
     def compute_value_list(self, stock_info_container):
         for analysis in stock_info_container.keys():
             for stock in
         return None
 
+
     def compute_value(self,
         industry
         ):
-        if self.industry_info[industry].has_dividend:
+        if self.__industry_info[industry].has_dividend:
             return self.compute_value__dividend_discount_model()
-        elif self.industry_info[industry].use_dcf:
+        elif self.__industry_info[industry].use_dcf:
             return self.compute_value__dcf()
-        elif self.industry_info[industry].use_cap_rate_market_model:  # Need cap rate; prefer real estate industry
+        elif self.__industry_info[industry].use_cap_rate_market_model:  # Need cap rate; prefer real estate industry
             return self.compute_value__cap_rate_market_model()
         else:
             return self.compute_value__relative_valuation_market_model()
@@ -114,7 +116,7 @@ class ValuationCalculator:
     #     industry,
     #     ebitda
     #     ):
-    #     return ebitda * self.industry_multiples[industry]
+    #     return ebitda * self.__industry_multiples[industry]
 
     
     # --------------------------------------------------------------------------

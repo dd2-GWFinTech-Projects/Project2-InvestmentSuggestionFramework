@@ -13,22 +13,22 @@ class PriceGetter:
 
     def __init__(self, debug_level=0):
 
-        self.debug_level = debug_level
+        self.__debug_level = debug_level
 
         # Set Alpaca API key and secret
-        self.alpaca_api_key = os.getenv("ALPACA_API_KEY")
-        self.alpaca_secret_key = os.getenv("ALPACA_SECRET_KEY")
+        self.__alpaca_api_key = os.getenv("ALPACA_API_KEY")
+        self.__alpaca_secret_key = os.getenv("ALPACA_SECRET_KEY")
 
         # Create the Alpaca API object
-        self.alpaca = tradeapi.REST(self.alpaca_api_key, self.alpaca_secret_key, api_version="v2")
+        self.__alpaca = tradeapi.REST(self.__alpaca_api_key, self.__alpaca_secret_key, api_version="v2")
 
         # Fmp Cloud API Key
-        self.fmp_cloud_key = '31853220bc5708a36155ca7f0481a5e0'
+        self.__fmp_cloud_key = '31853220bc5708a36155ca7f0481a5e0'
 
 
     # TODO Not working (api endpoint doesn't exist...)
     # def get_tickers(self):
-    #     ticker_list = self.alpaca.list_assets(status="active")
+    #     ticker_list = self.__alpaca.list_assets(status="active")
     #     return ticker_list
 
 
@@ -75,8 +75,8 @@ class PriceGetter:
 
 
     def get_tickers(self):
-        stock_ticker_str = requests.get(f'https://fmpcloud.io/api/v3/stock-screener?marketCapMoreThan=100000000000&limit=100&apikey={self.fmp_cloud_key}')
-        # stock_ticker_str = requests.get(f'https://fmpcloud.io/api/v3/stock-screener?sector=technology&marketCapMoreThan=100000000000&limit=100&apikey={self.fmp_cloud_key}')
+        stock_ticker_str = requests.get(f'https://fmpcloud.io/api/v3/stock-screener?marketCapMoreThan=100000000000&limit=100&apikey={self.__fmp_cloud_key}')
+        # stock_ticker_str = requests.get(f'https://fmpcloud.io/api/v3/stock-screener?sector=technology&marketCapMoreThan=100000000000&limit=100&apikey={self.__fmp_cloud_key}')
         stock_ticker_json = stock_ticker_str.json()
         stock_ticker_list = []
 
@@ -102,7 +102,7 @@ class PriceGetter:
         for stock_ticker in stock_info_container.stock_ticker_list:
 
             # Get current closing prices and append to dataset
-            data = self.alpaca.get_barset([stock_ticker], timeframe, start=start.isoformat(), end=now.isoformat()).df
+            data = self.__alpaca.get_barset([stock_ticker], timeframe, start=start.isoformat(), end=now.isoformat()).df
             stock_closing_prices_df[stock_ticker] = data[stock_ticker]["close"]
 
         stock_info_container.stock_closing_prices_df = stock_closing_prices_df
