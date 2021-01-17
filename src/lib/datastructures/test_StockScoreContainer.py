@@ -16,8 +16,8 @@ class TestStockScoreContainer(TestCase):
         self.assertEqual(len(all_stockscores), 5)
 
     def build_container(self, container):
-        container.add_stock_with_score("AAPL", 0.95, "Price")
-        container.add_stock_with_score("TSLA", 0.98, "Price")
-        container.add_stock_with_score("AAPL", 0.85, "Valuation")
-        container.add_stock_with_score("TSLA", 0.84, "Valuation")
-        container.add_stock_with_score("BNGO", 0.30, "Price")
+        container.add_stock_score("AAPL", 0.95, "Price")
+        container.add_stock_score("TSLA", 0.98, "Price")
+        container.add_stock_score("AAPL", 0.85, "Valuation")
+        container.add_stock_score("TSLA", 0.84, "Valuation")
+        container.add_stock_score("BNGO", 0.30, "Price")

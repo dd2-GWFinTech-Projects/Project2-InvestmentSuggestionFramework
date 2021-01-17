@@ -2,6 +2,7 @@ from unittest import TestCase
 
 from lib.valuation.ValuationCalculator import ValuationCalculator
 
+
 class TestValuationCalculator(TestCase):
 
     def test_compute_value__dcf(self):
@@ -12,3 +13,8 @@ class TestValuationCalculator(TestCase):
             wacc=0.08)
         npv_expected = 621178.98
         self.assertAlmostEqual(npv_expected, npv_actual, 1)
+
+
+class TestValuationCalculator(TestCase):
+    def test_compute_value_list(self):
+        self.fail()

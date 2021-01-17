@@ -4,12 +4,15 @@ from ..datastructures.StockInfo import StockInfo
 class StockInfoContainer:
 
     def __init__(self):
-        self.stock_info_map = {}
-        self.stock_ticker_list = []
-        self.stock_closing_prices_df = pd.DataFrame()
-        self.financial_metadata = None
+        self.stock_score_map = {}
+        self.stock_num_shares = {}
+        self.stock_price_history = pd.DataFrame()
+        self.financial_metadata = {}
 
-    def add_stock_with_score(self, ticker, score, analysis_source):
+
+
+
+    def add_stock_score(self, ticker, score, analysis_source):
         """
         Add StockInfo for a stock with a score metric.
         :param ticker:
