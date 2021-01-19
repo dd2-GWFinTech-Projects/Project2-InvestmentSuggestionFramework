@@ -42,29 +42,47 @@ class ValuationCalculator(AnalysisMethod):
 
 
     def analyze(self, stock_info_container):
-        return None
-
-
-    def compute_value_list(self, stock_info_container):
-
-        for stock_ticker in stock_info_container.get_all_tickers():
-            score = random.random()  # TODO
-            stock_info_container.add_stock_score(stock_ticker, self.__const_analysis_method, score)
-
+        stock_info_container = self.__compute_valuation_scores(stock_info_container)
         return stock_info_container
 
 
-    def compute_value(self,
-        industry
-        ):
+    def __compute_valuation_scores(self, stock_info_container):
+
+        stock_price_history = stock_info_container.get_all_price_history()
+
+        for stock_ticker in stock_info_container.get_all_tickers():
+            industry = stock_info_container.get_all_financial_metadata()[stock_ticker]["industry"]
+            valuation = self.__compute_valuation(stock_ticker, stock_info_container.get_all_financial_metadata())
+            current_price = stock_price_history[stock_ticker].tail(1).iloc[0]
+            score = self.__compute_score(current_price, valuation)
+
+        return None
+
+
+    def __compute_valuation(self, stock_ticker, industry, all_financial_metadata):
         if self.__industry_info[industry].has_dividend:
-            return self.compute_value__dividend_discount_model()
+            ticker = None
+            r = None
+            g = None
+            return self.compute_value__dividend_discount_model(ticker, r, g)
         elif self.__industry_info[industry].use_dcf:
-            return self.compute_value__dcf()
+            ebitda_projection = None
+            wacc = None
+            return self.compute_value__dcf(ebitda_projection, wacc)
         elif self.__industry_info[industry].use_cap_rate_market_model:  # Need cap rate; prefer real estate industry
-            return self.compute_value__cap_rate_market_model()
+            industry_multiples = None
+            market_cap = None
+            capitalization_rate = None
+            return self.compute_value__cap_rate_market_model(industry_multiples, market_cap, capitalization_rate)
         else:
-            return self.compute_value__relative_valuation_market_model()
+            equity_value = None
+            expected_ebitda = None
+            ebitda = None
+            return self.compute_market_value(equity_value, expected_ebitda, ebitda)
+
+
+    def __compute_score(self, current_price, valuation):
+        return 100.0 * (valuation - current_price) / current_price
 
 
     # --------------------------------------------------------------------------
@@ -118,10 +136,10 @@ class ValuationCalculator(AnalysisMethod):
 
     # Enterprise-Based Approach
     def compute_market_value(
-        equity_value,
-        expected_ebitda,
-        ebitda
-    ):
+            self,
+            equity_value,
+            expected_ebitda,
+            ebitda):
         return (equity_value)/(ebitda) * expected_ebitda
 
 

@@ -52,7 +52,6 @@ class PriceForecaster(AnalysisMethod):
         return stock_info_container
 
 
-
     def __generate_price_prediction(self, stock_info_container):
 
         # --------------------------------------------------------------------------
@@ -97,6 +96,7 @@ class PriceForecaster(AnalysisMethod):
             results_df[stock_ticker] = results.forecast(steps=num_steps)[0]
         return results_df
 
+
     def __compute_forecast_arima(self, stock_price_history, order=(1,1), num_steps=10):
         # Lag 1 order=(1,1)
         # Lag 2 order=(2,1,1)
@@ -107,8 +107,10 @@ class PriceForecaster(AnalysisMethod):
             results_df[stock_ticker] = results.forecast(steps=num_steps)[0]
         return results_df
 
+
     def __clean_dataframe(self, stock_price_history):
         return stock_price_history.sort_index()
+
 
     def __compute_values_from_pctchange(self, stock_price_history, pctchange_prediction):
         predicted_values = pd.DataFrame()
@@ -117,6 +119,7 @@ class PriceForecaster(AnalysisMethod):
             predicted_values[stock_ticker] = pctchange_prediction[stock_ticker] + last_actual_value
         return predicted_values
 
+
     def __compute_score_from_prediction(self, stock_info_container, stock_price_history, predicted_values, sub_analysis_method_str):
         for stock_ticker in stock_price_history.columns:
             last_actual_value = stock_price_history[stock_ticker].tail(1).iloc[0]
@@ -124,6 +127,7 @@ class PriceForecaster(AnalysisMethod):
             score = self.__compute_score_from_prediction_scalar(last_actual_value, last_predicted_value)
             stock_info_container.add_stock_score(stock_ticker, score, self.__const_analysis_method + "." + sub_analysis_method_str)
         return stock_info_container
+
 
     def __compute_score_from_prediction_scalar(self, last_actual_value, last_predicted_value):
         return 100 * (last_predicted_value - last_actual_value) / last_actual_value

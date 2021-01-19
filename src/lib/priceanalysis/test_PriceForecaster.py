@@ -4,7 +4,7 @@ from ..datastructures.TestHelper import TestHelper
 
 
 class TestPriceForecaster(TestCase):
-    def test_analyze(self):
+    def test_price_forecaster_analyze(self):
 
         price_forecaster = PriceForecaster()
         test_helper = TestHelper()

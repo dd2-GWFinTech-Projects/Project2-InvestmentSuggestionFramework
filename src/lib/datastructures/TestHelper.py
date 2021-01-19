@@ -77,3 +77,4 @@ class TestHelper:
             stock_financial_metadata_json = stock_financial_metadata_str.json()
             stock_financial_metadata = stock_financial_metadata_json  # self.__process_stock_financial_metadata_json(stock_financial_metadata_json)
             stock_info_container.add_stock_financial_metadata(stock_ticker, stock_financial_metadata)
+        return stock_info_container
