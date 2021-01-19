@@ -90,7 +90,7 @@ class PriceGetter:
     def get_prices(self, stock_info_container, trailing_n_days):
 
         # Build dates to capture trailing n days
-        now = pd.Timestamp("2020-10-28", tz="America/New_York")
+        now = pd.Timestamp.now(tz="America/New_York")
         offset = pd.Timedelta(trailing_n_days, unit="days")
         start = now - offset
 

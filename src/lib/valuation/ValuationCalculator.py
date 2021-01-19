@@ -1,5 +1,6 @@
 import numpy as np
 import random
+from ..datastructures.AnalysisMethod import AnalysisMethod
 
 
 class IndustryInfo:
@@ -9,10 +10,11 @@ class IndustryInfo:
         self.use_cap_rate_market_model = use_cap_rate_market_model
 
 
-class ValuationCalculator:
+class ValuationCalculator(AnalysisMethod):
 
 
     def __init__(self, debug_level=0):
+        super().__init__("Valuation")
         self.__debug_level = 0
         # Source: https://www.valentiam.com/newsandinsights/ebitda-multiples-by-industry
         self.__industry_multiples = {
@@ -36,6 +38,10 @@ class ValuationCalculator:
         }
         # Constants
         self.__const_analysis_method = "Valuation"
+
+
+    def analyze(self, stock_info_container):
+        return None
 
 
     def compute_value_list(self, stock_info_container):

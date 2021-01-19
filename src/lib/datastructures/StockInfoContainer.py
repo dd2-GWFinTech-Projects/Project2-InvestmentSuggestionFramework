@@ -37,9 +37,12 @@ class StockInfoContainer:
         self.__stock_score_map[ticker].append(StockScore(score, analysis_source))
 
     def add_stock_to_portfolio(self, ticker, num_shares):
+        self.__register_ticker(ticker)
         self.__portfolio[ticker] = num_shares
 
     def add_stock_price_history(self, stock_price_history):
+        for stock_ticker in stock_price_history.columns:
+            self.__register_ticker(stock_ticker)
         self.__stock_price_history = stock_price_history
 
     def add_stock_financial_metadata(self, ticker, stock_financial_metadata_map):

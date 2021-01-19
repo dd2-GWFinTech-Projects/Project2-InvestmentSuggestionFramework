@@ -55,7 +55,6 @@ class PriceForecaster(AnalysisMethod):
 
     def __generate_price_prediction(self, stock_info_container):
 
-
         # --------------------------------------------------------------------------
         # Clean prices dataframe
         # --------------------------------------------------------------------------
@@ -70,56 +69,61 @@ class PriceForecaster(AnalysisMethod):
         # --------------------------------------------------------------------------
 
         # ARMA prediction
-        results_arma = self.__compute_forecast_arma(self, stock_price_history, num_steps=10)
+        results_arma = self.__compute_forecast_arma(stock_price_history, order=(1,1), num_steps=10)
 
         # Compute score
-        last_actual_value = stock_price_history.tail(1).iloc[0].values[0]
-        last_predicted_value = results_arma.tail(1).iloc[0].values[0]
-        score_arma = self.__compute_score_from_prediction(last_actual_value, last_predicted_value)
-        # TODO
-
-
-
-
+        stock_info_container = self.__compute_score_from_prediction(stock_info_container, stock_price_history, results_arma, "ARMA")
 
         # --------------------------------------------------------------------------
         # ARIMA prediction and compute score
         # --------------------------------------------------------------------------
 
         # ARIMA prediction and compute score
-        results_arima = self.__compute_forecast_arima(self, stock_price_history, num_steps=10, order=(1, 1))
+        results_arima = self.__compute_forecast_arima(stock_price_history, order=(1,1), num_steps=10)
 
         # Compute score
-        last_actual_value = stock_price_history.tail(1).iloc[0].values[0]
-        last_predicted_value = results_arima.tail(1).iloc[0].values[0]
-        score_arima = self.__compute_score_from_prediction(last_actual_value, last_predicted_value)
+        stock_info_container = self.__compute_score_from_prediction(stock_info_container, stock_price_history, results_arima, "ARIMA")
+
+        return stock_info_container
 
 
+    def __compute_forecast_arma(self, stock_price_history, order=(1,1), num_steps=10):
+        results_df = pd.DataFrame()
+        for stock_ticker in stock_price_history.columns:
+            model = ARMA(stock_price_history[stock_ticker].values, order=order)
+            results = model.fit()
+            results_df[stock_ticker] = results.forecast(steps=num_steps)[0]
+        return results_df
 
-
-
-
-
-        return None
-
-
-    def __compute_forecast_arma(self, stock_price_history, num_steps=10):
-        model = ARMA(stock_price_history.values, order=(1,1))
-        results = model.fit()
-        return results.forecast(steps=num_steps)[0]
-
-    def __compute_forecast_arima(self, stock_price_history, num_steps=10, order=(1,1)):
+    def __compute_forecast_arima(self, stock_price_history, order=(1,1), num_steps=10):
         # Lag 1 order=(1,1)
         # Lag 2 order=(2,1,1)
-        model = ARIMA(stock_price_history.values, order=order)
-        results = model.fit()
-        return results.forecast(steps=num_steps)[0]
+        results_df = pd.DataFrame()
+        for stock_ticker in stock_price_history.columns:
+            model = ARIMA(stock_price_history[stock_ticker].values, order=order)
+            results = model.fit()
+            results_df[stock_ticker] = results.forecast(steps=num_steps)[0]
+        return results_df
 
     def __clean_dataframe(self, stock_price_history):
-        return stock_price_history.sort_index(inplace=True)
+        return stock_price_history.sort_index()
 
-    def __compute_score_from_prediction(self, last_actual_value, last_predicted_value):
+    def __compute_score_from_prediction(self, stock_info_container, stock_price_history, results, sub_analysis_method_str):
+        for stock_ticker in stock_price_history.columns:
+            last_actual_value = stock_price_history[stock_ticker].tail(1).iloc[0].values[0]
+            last_predicted_value = results[stock_ticker].tail(1).iloc[0].values[0]
+            score = self.__compute_score_from_prediction(last_actual_value, last_predicted_value)
+            stock_info_container.add_stock_score(stock_ticker, score, self.__const_analysis_method + sub_analysis_method_str)
+        return stock_info_container
+
+    def __compute_score_from_prediction_scalar(self, last_actual_value, last_predicted_value):
         return (last_predicted_value - last_actual_value) / last_actual_value
+
+
+
+
+
+
 
     #
     # def __abc(self):
