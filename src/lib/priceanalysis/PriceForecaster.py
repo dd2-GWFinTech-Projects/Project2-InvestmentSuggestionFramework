@@ -126,7 +126,7 @@ class PriceForecaster(AnalysisMethod):
         return stock_info_container
 
     def __compute_score_from_prediction_scalar(self, last_actual_value, last_predicted_value):
-        return (last_predicted_value - last_actual_value) / last_actual_value
+        return 100 * (last_predicted_value - last_actual_value) / last_actual_value
 
 
     #
