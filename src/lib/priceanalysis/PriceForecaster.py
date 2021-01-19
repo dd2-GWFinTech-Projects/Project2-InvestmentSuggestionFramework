@@ -76,6 +76,11 @@ class PriceForecaster(AnalysisMethod):
         last_actual_value = stock_price_history.tail(1).iloc[0].values[0]
         last_predicted_value = results_arma.tail(1).iloc[0].values[0]
         score_arma = self.__compute_score_from_prediction(last_actual_value, last_predicted_value)
+        # TODO
+
+
+
+
 
         # --------------------------------------------------------------------------
         # ARIMA prediction and compute score
@@ -88,6 +93,13 @@ class PriceForecaster(AnalysisMethod):
         last_actual_value = stock_price_history.tail(1).iloc[0].values[0]
         last_predicted_value = results_arima.tail(1).iloc[0].values[0]
         score_arima = self.__compute_score_from_prediction(last_actual_value, last_predicted_value)
+
+
+
+
+
+
+
         return None
 
 
