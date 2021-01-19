@@ -69,7 +69,8 @@ class PriceForecaster(AnalysisMethod):
         # --------------------------------------------------------------------------
 
         # ARMA prediction
-        results_arma = self.__compute_forecast_arma(stock_price_history, order=(1,1), num_steps=10)
+        pctchange_results_arma = self.__compute_forecast_arma(stock_price_pct_change, order=(1,1), num_steps=10)
+        predicted_values_arma = self.__compute_values_from_pctchange(stock_price_history, pctchange_results_arma)
 
         # Compute score
         stock_info_container = self.__compute_score_from_prediction(stock_info_container, stock_price_history, results_arma, "ARMA")
@@ -79,7 +80,8 @@ class PriceForecaster(AnalysisMethod):
         # --------------------------------------------------------------------------
 
         # ARIMA prediction and compute score
-        results_arima = self.__compute_forecast_arima(stock_price_history, order=(1,1), num_steps=10)
+        pctchange_results_arima = self.__compute_forecast_arima(stock_price_pct_change, order=(1,1), num_steps=10)
+        predicted_values_arima = self.__compute_values_from_pctchange(stock_price_history, pctchange_results_arima)
 
         # Compute score
         stock_info_container = self.__compute_score_from_prediction(stock_info_container, stock_price_history, results_arima, "ARIMA")
@@ -107,6 +109,13 @@ class PriceForecaster(AnalysisMethod):
 
     def __clean_dataframe(self, stock_price_history):
         return stock_price_history.sort_index()
+
+    def __compute_values_from_pctchange(self, stock_price_history, pctchange_prediction):
+        predicted_values = pd.DataFrame()
+        for stock_ticker in stock_price_history.columns:
+            last_actual_value = stock_price_history[stock_ticker].tail(1).iloc[0].values[0]
+            predicted_values[stock_ticker] = pctchange_prediction[stock_ticker] + last_actual_value
+        return predicted_values
 
     def __compute_score_from_prediction(self, stock_info_container, stock_price_history, results, sub_analysis_method_str):
         for stock_ticker in stock_price_history.columns:
