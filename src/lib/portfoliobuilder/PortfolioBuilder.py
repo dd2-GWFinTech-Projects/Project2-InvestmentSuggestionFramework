@@ -1,4 +1,3 @@
-from ..datastructures.StockInfo import StockInfo
 
 
 class PortfolioBuilder:
@@ -35,13 +34,13 @@ class PortfolioBuilder:
 
     def add_hedge_positions(self, stock_info_container):
         # TODO
-        return None
+        return stock_info_container
 
 
     def transform_suggested_portfolio_str(self, portfolio):
         recommendation_string = ""
         i = 0
-        for share_count in stock_shares_list:
+        for share_count in portfolio:
             ticker = share_count.ticker
             nshares = share_count.score
             if i > 0:
@@ -58,24 +57,24 @@ class PortfolioBuilder:
 
 
     def __compute_composite_scores(self, customer_metrics, stock_score_container):
-
-        portfolio_composite_scores = {}
-        for analysis_source in stock_score_container.stock_info_map.keys():
-
-            w = self.__weighting[analysis_source]
-
-            # Accumulate raw scores across all analysis methods
-            for stock_score in stock_score_container.stock_info_map[analysis_source]:
-                ticker = stock_score.ticker
-                raw_score = stock_score.score
-                if not (ticker in portfolio_composite_scores):
-                    portfolio_composite_scores[ticker] = StockInfo(ticker, w * raw_score)
-                else:
-                    old_score = portfolio_composite_scores[ticker]
-                    portfolio_composite_scores[ticker] = StockInfo(ticker, w * raw_score + old_score.score)
-
-        # Sort
-        return list(portfolio_composite_scores.values())
+        return stock_score_container
+        # portfolio_composite_scores = {}
+        # for analysis_source in stock_score_container.stock_info_map.keys():
+        #
+        #     w = self.__weighting[analysis_source]
+        #
+        #     # Accumulate raw scores across all analysis methods
+        #     for stock_score in stock_score_container.stock_info_map[analysis_source]:
+        #         ticker = stock_score.ticker
+        #         raw_score = stock_score.score
+        #         if not (ticker in portfolio_composite_scores):
+        #             portfolio_composite_scores[ticker] = StockInfo(ticker, w * raw_score)
+        #         else:
+        #             old_score = portfolio_composite_scores[ticker]
+        #             portfolio_composite_scores[ticker] = StockInfo(ticker, w * raw_score + old_score.score)
+        #
+        # # Sort
+        # return list(portfolio_composite_scores.values())
 
 
     def __sort_stock_score_list(self, score_list):
@@ -89,8 +88,8 @@ class PortfolioBuilder:
         # TODO Calculate price * nshares to equal investment
         total_nbr_shares = 400 #customer_metrics.investmentAmount
         stock_shares_list = []
-        for stock_score in stock_score_list:
-            ticker = stock_score.ticker
-            score = stock_score.score
-            stock_shares_list.append(StockInfo(ticker, 100))
+        # for stock_score in stock_score_list:
+        #     ticker = stock_score.ticker
+        #     score = stock_score.score
+        #     stock_shares_list.append(StockInfo(ticker, 100))
         return stock_shares_list

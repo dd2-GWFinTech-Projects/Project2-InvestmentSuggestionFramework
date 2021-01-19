@@ -8,7 +8,6 @@ from lib.priceanalysis.PriceForecaster import PriceForecaster
 from lib.valuation.ValuationCalculator import ValuationCalculator
 from lib.portfoliobuilder.PortfolioBuilder import PortfolioBuilder
 from lib.datastructures.CustomerMetrics import CustomerMetrics
-from lib.datastructures.StockInfo import StockInfo
 from lib.datastructures.StockInfoContainer import StockInfoContainer
 
 
@@ -235,7 +234,7 @@ def get_recommended_portfolio(investingDuration, investmentAmount, risk, investi
     stock_filter.filter(stock_info_container)
 
     # Call price and volatility analysis/prediction code
-    price_forecaster.generate_price_prediction(stock_info_container)
+    price_forecaster.analyze(stock_info_container)
 
     # Call company valuation prediction
     valuation_calculator.compute_value_list(stock_info_container)

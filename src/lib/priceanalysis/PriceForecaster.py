@@ -20,7 +20,7 @@ import ccxt
 import random
 
 from dotenv import load_dotenv
-from MCForecastTools import MCSimulation
+from ..priceanalysis.MCForecastTools import MCSimulation
 
 from ..datastructures.StockInfoContainer import StockInfoContainer
 
@@ -58,27 +58,13 @@ class PriceForecaster(AnalysisMethod):
 
         for stock_ticker in stock_info_container.get_all_tickers():
             score = random.random()  # TODO
-
-
-
-
-
-
-
-
-
-
-
             stock_info_container.add_stock_score(stock_ticker, self.__const_analysis_method, score)
 
         return stock_info_container
 
 
+
     def __generate_price_prediction(self, stock_info_container):
-
-
-
-    def generate_price_prediction_2(self, stock_info_container):
 
         # Concatenate all DataFrames into a single DataFrame
         # stock_price_history = pd.concat([ BTC_df, ETH_df, XRP_df ], axis="columns", join="inner")
