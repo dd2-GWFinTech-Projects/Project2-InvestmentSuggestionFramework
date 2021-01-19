@@ -34,7 +34,6 @@ class PriceForecaster(AnalysisMethod):
 
     def __init__(self):
         super().__init__("PriceForecasting")
-        # Constants
         self.__const_analysis_method = "PriceForecasting"
 
         # Load environment variables
@@ -45,9 +44,10 @@ class PriceForecaster(AnalysisMethod):
 
     def analyze(self, stock_info_container):
 
-        for stock_ticker in stock_info_container.get_all_tickers():
-            score = self.__generate_price_prediction(stock_info_container)
-            stock_info_container.add_stock_score(stock_ticker, self.__const_analysis_method, score)
+        stock_info_container = self.__generate_price_prediction(stock_info_container)
+        # for stock_ticker in stock_info_container.get_all_tickers():
+            # score = self.__generate_price_prediction(stock_info_container)
+            # stock_info_container.add_stock_score(stock_ticker, self.__const_analysis_method, score)
 
         return stock_info_container
 
@@ -73,18 +73,18 @@ class PriceForecaster(AnalysisMethod):
         predicted_values_arma = self.__compute_values_from_pctchange(stock_price_history, pctchange_results_arma)
 
         # Compute score
-        stock_info_container = self.__compute_score_from_prediction(stock_info_container, stock_price_history, results_arma, "ARMA")
+        stock_info_container = self.__compute_score_from_prediction(stock_info_container, stock_price_history, predicted_values_arma, "ARMA")
 
         # --------------------------------------------------------------------------
         # ARIMA prediction and compute score
         # --------------------------------------------------------------------------
 
         # ARIMA prediction and compute score
-        pctchange_results_arima = self.__compute_forecast_arima(stock_price_pct_change, order=(1,1), num_steps=10)
+        pctchange_results_arima = self.__compute_forecast_arima(stock_price_pct_change, order=(1, 1, 1), num_steps=10)
         predicted_values_arima = self.__compute_values_from_pctchange(stock_price_history, pctchange_results_arima)
 
         # Compute score
-        stock_info_container = self.__compute_score_from_prediction(stock_info_container, stock_price_history, results_arima, "ARIMA")
+        stock_info_container = self.__compute_score_from_prediction(stock_info_container, stock_price_history, predicted_values_arima, "ARIMA")
 
         return stock_info_container
 
@@ -113,25 +113,20 @@ class PriceForecaster(AnalysisMethod):
     def __compute_values_from_pctchange(self, stock_price_history, pctchange_prediction):
         predicted_values = pd.DataFrame()
         for stock_ticker in stock_price_history.columns:
-            last_actual_value = stock_price_history[stock_ticker].tail(1).iloc[0].values[0]
+            last_actual_value = stock_price_history[stock_ticker].tail(1).iloc[0]
             predicted_values[stock_ticker] = pctchange_prediction[stock_ticker] + last_actual_value
         return predicted_values
 
-    def __compute_score_from_prediction(self, stock_info_container, stock_price_history, results, sub_analysis_method_str):
+    def __compute_score_from_prediction(self, stock_info_container, stock_price_history, predicted_values, sub_analysis_method_str):
         for stock_ticker in stock_price_history.columns:
-            last_actual_value = stock_price_history[stock_ticker].tail(1).iloc[0].values[0]
-            last_predicted_value = results[stock_ticker].tail(1).iloc[0].values[0]
-            score = self.__compute_score_from_prediction(last_actual_value, last_predicted_value)
-            stock_info_container.add_stock_score(stock_ticker, score, self.__const_analysis_method + sub_analysis_method_str)
+            last_actual_value = stock_price_history[stock_ticker].tail(1).iloc[0]
+            last_predicted_value = predicted_values[stock_ticker].tail(1).iloc[0]
+            score = self.__compute_score_from_prediction_scalar(last_actual_value, last_predicted_value)
+            stock_info_container.add_stock_score(stock_ticker, score, self.__const_analysis_method + "." + sub_analysis_method_str)
         return stock_info_container
 
     def __compute_score_from_prediction_scalar(self, last_actual_value, last_predicted_value):
         return (last_predicted_value - last_actual_value) / last_actual_value
-
-
-
-
-
 
 
     #
@@ -172,7 +167,7 @@ class PriceForecaster(AnalysisMethod):
     #     # # For the order parameter, the second 1 indicates the number of MA lags
     #     # model = ARMA(stock_price_history_pctchange.values, order=(1, 1))
     #     # # Fit the model to the data
-    #     # results = model.fit()
+    #     # predicted_values = model.fit()
     #     # # Create the ARMA model using the return values and the order
     #     # # For the order parameter, the first 1 indicates the number of AR lags
     #     # # For the order parameter, the second 1 indicates the number of MA lags
@@ -180,13 +175,13 @@ class PriceForecaster(AnalysisMethod):
     #     # # Fit the model to the data
     #     # results_close = model_ARMA_2.fit()
     #     #
-    #     # results.forecast(steps=10)[0]
+    #     # predicted_values.forecast(steps=10)[0]
     #     #
     #     # import arch as arch
     #     # import warnings
     #     # warnings.filterwarnings('ignore')
-    #     # # Create a series using "Close" price percentage returns, drop any NaNs, and check the results:
-    #     # # (Make sure to multiply the pct_change() results by *100)
+    #     # # Create a series using "Close" price percentage returns, drop any NaNs, and check the predicted_values:
+    #     # # (Make sure to multiply the pct_change() predicted_values by *100)
     #     # BTC_csv=None
     #     # BTC_csv['Return'] = BTC_csv.Close.pct_change() * 100
     #     # BTC_csv['Lagged_Return'] = BTC_csv['Return'].shift()

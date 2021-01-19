@@ -11,14 +11,14 @@ class TestPriceForecaster(TestCase):
         stock_info_container = test_helper.build_container_price_history()
         price_forecaster.analyze(stock_info_container)
 
-        score_appl = stock_info_container.get_stock_scores("AAPL")
-        score_tsla = stock_info_container.get_stock_scores("TSLA")
-        score_msft = stock_info_container.get_stock_scores("MSFT")
+        score_appl = stock_info_container.get_stock_scores("AAPL")[0]
+        score_tsla = stock_info_container.get_stock_scores("TSLA")[0]
+        score_msft = stock_info_container.get_stock_scores("MSFT")[0]
 
-        self.assertTrue(score_appl.get_score() > 0)
-        self.assertTrue(score_tsla.get_score() > 0)
-        self.assertTrue(score_msft.get_score() > 0)
+        self.assertTrue(score_appl.get_score() != 0)
+        self.assertTrue(score_tsla.get_score() != 0)
+        self.assertTrue(score_msft.get_score() != 0)
 
-        self.assertEqual("PriceForecasting", score_appl.get_analysis_source())
-        self.assertEqual("PriceForecasting", score_tsla.get_analysis_source())
-        self.assertEqual("PriceForecasting", score_msft.get_analysis_source())
+        self.assertEqual("PriceForecasting.ARMA", score_appl.get_analysis_source())
+        self.assertEqual("PriceForecasting.ARMA", score_tsla.get_analysis_source())
+        self.assertEqual("PriceForecasting.ARMA", score_msft.get_analysis_source())

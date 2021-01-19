@@ -15,6 +15,7 @@ class ValuationCalculator(AnalysisMethod):
 
     def __init__(self, debug_level=0):
         super().__init__("Valuation")
+        self.__const_analysis_method = "Valuation"
         self.__debug_level = 0
         # Source: https://www.valentiam.com/newsandinsights/ebitda-multiples-by-industry
         self.__industry_multiples = {
