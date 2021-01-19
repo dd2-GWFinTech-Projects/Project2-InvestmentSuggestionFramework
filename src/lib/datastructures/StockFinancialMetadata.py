@@ -12,3 +12,5 @@ class StockFinancialMetadata:
 
     def get_ebidtaba(self):
         return None
+
+

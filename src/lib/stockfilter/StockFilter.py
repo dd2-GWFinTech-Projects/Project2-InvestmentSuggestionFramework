@@ -6,4 +6,5 @@ class StockFilter:
 
 
     def filter(self, stock_info_container):
-        return None
+        # TODO
+        return stock_info_container

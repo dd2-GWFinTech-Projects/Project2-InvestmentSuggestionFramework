@@ -99,11 +99,11 @@ class PriceGetter:
 
         # Get stock prices
         stock_closing_prices_df = pd.DataFrame()
-        for stock_ticker in stock_info_container.stock_ticker_list:
+        for stock_ticker in stock_info_container.get_all_tickers():
 
             # Get current closing prices and append to dataset
             data = self.__alpaca.get_barset([stock_ticker], timeframe, start=start.isoformat(), end=now.isoformat()).df
             stock_closing_prices_df[stock_ticker] = data[stock_ticker]["close"]
 
-        stock_info_container.stock_closing_prices_df = stock_closing_prices_df
+        stock_info_container.add_stock_price_history(stock_closing_prices_df)
         return stock_info_container

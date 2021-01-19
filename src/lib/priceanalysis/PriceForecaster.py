@@ -17,32 +17,68 @@ import seaborn as sns
 import numpy as np
 import alpaca_trade_api as tradeapi
 import ccxt
+import random
 
 from dotenv import load_dotenv
 from MCForecastTools import MCSimulation
 
 from ..datastructures.StockInfoContainer import StockInfoContainer
 
+class AnalysisMethod:
 
-class PriceForecaster:
+
+    def __init__(self, analysis_method_name):
+        # Constants
+        self.__const_analysis_method = "PriceForecasting"
+
+
+    def get_const_analysis_method_str(self):
+        return self.__const_analysis_method
+
+
+    def analyze(self, stock_info_container):
+        raise NotImplementedError
+
+
+class PriceForecaster(AnalysisMethod):
 
 
     def __init__(self):
+        super().__init__("PriceForecasting")
+        # Constants
+        self.__const_analysis_method = "PriceForecasting"
 
-        # --------------------------------------------------------------------------
         # Load environment variables
-        # --------------------------------------------------------------------------
-
         load_dotenv()
-
-        # Import environment variables
         self.__kraken_public_key = os.getenv("KRAKEN_API_KEY")
         self.__kraken_secret_key = os.getenv("KRAKEN_SECRET_KEY")
 
 
-    def generate_price_prediction(self, stock_info_list):
+    def analyze(self, stock_info_container):
 
-        stock_info_container = StockInfoContainer()
+        for stock_ticker in stock_info_container.get_all_tickers():
+            score = random.random()  # TODO
+
+
+
+
+
+
+
+
+
+
+
+            stock_info_container.add_stock_score(stock_ticker, self.__const_analysis_method, score)
+
+        return stock_info_container
+
+
+    def __generate_price_prediction(self, stock_info_container):
+
+
+
+    def generate_price_prediction_2(self, stock_info_container):
 
         # Concatenate all DataFrames into a single DataFrame
         # stock_price_history = pd.concat([ BTC_df, ETH_df, XRP_df ], axis="columns", join="inner")
@@ -218,6 +254,13 @@ class PriceForecaster:
             subplots=True,
             grid=True);
         plt.title(label="BitCoin's Return vs. Predicted Returns for the next 20 Days", fontsize=25);
+
+
+
+
+
+
+
 
 
 

@@ -16,60 +16,43 @@ class BalanceSheetGetter:
 
     def get_financial_info(self, stock_info_container):
 
-
-
-
-        stock_ticker_str = requests.get(
-            f'https://fmpcloud.io/api/v3/stock-screener?sector=technology&marketCapMoreThan=100000000000&limit=100&apikey={self.demo_key}')
-        stock_ticker_json = stock_ticker_str.json()
-        stock_ticker_list = []
-
-        for item in stock_ticker_json:
-            stock_ticker_list.append(item['symbol'])
-
-
-
-
-        financial_metadata = {}
-        for item in stock_ticker_list:
+        for stock_ticker in stock_info_container.get_all_tickers():
             try:
-                # annual income statement since we need anual sales
-                IS = requests.get(f'https://fmpcloud.io/api/v3/income-statement/{item}?apikey={demo}')
-                IS = IS.json()
-                Revenue = IS[0]['revenue']
-                grossprofitratip = IS[0]['grossProfitRatio']
-                # most recent market capitliazation
-                MarketCapit = requests.get(f'https://fmpcloud.io/api/v3/market-capitalization/{item}?apikey={demo}')
-                MarketCapit = MarketCapit.json()
-                MarketCapit = MarketCapit[0]['marketCap']
-
-                # Price to sales
-                p_to_sales = MarketCapit / Revenue
-
-                financial_metadata[item] = {}
-                financial_metadata[item]['revenue'] = Revenue
-                financial_metadata[item]['Gross_Profit_ratio'] = grossprofitratip
-                financial_metadata[item]['price_to_sales'] = p_to_sales
-                financial_metadata[item]['Market_Capit'] = MarketCapit
+                stock_financial_metadata_str = requests.get(f"https://fmpcloud.io/api/v3/financial-statement-full-as-reported/{stock_ticker}?apikey={self.__fmp_cloud_key}")
+                # TODO Other requests for auxilliary data?
             except:
-                pass
-        print(financial_metadata)
-
-
-
-
-
-
-        price_to_sales_df = pd.DataFrame.from_dict(financial_metadata, orient='index')
-
-        price_to_sales_df['ps_average_sector'] = price_to_sales_df['price_to_sales'].mean()
-        price_to_sales_df['pscompany_vs_averagesector'] = price_to_sales_df['price_to_sales'] - price_to_sales_df[
-            'ps_average_sector']
-        price_to_sales_df['price_as_per_average_industryPS'] = price_to_sales_df['ps_average_sector'] * \
-                                                               price_to_sales_df['revenue']
-        price_to_sales_df['price_difference'] = price_to_sales_df['price_as_per_average_industryPS'] - \
-                                                price_to_sales_df['Market_Capit']
-
-
+                continue
+            stock_financial_metadata_json = stock_financial_metadata_str.json()
+            stock_financial_metadata = self.__process_stock_financial_metadata_json(stock_financial_metadata_json)
+            stock_info_container.add_stock_financial_metadata(stock_ticker, stock_financial_metadata)
 
         return stock_info_container
+
+    # --------------------------------------------------------------------------
+    # Helpers
+    # --------------------------------------------------------------------------
+
+
+    def __process_stock_financial_metadata_json(self, stock_financial_metadata_json):
+
+        # TODO Calculations and data aggregation?
+
+        # marketCap
+        # revenue
+        # Gross_Profit_ratio
+        # p_to_sales = MarketCapit / Revenue
+        # price_to_sales
+
+        #
+        # price_to_sales_df['ps_average_sector'] = price_to_sales_df['price_to_sales'].mean()
+        # price_to_sales_df['pscompany_vs_averagesector'] = price_to_sales_df['price_to_sales'] - price_to_sales_df[
+        #     'ps_average_sector']
+        # price_to_sales_df['price_as_per_average_industryPS'] = price_to_sales_df['ps_average_sector'] * \
+        #                                                        price_to_sales_df['revenue']
+        # price_to_sales_df['price_difference'] = price_to_sales_df['price_as_per_average_industryPS'] - \
+        #                                         price_to_sales_df['Market_Capit']
+        #
+
+        # TODO Transform to dataframe? price_to_sales_df = pd.DataFrame.from_dict(financial_metadata, orient='index')
+
+        return stock_financial_metadata_json

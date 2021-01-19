@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 
 class IndustryInfo:
@@ -33,12 +34,17 @@ class ValuationCalculator:
         self.__industry_info = {
             "Technology": IndustryInfo(False, True, False)
         }
+        # Constants
+        self.__const_analysis_method = "Valuation"
 
 
     def compute_value_list(self, stock_info_container):
-        for analysis in stock_info_container.keys():
-            for stock in
-        return None
+
+        for stock_ticker in stock_info_container.get_all_tickers():
+            score = random.random()  # TODO
+            stock_info_container.add_stock_score(stock_ticker, self.__const_analysis_method, score)
+
+        return stock_info_container
 
 
     def compute_value(self,

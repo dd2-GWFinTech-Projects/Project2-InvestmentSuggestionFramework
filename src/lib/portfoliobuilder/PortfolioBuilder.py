@@ -33,12 +33,12 @@ class PortfolioBuilder:
         # Transform to string representation
 
 
-    def add_hedge_positions(self, suggested_portfolio):
+    def add_hedge_positions(self, stock_info_container):
         # TODO
-        return suggested_portfolio
+        return None
 
 
-    def transform_suggested_portfolio_str(self, stock_shares_list):
+    def transform_suggested_portfolio_str(self, portfolio):
         recommendation_string = ""
         i = 0
         for share_count in stock_shares_list:
