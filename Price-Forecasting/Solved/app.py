@@ -8,6 +8,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 from dash.dependencies import Input, Output
 
 app = dash.Dash()
@@ -53,6 +54,8 @@ import dash_html_components as html
 =======
 =======
 >>>>>>> parent of 8771e24... New Changes in the breakout room
+=======
+>>>>>>> parent of 8771e24... New Changes in the breakout room
 
 app = dash.Dash()
 colors = {
@@ -88,6 +91,10 @@ app.layout = html.Div(style={'backgroundColor': colors['background']}, children=
         }
     )
 <<<<<<< HEAD
+<<<<<<< HEAD
+])
+>>>>>>> parent of 8771e24... New Changes in the breakout room
+=======
 ])
 >>>>>>> parent of 8771e24... New Changes in the breakout room
 =======
