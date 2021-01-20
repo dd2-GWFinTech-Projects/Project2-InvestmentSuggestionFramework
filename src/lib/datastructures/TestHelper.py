@@ -15,6 +15,7 @@ from ..datastructures.CustomerMetrics import CustomerMetrics
 class TestHelper:
     def __init__(self, debug_level=0):
         self.debug_level = debug_level
+        self.__fmp_cloud_key = '31853220bc5708a36155ca7f0481a5e0'
 
     def build_customer_metrics(self):
         customer_metrics = CustomerMetrics("Long", 5000, "Medium", "Intermediate")

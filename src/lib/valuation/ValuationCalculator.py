@@ -51,25 +51,41 @@ class ValuationCalculator(AnalysisMethod):
         stock_price_history = stock_info_container.get_all_price_history()
 
         for stock_ticker in stock_info_container.get_all_tickers():
-            industry = stock_info_container.get_all_financial_metadata()[stock_ticker]["industry"]
-            valuation = self.__compute_valuation(stock_ticker, stock_info_container.get_all_financial_metadata())
+
+            stock_financial_metadata = stock_info_container.get_financial_metadata(stock_ticker)
+            analysis_submethod = self.__select_analysis_submethod(stock_financial_metadata)
+
+            valuation = self.__compute_valuation(stock_financial_metadata, analysis_submethod)
             current_price = stock_price_history[stock_ticker].tail(1).iloc[0]
+
             score = self.__compute_score(current_price, valuation)
+            stock_info_container.add_stock_score(stock_ticker, self.__const_analysis_method + "." + analysis_submethod, score)
 
         return None
 
-
-    def __compute_valuation(self, stock_ticker, industry, all_financial_metadata):
+    def __select_analysis_submethod(self, stock_financial_metadata):
+        industry = stock_financial_metadata.get_industry()
         if self.__industry_info[industry].has_dividend:
+            return "DividendDiscountModel"
+        elif self.__industry_info[industry].use_dcf:
+            return "DCF"
+        elif self.__industry_info[industry].use_cap_rate_market_model:  # Need cap rate; prefer real estate industry
+            return "CapRateMarketModel"
+        else:
+            return "MarketValue"
+
+    def __compute_valuation(self, stock_financial_metadata, analysis_submethod):
+        industry = stock_financial_metadata.get_industry()
+        if "DividendDiscountModel" == analysis_submethod:
             ticker = None
             r = None
             g = None
             return self.compute_value__dividend_discount_model(ticker, r, g)
-        elif self.__industry_info[industry].use_dcf:
-            ebitda_projection = None
+        elif "DCF" == analysis_submethod:
+            ebitda_projection = []
             wacc = None
             return self.compute_value__dcf(ebitda_projection, wacc)
-        elif self.__industry_info[industry].use_cap_rate_market_model:  # Need cap rate; prefer real estate industry
+        elif "CapRateMarketModel" == analysis_submethod:  # Need cap rate; prefer real estate industry
             industry_multiples = None
             market_cap = None
             capitalization_rate = None

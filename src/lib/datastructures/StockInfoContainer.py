@@ -73,6 +73,10 @@ class StockInfoContainer:
     def get_all_financial_metadata(self):
         return self.__financial_metadata
 
+    def get_financial_metadata(self, stock_ticker):
+        return self.__financial_metadata[stock_ticker]
+
+
     # --------------------------------------------------------------------------
     # Getters - Individual stock data
     # --------------------------------------------------------------------------
