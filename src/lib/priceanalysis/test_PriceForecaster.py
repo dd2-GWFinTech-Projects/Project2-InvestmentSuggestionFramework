@@ -12,13 +12,13 @@ class TestPriceForecaster(TestCase):
         price_forecaster.analyze(stock_info_container)
 
         score_appl = stock_info_container.get_stock_scores("AAPL")[0]
-        score_tsla = stock_info_container.get_stock_scores("TSLA")[0]
-        score_msft = stock_info_container.get_stock_scores("MSFT")[0]
+        score_bngo = stock_info_container.get_stock_scores("BNGO")[0]
+        score_ciic = stock_info_container.get_stock_scores("CIIC")[0]
 
         self.assertTrue(score_appl.get_score() != 0)
-        self.assertTrue(score_tsla.get_score() != 0)
-        self.assertTrue(score_msft.get_score() != 0)
+        self.assertTrue(score_bngo.get_score() != 0)
+        self.assertTrue(score_ciic.get_score() != 0)
 
         self.assertEqual("PriceForecasting.ARMA", score_appl.get_analysis_source())
-        self.assertEqual("PriceForecasting.ARMA", score_tsla.get_analysis_source())
-        self.assertEqual("PriceForecasting.ARMA", score_msft.get_analysis_source())
+        self.assertEqual("PriceForecasting.ARMA", score_bngo.get_analysis_source())
+        self.assertEqual("PriceForecasting.ARMA", score_ciic.get_analysis_source())

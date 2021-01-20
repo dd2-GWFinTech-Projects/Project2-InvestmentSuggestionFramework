@@ -13,7 +13,7 @@ class TestPriceGetter(TestCase):
 
     def test_get_prices(self):
         price_getter = PriceGetter()
-        stock_prices = price_getter.get_prices(stock_ticker_list=["AAPL", "TSLA"], trailing_n_days=100)
+        stock_prices = price_getter.get_prices(stock_ticker_list=["AAPL", "BNGO", "CIIC"], trailing_n_days=100)
         self.assertEqual("AAPL", stock_prices.columns[0])
-        self.assertEqual("TSLA", stock_prices.columns[1])
+        self.assertEqual("BNGO", stock_prices.columns[1])
         self.assertGreater(60, stock_prices.shape[1])

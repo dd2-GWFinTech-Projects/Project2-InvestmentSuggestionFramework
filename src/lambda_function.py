@@ -221,7 +221,7 @@ def get_recommended_portfolio(investingDuration, investmentAmount, risk, investi
 
     # Retrieve stock list
     stock_ticker_list = price_getter.get_tickers()
-    # stock_ticker_list = ["AAPL", "TSLA"]
+    # stock_ticker_list = ["AAPL", "BNGO", "CIIC"]
     stock_info_container.add_ticker_list(stock_ticker_list)
 
     # Retrieve price histories

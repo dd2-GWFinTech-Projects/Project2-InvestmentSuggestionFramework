@@ -25,25 +25,25 @@ class TestHelper:
         if stock_info_container is None:
             stock_info_container = StockInfoContainer()
         stock_info_container.add_ticker("AAPL")
-        stock_info_container.add_ticker("TSLA")
-        stock_info_container.add_ticker("MSFT")
+        stock_info_container.add_ticker("BNGO")
+        stock_info_container.add_ticker("CIIC")
 
     def build_container_stockscores(self, stock_info_container=None):
         if stock_info_container is None:
             stock_info_container = StockInfoContainer()
         stock_info_container.add_stock_score("AAPL", 0.95, "Price")
-        stock_info_container.add_stock_score("TSLA", 0.98, "Price")
+        stock_info_container.add_stock_score("BNGO", 0.98, "Price")
         stock_info_container.add_stock_score("AAPL", 0.85, "Valuation")
-        stock_info_container.add_stock_score("TSLA", 0.84, "Valuation")
-        stock_info_container.add_stock_score("MSFT", 0.30, "Price")
+        stock_info_container.add_stock_score("BNGO", 0.84, "Valuation")
+        stock_info_container.add_stock_score("CIIC", 0.30, "Price")
         return stock_info_container
 
     def build_container_portfolio(self, stock_info_container=None):
         if stock_info_container is None:
             stock_info_container = StockInfoContainer()
         stock_info_container.add_stock_to_portfolio("AAPL", 100)
-        stock_info_container.add_stock_to_portfolio("TSLA", 100)
-        stock_info_container.add_stock_to_portfolio("MSFT", 100)
+        stock_info_container.add_stock_to_portfolio("BNGO", 100)
+        stock_info_container.add_stock_to_portfolio("CIIC", 100)
 
     def build_container_price_history(self, stock_info_container=None):
         if stock_info_container is None:
@@ -58,7 +58,7 @@ class TestHelper:
         start = now - offset
         timeframe = "1D"
         stock_closing_prices_df = pd.DataFrame()
-        for stock_ticker in [ "AAPL", "TSLA", "MSFT" ]:
+        for stock_ticker in [ "AAPL", "BNGO", "CIIC" ]:
             data = self.__alpaca.get_barset([stock_ticker], timeframe, start=start.isoformat(), end=now.isoformat()).df
             stock_closing_prices_df[stock_ticker] = data[stock_ticker]["close"]
         stock_info_container.add_stock_price_history(stock_closing_prices_df)
@@ -68,10 +68,11 @@ class TestHelper:
         if stock_info_container is None:
             stock_info_container = StockInfoContainer()
 
-        for stock_ticker in ["AAPL", "TSLA", "MSFT"]:
+        for stock_ticker in ["AAPL", "BNGO", "CIIC"]:
             try:
+                fmp_cloud_key = '31853220bc5708a36155ca7f0481a5e0'
                 stock_financial_metadata_str = requests.get(
-                    f"https://fmpcloud.io/api/v3/financial-statement-full-as-reported/{stock_ticker}?apikey={self.__fmp_cloud_key}")
+                    f"https://fmpcloud.io/api/v3/financial-statement-full-as-reported/{stock_ticker}?apikey={fmp_cloud_key}")
                 # TODO Other requests for auxilliary data?
             except:
                 continue
