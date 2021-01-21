@@ -11,7 +11,7 @@ class BalanceSheetGetter:
         self.__debug_level = 0
 
         # Fmp Cloud API Key
-        self.__fmp_cloud_key = '31853220bc5708a36155ca7f0481a5e0'
+        self.__fmp_cloud_key = 'd62b3ac01083146edd0acaa71d57074a'
 
 
     def get_financial_info(self, stock_info_container):

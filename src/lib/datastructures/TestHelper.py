@@ -15,7 +15,7 @@ from ..datastructures.CustomerMetrics import CustomerMetrics
 class TestHelper:
     def __init__(self, debug_level=0):
         self.debug_level = debug_level
-        self.__fmp_cloud_key = '31853220bc5708a36155ca7f0481a5e0'
+        self.__fmp_cloud_key = 'd62b3ac01083146edd0acaa71d57074a'
 
     def build_customer_metrics(self):
         customer_metrics = CustomerMetrics("Long", 5000, "Medium", "Intermediate")
@@ -70,7 +70,7 @@ class TestHelper:
 
         for stock_ticker in ["AAPL", "BNGO", "CIIC"]:
             try:
-                fmp_cloud_key = '31853220bc5708a36155ca7f0481a5e0'
+                fmp_cloud_key = 'd62b3ac01083146edd0acaa71d57074a'
                 stock_financial_metadata_str = requests.get(
                     f"https://fmpcloud.io/api/v3/financial-statement-full-as-reported/{stock_ticker}?apikey={fmp_cloud_key}")
                 # TODO Other requests for auxilliary data?
