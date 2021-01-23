@@ -237,7 +237,7 @@ def get_recommended_portfolio(investingDuration, investmentAmount, risk, investi
     price_forecaster.analyze(stock_info_container)
 
     # Call company valuation prediction
-    valuation_calculator.compute_value_list(stock_info_container)
+    valuation_calculator.analyze(stock_info_container)
 
     # Call portfolio builder to assemble information into coherent portfolio
     portfolio_builder.build_suggested_portfolio(customer_metrics, stock_info_container)

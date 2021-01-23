@@ -2,14 +2,14 @@ from unittest import TestCase
 from lib.valuation.ValuationCalculator import ValuationCalculator
 from unittest import TestCase
 from ..priceanalysis.PriceForecaster import PriceForecaster
-from ..datastructures.TestHelper import TestHelper
+from ..datastructures.IntegrationTestHelper import IntegrationTestHelper
 
 class TestValuationCalculator(TestCase):
 
     def test_valuation_calculator_analyze(self):
 
         valuation_calculator = ValuationCalculator()
-        test_helper = TestHelper()
+        test_helper = IntegrationTestHelper()
         stock_info_container = test_helper.build_container_financial_metadata()
         stock_info_container = test_helper.build_container_price_history(stock_info_container)
         valuation_calculator.analyze(stock_info_container)

@@ -54,7 +54,7 @@ class StockInfoContainer:
     # --------------------------------------------------------------------------
 
     def get_all_tickers(self):
-        return self.__ticker_set
+        return list(self.__ticker_set)
 
     def get_all_scores_single_level(self):
         """
@@ -81,7 +81,7 @@ class StockInfoContainer:
     # Getters - Individual stock data
     # --------------------------------------------------------------------------
 
-    def get_stock_scores(self, ticker):
+    def get_stock_score(self, ticker):
         return self.__stock_score_map[ticker]
 
     def get_stock_num_shares(self, ticker):
