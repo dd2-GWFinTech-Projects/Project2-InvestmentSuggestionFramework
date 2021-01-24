@@ -1,6 +1,6 @@
 from unittest import TestCase
-from ..priceanalysis.PriceForecaster import PriceForecaster
-from ..datastructures.IntegrationTestHelper import IntegrationTestHelper
+from main.priceanalysis.PriceForecaster import PriceForecaster
+from main.datastructures.IntegrationTestHelper import IntegrationTestHelper
 
 
 class TestPriceForecaster(TestCase):

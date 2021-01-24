@@ -1,14 +1,12 @@
 ### Required Libraries ###
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from lib.pricegetter.PriceGetter import PriceGetter
-from lib.balancesheetgetter.BalanceSheetGetter import BalanceSheetGetter
-from lib.stockfilter.StockFilter import StockFilter
-from lib.priceanalysis.PriceForecaster import PriceForecaster
-from lib.valuation.ValuationCalculator import ValuationCalculator
-from lib.portfoliobuilder.PortfolioBuilder import PortfolioBuilder
-from lib.datastructures.CustomerMetrics import CustomerMetrics
-from lib.datastructures.StockInfoContainer import StockInfoContainer
+from main.pricegetter.PriceGetter import PriceGetter
+from main.balancesheetgetter import BalanceSheetGetter
+from main.stockfilter.StockFilter import StockFilter
+from main.priceanalysis.PriceForecaster import PriceForecaster
+from main.valuation.ValuationCalculator import ValuationCalculator
+from main.portfoliobuilder import PortfolioBuilder
+from main.datastructures import CustomerMetrics
+from main.datastructures import StockInfoContainer
 
 
 ### Main Handler ###

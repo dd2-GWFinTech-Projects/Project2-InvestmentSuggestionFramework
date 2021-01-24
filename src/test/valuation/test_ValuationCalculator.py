@@ -1,8 +1,6 @@
+from main.valuation.ValuationCalculator import ValuationCalculator
 from unittest import TestCase
-from lib.valuation.ValuationCalculator import ValuationCalculator
-from unittest import TestCase
-from ..priceanalysis.PriceForecaster import PriceForecaster
-from ..datastructures.IntegrationTestHelper import IntegrationTestHelper
+from main.datastructures.IntegrationTestHelper import IntegrationTestHelper
 
 class TestValuationCalculator(TestCase):
 

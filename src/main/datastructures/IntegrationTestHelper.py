@@ -13,6 +13,7 @@ from ..datastructures.StockInfoContainer import StockInfoContainer
 from ..datastructures.CustomerMetrics import CustomerMetrics
 
 class IntegrationTestHelper:
+
     def __init__(self, debug_level=0):
         self.debug_level = debug_level
         self.__fmp_cloud_key = 'd62b3ac01083146edd0acaa71d57074a'

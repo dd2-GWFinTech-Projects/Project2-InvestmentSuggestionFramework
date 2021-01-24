@@ -1,5 +1,5 @@
 from unittest import TestCase
-from ..pricegetter.PriceGetter import PriceGetter
+from main.pricegetter.PriceGetter import PriceGetter
 
 
 class TestPriceGetter(TestCase):

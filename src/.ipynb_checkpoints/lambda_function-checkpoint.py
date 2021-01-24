@@ -1,7 +1,5 @@
 ### Required Libraries ###
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from lib.pricegetter.PriceGetter import PriceGetter
+from main.pricegetter.PriceGetter import PriceGetter
 
 
 ### Main Handler ###
