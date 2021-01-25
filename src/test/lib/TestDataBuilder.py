@@ -17,13 +17,21 @@ from main.datastructures.CustomerMetrics import CustomerMetrics
 
 class TestDataBuilder:
 
+
     def __init__(self, debug_level=0):
         self.debug_level = debug_level
         self.__fmp_cloud_key = 'd62b3ac01083146edd0acaa71d57074a'
 
+
+    # --------------------------------------------------------------------------
+    # Integration Test Helpers
+    # --------------------------------------------------------------------------
+
+
     def build_customer_metrics(self):
         customer_metrics = CustomerMetrics("Long", 5000, "Medium", "Intermediate")
         return customer_metrics
+
 
     def build_container_stocktickers(self, stock_info_container=None):
         if stock_info_container is None:
@@ -31,6 +39,7 @@ class TestDataBuilder:
         stock_info_container.add_ticker("AAPL")
         stock_info_container.add_ticker("BNGO")
         stock_info_container.add_ticker("CIIC")
+
 
     def build_container_stockscores(self, stock_info_container=None):
         if stock_info_container is None:
@@ -41,6 +50,7 @@ class TestDataBuilder:
         stock_info_container.add_stock_score("BNGO", 0.84, "Valuation")
         stock_info_container.add_stock_score("CIIC", 0.30, "Price")
         return stock_info_container
+
 
     def build_container_portfolio(self, stock_info_container=None):
         if stock_info_container is None:
@@ -68,6 +78,7 @@ class TestDataBuilder:
         stock_info_container.add_stock_price_history(stock_closing_prices_df)
         return stock_info_container
 
+
     def build_container_financial_metadata(self, stock_info_container=None):
         if stock_info_container is None:
             stock_info_container = StockInfoContainer()
@@ -84,8 +95,6 @@ class TestDataBuilder:
             stock_financial_metadata = stock_financial_metadata_json  # self.__process_stock_financial_metadata_json(stock_financial_metadata_json)
             stock_info_container.add_stock_financial_metadata(stock_ticker, stock_financial_metadata)
         return stock_info_container
-
-
 
 
     # --------------------------------------------------------------------------
