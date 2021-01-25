@@ -7,6 +7,7 @@ import alpaca_trade_api as tradeapi
 import requests
 import pandas as pd
 import requests
+from pathlib import Path
 
 from main.portfoliobuilder.PortfolioBuilder import PortfolioBuilder
 from main.datastructures.StockInfoContainer import StockInfoContainer
@@ -95,6 +96,15 @@ class TestDataBuilder:
         container.add_stock_to_portfolio("AAPL", 102)
         container.add_stock_to_portfolio("MSFT", 103)
         container.add_stock_to_portfolio("TSLA", 104)
+        return container
+
+
+    def build_simple_scores(self):
+        container = StockInfoContainer()
+        container.add_stock_score("AAPL", "price analysis", 0.8)
+        container.add_stock_score("MSFT", "valuation analysis", 0.6)
+        container.add_stock_score("TSLA", "other analysis", 0.4)
+        return container
 
 
     def build_stock_price_data(self):
