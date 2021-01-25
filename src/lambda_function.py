@@ -1,12 +1,12 @@
 ### Required Libraries ###
 from main.pricegetter.PriceGetter import PriceGetter
-from main.balancesheetgetter import BalanceSheetGetter
+from main.balancesheetgetter.BalanceSheetGetter import BalanceSheetGetter
 from main.stockfilter.StockFilter import StockFilter
 from main.priceanalysis.PriceForecaster import PriceForecaster
 from main.valuation.ValuationCalculator import ValuationCalculator
-from main.portfoliobuilder import PortfolioBuilder
-from main.datastructures import CustomerMetrics
-from main.datastructures import StockInfoContainer
+from main.portfoliobuilder.PortfolioBuilder import PortfolioBuilder
+from main.datastructures.CustomerMetrics import CustomerMetrics
+from main.datastructures.StockInfoContainer import StockInfoContainer
 
 
 ### Main Handler ###

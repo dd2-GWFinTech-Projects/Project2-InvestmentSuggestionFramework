@@ -1,6 +1,6 @@
 from unittest import TestCase
 from main.pricegetter.PriceGetter import PriceGetter
-
+from main.datastructures.StockInfoContainer import StockInfoContainer
 
 class TestPriceGetter(TestCase):
 
@@ -13,7 +13,11 @@ class TestPriceGetter(TestCase):
 
     def test_get_prices(self):
         price_getter = PriceGetter()
-        stock_prices = price_getter.get_prices(stock_ticker_list=["AAPL", "BNGO", "CIIC"], trailing_n_days=100)
-        self.assertEqual("AAPL", stock_prices.columns[0])
-        self.assertEqual("BNGO", stock_prices.columns[1])
+        container = StockInfoContainer()
+        container.add_ticker_list(["AAPL", "BNGO", "CIIC"])
+        price_getter.get_prices(container, trailing_n_days=100)
+        stock_prices = container.get_all_price_history()
+        self.assertTrue("AAPL" in set(stock_prices.columns))
+        self.assertTrue("BNGO" in set(stock_prices.columns))
+        self.assertTrue("CIIC" in set(stock_prices.columns))
         self.assertGreater(60, stock_prices.shape[1])
