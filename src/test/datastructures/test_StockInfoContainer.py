@@ -2,6 +2,7 @@ from unittest import TestCase
 from main.datastructures.StockInfoContainer import StockInfoContainer
 import pandas as pd
 from pathlib import Path
+from test.lib.TestDataBuilder import TestDataBuilder
 
 
 class TestStockInfoContainer(TestCase):
@@ -41,26 +42,34 @@ class TestStockInfoContainer(TestCase):
 
 
     def test_add_stock_to_portfolio(self):
-        container = StockInfoContainer()
-        container.add_stock_to_portfolio("AAPL", 102)
+        test_data_builder = TestDataBuilder()
+        container = test_data_builder.build_simple_portfolio()
+
+        # Build test data
         portfolio = container.get_portfolio()
-        self.assertEqual(1, len(portfolio))
+        self.assertEqual(3, len(portfolio))
         self.assertEqual(102, portfolio["AAPL"])
+        self.assertEqual(102, portfolio["MSFT"])
+        self.assertEqual(102, portfolio["TSLA"])
         # Validate that the tickers were registered
         self.assertEqual(1, len(container.get_all_tickers()))
 
+
     def test_add_stock_price_history(self):
-        container = StockInfoContainer()
-        expected_index = [
-            pd.Timestamp("01-01-2021", tz="America/New_York"),
-            pd.Timestamp("01-02-2021", tz="America/New_York"),
-            pd.Timestamp("01-03-2021", tz="America/New_York")
-        ]
-        expected_stock_price_history = pd.DataFrame({"APPL": [100.0, 101.0, 102.3], "MSFT": [56.0, 56.2, 59.3]}, index=index)
+
+        # Build test data
+        test_data_builder = TestDataBuilder()
+        (container, expected_index, expected_stock_price_history) = self.__build_stock_price_data()
+
+        # Call add function
         container.add_stock_price_history(expected_stock_price_history)
+
+        # Extract needed data for testing
         actual_stock_price_history__aapl = container.get_stock_price_history("AAPL")
         actual_stock_price_history__msft = container.get_stock_price_history("MSFT")
         actual_index = actual_stock_price_history__aapl.index
+
+        # Perform assertions
         self.assertEqual(3, actual_stock_price_history__aapl.shape[0])
         self.assertEqual(3, actual_stock_price_history__msft.shape[0])
         self.assertEqual(expected_index[0], actual_index[0])
@@ -72,24 +81,29 @@ class TestStockInfoContainer(TestCase):
         self.assertEqual(expected_stock_price_history["MSFT"].values[0], actual_stock_price_history__msft.values[0])
         self.assertEqual(expected_stock_price_history["MSFT"].values[1], actual_stock_price_history__msft.values[1])
         self.assertEqual(expected_stock_price_history["MSFT"].values[2], actual_stock_price_history__msft.values[2])
+
         # Validate that the tickers were registered
         self.assertEqual(2, len(container.get_all_tickers()))
 
+
     def test_add_stock_financial_metadata(self):
-        container = StockInfoContainer()
-        file_path = Path("data/fmpcloud_sample_aapl.json")
-        with open(file_path, "r") as json_file:
-            expected_financial_metadata = json_file.read()
-            container.add_stock_financial_metadata("AAPL", expected_financial_metadata)
-            actual_financial_metadata = container.get_stock_financial_metadata("AAPL")
-            self.assertEqual(expected_financial_metadata[0]["numberofsignificantvendors"], actual_financial_metadata[0]["numberofsignificantvendors"])
-            self.assertEqual(expected_financial_metadata[0]["currentstateandlocaltaxexpensebenefit"], actual_financial_metadata[0]["currentstateandlocaltaxexpensebenefit"])
-            self.assertEqual(expected_financial_metadata[0]["investmentincomeinterestanddividend"], actual_financial_metadata[0]["investmentincomeinterestanddividend"])
-            self.assertIsNone(container.get_stock_financial_metadata("MSFT"))
-            # Validate that the tickers were registered
-            self.assertEqual(1, len(container.get_all_tickers()))
 
+        # Build test data
+        test_data_builder = TestDataBuilder()
+        (container, expected_financial_metadata) = test_data_builder.build_financial_metadata()
+        actual_financial_metadata = container.get_stock_financial_metadata("AAPL")
 
+        # Make assertions
+        self.assertEqual(expected_financial_metadata[0]["numberofsignificantvendors"],
+                         actual_financial_metadata[0]["numberofsignificantvendors"])
+        self.assertEqual(expected_financial_metadata[0]["currentstateandlocaltaxexpensebenefit"],
+                         actual_financial_metadata[0]["currentstateandlocaltaxexpensebenefit"])
+        self.assertEqual(expected_financial_metadata[0]["investmentincomeinterestanddividend"],
+                         actual_financial_metadata[0]["investmentincomeinterestanddividend"])
+        self.assertIsNone(container.get_stock_financial_metadata("MSFT"))
+
+        # Validate that the tickers were registered
+        self.assertEqual(1, len(container.get_all_tickers()))
 
 
     def test_get_all_tickers(self):
@@ -102,6 +116,7 @@ class TestStockInfoContainer(TestCase):
         expected_tickers = ["AAPL", "MSFT", "TSLA"]
         for ticker in expected_tickers:
             self.assertTrue(ticker in set(all_tickers))
+
 
     def test_get_all_scores_single_level(self):
         container = StockInfoContainer()
@@ -125,14 +140,57 @@ class TestStockInfoContainer(TestCase):
             self.assertEqual(expected_analysis_methods[ticker], actual_score_info.get_analysis_source())
             self.assertEqual(expected_scores[ticker], actual_score_info.get_score())
 
+
     def test_get_portfolio(self):
+        self.test_add_stock_to_portfolio()
+
 
     def test_get_all_price_history(self):
-        self.fail()
+
+        # Build test data
+        (container, expected_index, expected_stock_price_history) = self.__build_stock_price_data()
+
+        # Call add function
+        container.add_stock_price_history(expected_stock_price_history)
+
+        # Extract needed data for testing
+        all_price_history = container.get_all_price_history()
+        actual_stock_price_history__aapl = all_price_history["AAPL"]
+        actual_stock_price_history__msft = all_price_history["MSFT"]
+        actual_index = actual_stock_price_history__aapl.index
+
+        # Perform assertions
+        self.assertEqual(3, actual_stock_price_history__aapl.shape[0])
+        self.assertEqual(3, actual_stock_price_history__msft.shape[0])
+        self.assertEqual(expected_index[0], actual_index[0])
+        self.assertEqual(expected_index[1], actual_index[1])
+        self.assertEqual(expected_index[2], actual_index[2])
+        self.assertEqual(expected_stock_price_history["AAPL"].values[0], actual_stock_price_history__aapl.values[0])
+        self.assertEqual(expected_stock_price_history["AAPL"].values[1], actual_stock_price_history__aapl.values[1])
+        self.assertEqual(expected_stock_price_history["AAPL"].values[2], actual_stock_price_history__aapl.values[2])
+        self.assertEqual(expected_stock_price_history["MSFT"].values[0], actual_stock_price_history__msft.values[0])
+        self.assertEqual(expected_stock_price_history["MSFT"].values[1], actual_stock_price_history__msft.values[1])
+        self.assertEqual(expected_stock_price_history["MSFT"].values[2], actual_stock_price_history__msft.values[2])
 
 
     def test_get_all_financial_metadata(self):
-        self.fail()
+
+        # Build test data
+        (container, expected_financial_metadata) = self.__build_financial_metadata()
+        actual_financial_metadata = container.get_all_financial_metadata()
+
+        # Make assertions
+        self.assertEqual(expected_financial_metadata[0]["numberofsignificantvendors"],
+                         actual_financial_metadata[0]["numberofsignificantvendors"])
+        self.assertEqual(expected_financial_metadata[0]["currentstateandlocaltaxexpensebenefit"],
+                         actual_financial_metadata[0]["currentstateandlocaltaxexpensebenefit"])
+        self.assertEqual(expected_financial_metadata[0]["investmentincomeinterestanddividend"],
+                         actual_financial_metadata[0]["investmentincomeinterestanddividend"])
+        self.assertIsNone(container.get_stock_financial_metadata("MSFT"))
+
+        # Validate that the tickers were registered
+        self.assertEqual(1, len(container.get_all_tickers()))
+
 
 
     def test_get_financial_metadata(self):
@@ -153,3 +211,4 @@ class TestStockInfoContainer(TestCase):
 
     def test_get_stock_financial_metadata(self):
         self.fail()
+

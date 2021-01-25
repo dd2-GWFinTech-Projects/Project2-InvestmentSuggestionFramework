@@ -1,13 +1,13 @@
 from main.valuation.ValuationCalculator import ValuationCalculator
 from unittest import TestCase
-from main.datastructures.IntegrationTestHelper import IntegrationTestHelper
+from test.lib.TestDataBuilder import TestDataBuilder
 
 class TestValuationCalculator(TestCase):
 
     def test_valuation_calculator_analyze(self):
 
         valuation_calculator = ValuationCalculator()
-        test_helper = IntegrationTestHelper()
+        test_helper = TestDataBuilder()
         stock_info_container = test_helper.build_container_financial_metadata()
         stock_info_container = test_helper.build_container_price_history(stock_info_container)
         valuation_calculator.analyze(stock_info_container)

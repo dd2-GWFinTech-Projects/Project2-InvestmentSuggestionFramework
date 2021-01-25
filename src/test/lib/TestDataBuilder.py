@@ -8,11 +8,11 @@ import requests
 import pandas as pd
 import requests
 
-from ..portfoliobuilder.PortfolioBuilder import PortfolioBuilder
-from ..datastructures.StockInfoContainer import StockInfoContainer
-from ..datastructures.CustomerMetrics import CustomerMetrics
+from main.portfoliobuilder.PortfolioBuilder import PortfolioBuilder
+from main.datastructures.StockInfoContainer import StockInfoContainer
+from main.datastructures.CustomerMetrics import CustomerMetrics
 
-class IntegrationTestHelper:
+class TestDataBuilder:
 
     def __init__(self, debug_level=0):
         self.debug_level = debug_level
@@ -81,3 +81,37 @@ class IntegrationTestHelper:
             stock_financial_metadata = stock_financial_metadata_json  # self.__process_stock_financial_metadata_json(stock_financial_metadata_json)
             stock_info_container.add_stock_financial_metadata(stock_ticker, stock_financial_metadata)
         return stock_info_container
+
+
+
+
+    # --------------------------------------------------------------------------
+    # StockInfoContainer Helpers
+    # --------------------------------------------------------------------------
+
+
+    def build_simple_portfolio(self):
+        container = StockInfoContainer()
+        container.add_stock_to_portfolio("AAPL", 102)
+        container.add_stock_to_portfolio("MSFT", 103)
+        container.add_stock_to_portfolio("TSLA", 104)
+
+
+    def build_stock_price_data(self):
+        container = StockInfoContainer()
+        expected_index = [
+            pd.Timestamp("01-01-2021", tz="America/New_York"),
+            pd.Timestamp("01-02-2021", tz="America/New_York"),
+            pd.Timestamp("01-03-2021", tz="America/New_York")
+        ]
+        expected_stock_price_history = pd.DataFrame({"APPL": [100.0, 101.0, 102.3], "MSFT": [56.0, 56.2, 59.3]}, index=expected_index)
+        return (container, expected_index, expected_stock_price_history)
+
+
+    def build_financial_metadata(self):
+        container = StockInfoContainer()
+        file_path = Path("data/fmpcloud_sample_aapl.json")
+        with open(file_path, "r") as json_file:
+            expected_financial_metadata = json_file.read()
+            container.add_stock_financial_metadata("AAPL", expected_financial_metadata)
+        return (container, expected_financial_metadata)
