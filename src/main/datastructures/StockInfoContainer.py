@@ -45,9 +45,9 @@ class StockInfoContainer:
             self.__register_ticker(stock_ticker)
         self.__stock_price_history = stock_price_history
 
-    def add_stock_financial_metadata(self, ticker, stock_financial_metadata_map):
+    def add_stock_financial_metadata(self, ticker, stock_financial_metadata_listmap):
         self.__register_ticker(ticker)
-        self.__financial_metadata[ticker] = StockFinancialMetadata(stock_financial_metadata_map)
+        self.__financial_metadata[ticker] = StockFinancialMetadata(stock_financial_metadata_listmap)
 
     # --------------------------------------------------------------------------
     # Getters - All stock data
@@ -87,7 +87,7 @@ class StockInfoContainer:
         return self.__stock_price_history[ticker]
 
     def get_stock_financial_metadata(self, ticker):
-        return self.__financial_metadata[ticker]
+        return self.__financial_metadata.get(ticker, None)
 
     # --------------------------------------------------------------------------
     # Helper functions

@@ -107,16 +107,17 @@ class TestStockInfoContainer(TestCase):
 
         # Build test data
         test_data_builder = TestDataBuilder()
-        (container, expected_financial_metadata) = test_data_builder.build_financial_metadata()
+        (container, expected_financial_metadata_listmap) = test_data_builder.build_financial_metadata()
         actual_financial_metadata = container.get_stock_financial_metadata("AAPL")
+        actual_financial_metadata_datamap = actual_financial_metadata.get_latest()
 
         # Make assertions
-        self.assertEqual(expected_financial_metadata[0]["numberofsignificantvendors"],
-                         actual_financial_metadata[0]["numberofsignificantvendors"])
-        self.assertEqual(expected_financial_metadata[0]["currentstateandlocaltaxexpensebenefit"],
-                         actual_financial_metadata[0]["currentstateandlocaltaxexpensebenefit"])
-        self.assertEqual(expected_financial_metadata[0]["investmentincomeinterestanddividend"],
-                         actual_financial_metadata[0]["investmentincomeinterestanddividend"])
+        self.assertEqual(expected_financial_metadata_listmap[0]["numberofsignificantvendors"],
+                         actual_financial_metadata_datamap["numberofsignificantvendors"])
+        self.assertEqual(expected_financial_metadata_listmap[0]["currentstateandlocaltaxexpensebenefit"],
+                         actual_financial_metadata_datamap["currentstateandlocaltaxexpensebenefit"])
+        self.assertEqual(expected_financial_metadata_listmap[0]["investmentincomeinterestanddividend"],
+                         actual_financial_metadata_datamap["investmentincomeinterestanddividend"])
         self.assertIsNone(container.get_stock_financial_metadata("MSFT"))
 
         # Validate that the tickers were registered
@@ -225,6 +226,7 @@ class TestStockInfoContainer(TestCase):
 
 
     def test_get_stock_num_shares(self):
+
         # Build test data
         test_data_builder = TestDataBuilder()
         container = test_data_builder.build_simple_portfolio()

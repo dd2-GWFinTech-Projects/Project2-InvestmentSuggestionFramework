@@ -8,6 +8,8 @@ import requests
 import pandas as pd
 import requests
 from pathlib import Path
+import json
+
 
 from main.portfoliobuilder.PortfolioBuilder import PortfolioBuilder
 from main.datastructures.StockInfoContainer import StockInfoContainer
@@ -120,8 +122,9 @@ class TestDataBuilder:
 
     def build_financial_metadata(self):
         container = StockInfoContainer()
-        file_path = Path("data/fmpcloud_sample_aapl.json")
+        file_path = Path("../lib/data/fmpcloud_sample_aapl.json")
         with open(file_path, "r") as json_file:
-            expected_financial_metadata = json_file.read()
+            expected_financial_metadata_str = json_file.read()
+            expected_financial_metadata = json.loads(expected_financial_metadata_str)
             container.add_stock_financial_metadata("AAPL", expected_financial_metadata)
         return (container, expected_financial_metadata)
