@@ -47,9 +47,9 @@ class TestStockInfoContainer(TestCase):
         container.add_stock_score("AAPL", "price analysis", 0.8)
 
         # Assertions
-        score_info = container.get_stock_score("AAPL")
-        self.assertEqual("price analysis", score_info.get_analysis_source())
-        self.assertEqual(0.8, score_info.get_score())
+        score_info_list = container.get_stock_score_list("AAPL")
+        self.assertEqual("price analysis", score_info_list[0].get_analysis_source())
+        self.assertEqual(0.8, score_info_list[0].get_score())
 
         # Validate that the tickers were registered
         self.assertEqual(1, len(container.get_all_tickers()))
@@ -220,9 +220,9 @@ class TestStockInfoContainer(TestCase):
         container = test_data_builder.build_simple_scores()
 
         # Assertions
-        score_info = container.get_stock_score("AAPL")
-        self.assertEqual("price analysis", score_info.get_analysis_source())
-        self.assertEqual(0.8, score_info.get_score())
+        score_info = container.get_stock_score_list("AAPL")
+        self.assertEqual("price analysis", score_info[0].get_analysis_source())
+        self.assertEqual(0.8, score_info[0].get_score())
 
 
     def test_get_stock_num_shares(self):

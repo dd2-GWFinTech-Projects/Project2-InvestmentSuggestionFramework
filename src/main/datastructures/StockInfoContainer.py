@@ -34,7 +34,7 @@ class StockInfoContainer:
         self.__register_ticker(ticker)
         if not (ticker in self.__stock_score_map):
             self.__stock_score_map[ticker] = []
-        self.__stock_score_map[ticker].append(StockScore(score, analysis_source))
+        self.__stock_score_map[ticker].append(StockScore(ticker, score, analysis_source))
 
     def add_stock_to_portfolio(self, ticker, num_shares):
         self.__register_ticker(ticker)
@@ -77,14 +77,14 @@ class StockInfoContainer:
     # Getters - Individual stock data
     # --------------------------------------------------------------------------
 
-    def get_stock_score(self, ticker):
-        return self.__stock_score_map[ticker]
+    def get_stock_score_list(self, ticker):
+        return self.__stock_score_map.get(ticker, None)
 
     def get_stock_num_shares(self, ticker):
-        return self.__portfolio[ticker]
+        return self.__portfolio.get(ticker, None)
 
     def get_stock_price_history(self, ticker):
-        return self.__stock_price_history[ticker]
+        return self.__stock_price_history.get(ticker, None)
 
     def get_stock_financial_metadata(self, ticker):
         return self.__financial_metadata.get(ticker, None)

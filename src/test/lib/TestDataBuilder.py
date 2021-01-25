@@ -116,7 +116,7 @@ class TestDataBuilder:
             pd.Timestamp("01-02-2021", tz="America/New_York"),
             pd.Timestamp("01-03-2021", tz="America/New_York")
         ]
-        expected_stock_price_history = pd.DataFrame({"APPL": [100.0, 101.0, 102.3], "MSFT": [56.0, 56.2, 59.3]}, index=expected_index)
+        expected_stock_price_history = pd.DataFrame({"AAPL": [100.0, 101.0, 102.3], "MSFT": [56.0, 56.2, 59.3]}, index=expected_index)
         return (container, expected_index, expected_stock_price_history)
 
 
