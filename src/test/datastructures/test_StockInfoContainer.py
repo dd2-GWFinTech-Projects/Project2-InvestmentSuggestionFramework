@@ -69,7 +69,7 @@ class TestStockInfoContainer(TestCase):
         self.assertEqual(104, portfolio["TSLA"])
 
         # Validate that the tickers were registered
-        self.assertEqual(1, len(container.get_all_tickers()))
+        self.assertEqual(3, len(container.get_all_tickers()))
 
 
     def test_add_stock_price_history(self):
@@ -156,7 +156,7 @@ class TestStockInfoContainer(TestCase):
             "MSFT": "valuation analysis",
             "TSLA": "other analysis"
         }
-        self.assertEqual(3, all_scores_single_level)
+        self.assertEqual(3, len(all_scores_single_level))
         for actual_score_info in all_scores_single_level:
             ticker = actual_score_info.get_ticker()
             self.assertEqual(expected_analysis_methods[ticker], actual_score_info.get_analysis_source())
@@ -206,11 +206,11 @@ class TestStockInfoContainer(TestCase):
 
         # Make assertions
         self.assertEqual(expected_financial_metadata[0]["numberofsignificantvendors"],
-                         actual_financial_metadata["AAPL"][0]["numberofsignificantvendors"])
+                         actual_financial_metadata["AAPL"].get_latest()["numberofsignificantvendors"])
         self.assertEqual(expected_financial_metadata[0]["currentstateandlocaltaxexpensebenefit"],
-                         actual_financial_metadata["AAPL"]["currentstateandlocaltaxexpensebenefit"])
+                         actual_financial_metadata["AAPL"].get_latest()["currentstateandlocaltaxexpensebenefit"])
         self.assertEqual(expected_financial_metadata[0]["investmentincomeinterestanddividend"],
-                         actual_financial_metadata["AAPL"]["investmentincomeinterestanddividend"])
+                         actual_financial_metadata["AAPL"].get_latest()["investmentincomeinterestanddividend"])
 
 
     def test_get_stock_scores(self):
@@ -272,12 +272,12 @@ class TestStockInfoContainer(TestCase):
         (container, expected_financial_metadata) = test_data_builder.build_financial_metadata()
 
         # Assertions
-        financial_metadata__aapl = container.get_financial_metadata("AAPL")
+        financial_metadata__aapl = container.get_stock_financial_metadata("AAPL")
         self.assertEqual(expected_financial_metadata[0]["numberofsignificantvendors"],
-                         financial_metadata__aapl[0]["numberofsignificantvendors"])
+                         financial_metadata__aapl.get_latest()["numberofsignificantvendors"])
         self.assertEqual(expected_financial_metadata[0]["currentstateandlocaltaxexpensebenefit"],
-                         financial_metadata__aapl[0]["currentstateandlocaltaxexpensebenefit"])
+                         financial_metadata__aapl.get_latest()["currentstateandlocaltaxexpensebenefit"])
         self.assertEqual(expected_financial_metadata[0]["investmentincomeinterestanddividend"],
-                         financial_metadata__aapl[0]["investmentincomeinterestanddividend"])
+                         financial_metadata__aapl.get_latest()["investmentincomeinterestanddividend"])
 
         self.assertIsNone(container.get_stock_financial_metadata("MSFT"))
