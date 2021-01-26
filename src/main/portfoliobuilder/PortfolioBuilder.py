@@ -1,4 +1,4 @@
-
+from main.datastructures.StockShares import StockShares
 
 class PortfolioBuilder:
 
@@ -27,8 +27,11 @@ class PortfolioBuilder:
         stock_score_list = self.__sort_stock_score_list(stock_score_list)
 
         # Compute number of shares
-        stock_shares_list = self.__compute_shares(customer_metrics, stock_score_list)
-        return stock_shares_list
+        stock_info_container = self.__compute_shares(customer_metrics, stock_score_list, stock_info_container)
+        return stock_info_container
+
+
+    def transform_portfolio_to_str(self, portfolio):
         # Transform to string representation
 
 
@@ -96,7 +99,7 @@ class PortfolioBuilder:
         return score_list
 
 
-    def __compute_shares(self, customer_metrics, stock_score_list):
+    def __compute_shares(self, customer_metrics, stock_score_list, stock_info_container):
 
         total_nbr_shares = 400  #customer_metrics.investmentAmount
 
@@ -106,9 +109,10 @@ class PortfolioBuilder:
             total_score += stock_score.get_score()
 
         # Scale shares proportionally   #TODO this is wrong bc it does not take money into account
-        portfolio = {}
+        portfolio = []
         for stock_score in stock_score_list:
             num_shares = total_nbr_shares * stock_score.get_score() / total_score
-            portfolio[stock_score.get_ticker()] = num_shares
+            stock_ticker = stock_score.get_ticker()
+            portfolio[stock_score.get_ticker()] = StockShares(stock_ticker, num_shares)
 
         return portfolio

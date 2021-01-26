@@ -1,16 +1,12 @@
 
-class StockScore:
+class StockShares:
 
-    def __init__(self, ticker, score, analysis_source):
+    def __init__(self, ticker, num_shares):
         self.__ticker = ticker
-        self.__score = score
-        self.__analysis_source = analysis_source
+        self.__num_shares = num_shares
 
     def get_ticker(self):
         return self.__ticker
 
-    def get_score(self):
-        return self.__score
-
-    def get_analysis_source(self):
-        return self.__analysis_source
+    def get_num_shares(self):
+        return self.__num_shares
