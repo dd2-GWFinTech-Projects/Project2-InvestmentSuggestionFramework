@@ -226,7 +226,7 @@ def get_recommended_portfolio(investingDuration, investmentAmount, risk, investi
     price_getter.get_prices(stock_info_container, trailing_n_days=100)
 
     # Retrieve company financial information (and metadata)
-    balance_sheet_getter.get_financial_info(stock_info_container)
+    balance_sheet_getter.load_financial_info(stock_info_container)
 
     # Apply filter
     stock_filter.filter(stock_info_container)
