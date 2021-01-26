@@ -19,9 +19,9 @@ class TestValuationCalculator(TestCase):
         all_tickers = stock_info_container.get_all_tickers()
         self.assertEqual(3, len(all_tickers))
 
-        score_aapl = stock_info_container.get_stock_score_list("AAPL")[0]
-        score_bngo = stock_info_container.get_stock_score_list("BNGO")[0]
-        score_ciic = stock_info_container.get_stock_score_list("CIIC")[0]
+        score_aapl = stock_info_container.get_stock_raw_score_list("AAPL")[0]
+        score_bngo = stock_info_container.get_stock_raw_score_list("BNGO")[0]
+        score_ciic = stock_info_container.get_stock_raw_score_list("CIIC")[0]
 
         self.assertTrue(score_aapl.get_score() != 0)
         self.assertTrue(score_bngo.get_score() != 0)

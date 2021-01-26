@@ -1,4 +1,4 @@
-from main.datastructures.StockShares import StockShares
+
 
 class PortfolioBuilder:
 
@@ -31,27 +31,23 @@ class PortfolioBuilder:
         return stock_info_container
 
 
-    def transform_portfolio_to_str(self, portfolio):
+    def transform_portfolio_to_str(self, stock_info_container):
+
         # Transform to string representation
+        portfolio_str = ""
+        i = 0
+        for (stock_ticker, num_shares) in stock_info_container.get_portfolio().items():
+            if i > 0:
+                portfolio_str += " - "
+            portfolio_str += f"{stock_ticker} ({num_shares})"
+            i += 1
+
+        return portfolio_str
 
 
     def add_hedge_positions(self, stock_info_container):
         # TODO
         return stock_info_container
-
-
-    def transform_suggested_portfolio_str(self, portfolio):
-        recommendation_string = ""
-        i = 0
-        for share_count in portfolio:
-            ticker = share_count.ticker
-            nshares = share_count.score
-            if i > 0:
-                recommendation_string += " - "
-            recommendation_string += f"{ticker} ({nshares})"
-            i += 1
-
-        return recommendation_string
 
 
     # --------------------------------------------------------------------------
@@ -68,7 +64,7 @@ class PortfolioBuilder:
         portfolio_composite_score_counts = {}
 
         # Sum the weighted scores
-        for stock_score in stock_info_container.get_all_scores_single_level():
+        for stock_score in stock_info_container.get_all_raw_scores_single_level():
 
             stock_ticker = stock_score.get_ticker()
             score = stock_score.get_score()
@@ -109,10 +105,8 @@ class PortfolioBuilder:
             total_score += stock_score.get_score()
 
         # Scale shares proportionally   #TODO this is wrong bc it does not take money into account
-        portfolio = []
         for stock_score in stock_score_list:
             num_shares = total_nbr_shares * stock_score.get_score() / total_score
-            stock_ticker = stock_score.get_ticker()
-            portfolio[stock_score.get_ticker()] = StockShares(stock_ticker, num_shares)
+            stock_info_container.add_stock_to_portfolio(stock_score.get_ticker(), num_shares)
 
-        return portfolio
+        return stock_info_container

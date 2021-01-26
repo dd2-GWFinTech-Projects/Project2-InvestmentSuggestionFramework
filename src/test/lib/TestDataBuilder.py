@@ -41,14 +41,14 @@ class TestDataBuilder:
         stock_info_container.add_ticker("CIIC")
 
 
-    def build_container_stockscores(self, stock_info_container=None):
+    def build_container_raw_stockscores(self, stock_info_container=None):
         if stock_info_container is None:
             stock_info_container = StockInfoContainer()
-        stock_info_container.add_stock_score("AAPL", 0.95, "Price")
-        stock_info_container.add_stock_score("BNGO", 0.98, "Price")
-        stock_info_container.add_stock_score("AAPL", 0.85, "Valuation")
-        stock_info_container.add_stock_score("BNGO", 0.84, "Valuation")
-        stock_info_container.add_stock_score("CIIC", 0.30, "Price")
+        stock_info_container.add_stock_raw_score("AAPL", 0.95, "Price")
+        stock_info_container.add_stock_raw_score("BNGO", 0.98, "Price")
+        stock_info_container.add_stock_raw_score("AAPL", 0.85, "Valuation")
+        stock_info_container.add_stock_raw_score("BNGO", 0.84, "Valuation")
+        stock_info_container.add_stock_raw_score("CIIC", 0.30, "Price")
         return stock_info_container
 
 
@@ -111,12 +111,21 @@ class TestDataBuilder:
         return stock_info_container
 
 
-    def build_simple_scores(self, stock_info_container=None):
+    def build_simple_raw_scores(self, stock_info_container=None):
         if stock_info_container is None:
             stock_info_container = StockInfoContainer()
-        stock_info_container.add_stock_score("AAPL", 0.8, "price analysis")
-        stock_info_container.add_stock_score("MSFT", 0.6, "valuation analysis")
-        stock_info_container.add_stock_score("TSLA", 0.4, "other analysis")
+        stock_info_container.add_stock_raw_score("AAPL", 0.8, "price analysis")
+        stock_info_container.add_stock_raw_score("MSFT", 0.6, "valuation analysis")
+        stock_info_container.add_stock_raw_score("TSLA", 0.4, "other analysis")
+        return stock_info_container
+
+
+    def build_simple_composite_scores(self, stock_info_container=None):
+        if stock_info_container is None:
+            stock_info_container = StockInfoContainer()
+        stock_info_container.add_stock_composite_score("AAPL", 0.8)
+        stock_info_container.add_stock_composite_score("MSFT", 0.6)
+        stock_info_container.add_stock_composite_score("TSLA", 0.4)
         return stock_info_container
 
 

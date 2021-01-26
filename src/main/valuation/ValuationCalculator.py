@@ -59,7 +59,7 @@ class ValuationCalculator(AnalysisMethod):
             current_price = stock_price_history[stock_ticker].tail(1).iloc[0]
 
             score = self.__compute_score(current_price, valuation)
-            stock_info_container.add_stock_score(stock_ticker, score, self.__const_analysis_method + "." + analysis_submethod)
+            stock_info_container.add_stock_raw_score(stock_ticker, score, self.__const_analysis_method + "." + analysis_submethod)
 
         return stock_info_container
 
