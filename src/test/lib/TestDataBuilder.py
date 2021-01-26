@@ -102,38 +102,42 @@ class TestDataBuilder:
     # --------------------------------------------------------------------------
 
 
-    def build_simple_portfolio(self):
-        container = StockInfoContainer()
-        container.add_stock_to_portfolio("AAPL", 102)
-        container.add_stock_to_portfolio("MSFT", 103)
-        container.add_stock_to_portfolio("TSLA", 104)
-        return container
+    def build_simple_portfolio(self, stock_info_container=None):
+        if stock_info_container is None:
+            stock_info_container = StockInfoContainer()
+        stock_info_container.add_stock_to_portfolio("AAPL", 102)
+        stock_info_container.add_stock_to_portfolio("MSFT", 103)
+        stock_info_container.add_stock_to_portfolio("TSLA", 104)
+        return stock_info_container
 
 
-    def build_simple_scores(self):
-        container = StockInfoContainer()
-        container.add_stock_score("AAPL", 0.8, "price analysis")
-        container.add_stock_score("MSFT", 0.6, "valuation analysis")
-        container.add_stock_score("TSLA", 0.4, "other analysis")
-        return container
+    def build_simple_scores(self, stock_info_container=None):
+        if stock_info_container is None:
+            stock_info_container = StockInfoContainer()
+        stock_info_container.add_stock_score("AAPL", 0.8, "price analysis")
+        stock_info_container.add_stock_score("MSFT", 0.6, "valuation analysis")
+        stock_info_container.add_stock_score("TSLA", 0.4, "other analysis")
+        return stock_info_container
 
 
-    def build_stock_price_data(self):
-        container = StockInfoContainer()
+    def build_stock_price_data(self, stock_info_container=None):
+        if stock_info_container is None:
+            stock_info_container = StockInfoContainer()
         expected_index = [
             pd.Timestamp("01-01-2021", tz="America/New_York"),
             pd.Timestamp("01-02-2021", tz="America/New_York"),
             pd.Timestamp("01-03-2021", tz="America/New_York")
         ]
         expected_stock_price_history = pd.DataFrame({"AAPL": [100.0, 101.0, 102.3], "MSFT": [56.0, 56.2, 59.3]}, index=expected_index)
-        return (container, expected_index, expected_stock_price_history)
+        return (stock_info_container, expected_index, expected_stock_price_history)
 
 
-    def build_financial_metadata(self):
-        container = StockInfoContainer()
+    def build_financial_metadata(self, stock_info_container=None):
+        if stock_info_container is None:
+            stock_info_container = StockInfoContainer()
         file_path = Path("../lib/data/fmpcloud_sample_aapl.json")
         with open(file_path, "r") as json_file:
             expected_financial_metadata_str = json_file.read()
             expected_financial_metadata = json.loads(expected_financial_metadata_str)
-            container.add_stock_financial_metadata("AAPL", expected_financial_metadata)
-        return (container, expected_financial_metadata)
+            stock_info_container.add_stock_financial_metadata("AAPL", expected_financial_metadata)
+        return (stock_info_container, expected_financial_metadata)

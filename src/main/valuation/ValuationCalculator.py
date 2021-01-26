@@ -52,16 +52,16 @@ class ValuationCalculator(AnalysisMethod):
 
         for stock_ticker in stock_info_container.get_all_tickers():
 
-            stock_financial_metadata = stock_info_container.get_financial_metadata(stock_ticker)
+            stock_financial_metadata = stock_info_container.get_stock_financial_metadata(stock_ticker)
             analysis_submethod = self.__select_analysis_submethod(stock_financial_metadata)
 
             valuation = self.__compute_valuation(stock_financial_metadata, analysis_submethod)
             current_price = stock_price_history[stock_ticker].tail(1).iloc[0]
 
             score = self.__compute_score(current_price, valuation)
-            stock_info_container.add_stock_score(stock_ticker, self.__const_analysis_method + "." + analysis_submethod, score)
+            stock_info_container.add_stock_score(stock_ticker, score, self.__const_analysis_method + "." + analysis_submethod)
 
-        return None
+        return stock_info_container
 
     def __select_analysis_submethod(self, stock_financial_metadata):
         industry = stock_financial_metadata.get_industry()
@@ -82,8 +82,8 @@ class ValuationCalculator(AnalysisMethod):
             g = None
             return self.compute_value__dividend_discount_model(ticker, r, g)
         elif "DCF" == analysis_submethod:
-            ebitda_projection = []
-            wacc = None
+            ebitda_projection = [1e6, 1.2e6, 1.25e6]
+            wacc = 0.02
             return self.compute_value__dcf(ebitda_projection, wacc)
         elif "CapRateMarketModel" == analysis_submethod:  # Need cap rate; prefer real estate industry
             industry_multiples = None

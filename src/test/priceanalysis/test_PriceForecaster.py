@@ -8,11 +8,15 @@ class TestPriceForecaster(TestCase):
 
     def test_price_forecaster_analyze(self):
 
-        price_forecaster = PriceForecaster()
+        # Build test data
         test_data_builder = TestDataBuilder()
         stock_info_container = test_data_builder.build_container_price_history()
+
+        # Run the function
+        price_forecaster = PriceForecaster()
         price_forecaster.analyze(stock_info_container)
 
+        # Assertions
         score_aapl = stock_info_container.get_stock_score_list("AAPL")[0]
         score_bngo = stock_info_container.get_stock_score_list("BNGO")[0]
         score_ciic = stock_info_container.get_stock_score_list("CIIC")[0]
