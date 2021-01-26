@@ -44,7 +44,7 @@ class TestStockInfoContainer(TestCase):
 
         # Build test data
         container = StockInfoContainer()
-        container.add_stock_score("AAPL", "price analysis", 0.8)
+        container.add_stock_score("AAPL", 0.8, "price analysis")
 
         # Assertions
         score_info_list = container.get_stock_score_list("AAPL")

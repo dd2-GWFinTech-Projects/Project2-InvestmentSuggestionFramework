@@ -23,7 +23,7 @@ class StockInfoContainer:
         for ticker in ticker_list:
             self.__register_ticker(ticker)
 
-    def add_stock_score(self, ticker, analysis_source, score):
+    def add_stock_score(self, ticker, score, analysis_source):
         """
         Add StockInfo for a stock with a score metric.
         :param ticker:

@@ -6,7 +6,7 @@ from main.balancesheetgetter.BalanceSheetGetter import BalanceSheetGetter
 
 class TestBalanceSheetGetter(TestCase):
 
-    def test_get_financial_info(self):
+    def test_load_financial_info(self):
 
         # Build test data
         container = StockInfoContainer()
@@ -18,10 +18,9 @@ class TestBalanceSheetGetter(TestCase):
         balance_sheet_getter.load_financial_info(container)
 
         # Assertions
-        for stock_ticker in stock_ticker_list:
-            actual_financial_metadata = container.get_stock_financial_metadata(stock_ticker)
-            actual_financial_metadata_datamap = actual_financial_metadata.get_latest()
-            self.assertIsNotNone(actual_financial_metadata_datamap["numberofsignificantvendors"])
-            # TODO...not all stocks have shares outstanding in this report...
-            # self.assertIsNotNone(actual_financial_metadata_datamap["sharesoutstanding"])
-            # self.assertIsNotNone(actual_financial_metadata_datamap["longtermdebtcurrent"])
+        actual_financial_metadata = container.get_stock_financial_metadata("AAPL")
+        actual_financial_metadata_datamap = actual_financial_metadata.get_latest()
+        self.assertIsNotNone(actual_financial_metadata_datamap["incometaxreconciliationtaxcreditsresearch"])
+        actual_financial_metadata = container.get_stock_financial_metadata("BNGO")
+        actual_financial_metadata_datamap = actual_financial_metadata.get_latest()
+        self.assertIsNotNone(actual_financial_metadata_datamap["netincomeloss"])

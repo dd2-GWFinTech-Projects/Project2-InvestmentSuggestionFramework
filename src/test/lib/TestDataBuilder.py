@@ -112,9 +112,9 @@ class TestDataBuilder:
 
     def build_simple_scores(self):
         container = StockInfoContainer()
-        container.add_stock_score("AAPL", "price analysis", 0.8)
-        container.add_stock_score("MSFT", "valuation analysis", 0.6)
-        container.add_stock_score("TSLA", "other analysis", 0.4)
+        container.add_stock_score("AAPL", 0.8, "price analysis")
+        container.add_stock_score("MSFT", 0.6, "valuation analysis")
+        container.add_stock_score("TSLA", 0.4, "other analysis")
         return container
 
 
