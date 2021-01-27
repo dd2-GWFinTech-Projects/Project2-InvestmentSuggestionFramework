@@ -35,7 +35,7 @@ class TestPortfolioBuilder(TestCase):
         }
         for composite_score in composite_score_list:
             stock_ticker = composite_score.get_ticker()
-            self.assertEqual(expected_composite_scores[stock_ticker], composite_score.get_score())
+            self.assertAlmostEqual(expected_composite_scores[stock_ticker], composite_score.get_score(), 3)
 
         # Portfolio length assertions
         self.assertEqual(3, len(stock_info_container.get_all_tickers()))
