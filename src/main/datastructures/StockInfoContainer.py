@@ -20,6 +20,9 @@ class StockInfoContainer:
     def add_ticker(self, ticker):
         self.__register_ticker(ticker)
 
+    def remove_ticker(self, ticker):
+        self.__deregister_ticker(ticker)
+
     def add_ticker_list(self, ticker_list):
         for ticker in ticker_list:
             self.__register_ticker(ticker)
@@ -46,7 +49,7 @@ class StockInfoContainer:
         self.__portfolio[ticker] = num_shares
 
     def add_stock_price_history(self, stock_price_history):
-        for stock_ticker in stock_price_history.columns:
+        for stock_ticker in self.get_all_tickers():
             self.__register_ticker(stock_ticker)
         self.__stock_price_history = stock_price_history
 
@@ -106,3 +109,6 @@ class StockInfoContainer:
 
     def __register_ticker(self, ticker):
         self.__ticker_set.add(ticker)
+
+    def __deregister_ticker(self, ticker):
+        self.__ticker_set.remove(ticker)
