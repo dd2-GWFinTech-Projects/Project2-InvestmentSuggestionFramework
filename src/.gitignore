@@ -1,3 +1,6 @@
 # Ignoring local dependency package dir
 .package/
 
+# Ignoring build deployment package
+litquidity-chatbot.zip
+

@@ -14,8 +14,8 @@ class PriceGetter:
         self.__debug_level = debug_level
 
         # Set Alpaca API key and secret
-        self.__alpaca_api_key = os.getenv("ALPACA_API_KEY")
-        self.__alpaca_secret_key = os.getenv("ALPACA_SECRET_KEY")
+        self.__alpaca_api_key = "PKA0PKYDPIZRN5Q6EKE0"
+        self.__alpaca_secret_key = "pNS3zeDdHxV4r4rctUHqanoshaTILhySqRVMvsD4"
 
         # Create the Alpaca API object
         self.__alpaca = tradeapi.REST(self.__alpaca_api_key, self.__alpaca_secret_key, api_version="v2")

@@ -62,8 +62,8 @@ class TestDataBuilder:
     def build_container_price_history(self, stock_info_container=None):
         if stock_info_container is None:
             stock_info_container = StockInfoContainer()
-        self.__alpaca_api_key = os.getenv("ALPACA_API_KEY")
-        self.__alpaca_secret_key = os.getenv("ALPACA_SECRET_KEY")
+        self.__alpaca_api_key = "PKA0PKYDPIZRN5Q6EKE0"
+        self.__alpaca_secret_key = "pNS3zeDdHxV4r4rctUHqanoshaTILhySqRVMvsD4"
         self.__alpaca = tradeapi.REST(self.__alpaca_api_key, self.__alpaca_secret_key, api_version="v2")
         self.__fmp_cloud_key = '31853220bc5708a36155ca7f0481a5e0'
         now = pd.Timestamp.now(tz="America/New_York")
