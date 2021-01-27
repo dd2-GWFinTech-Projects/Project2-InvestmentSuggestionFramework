@@ -4,6 +4,7 @@ import pandas as pd
 from test.lib.TestDataBuilder import TestDataBuilder
 
 
+# NOTE: Fails unless run from this file due to reading data from relative directory.
 class TestStockInfoContainer(TestCase):
 
 

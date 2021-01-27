@@ -55,12 +55,23 @@ class TestPortfolioBuilder(TestCase):
     def test_add_hedge_positions(self):
         self.fail()
 
-    def test_transform_portfolio_to_str(self):
-        self.fail()
 
-        # portfolio_expected = "TSLA (100) - AAPL (100) - BNGO (100)"
-        # self.assertEqual(portfolio_expected, portfolio_actual)
-    #
+    def test_transform_portfolio_to_str(self):
+
+        # Build test data
+        test_data_builder = TestDataBuilder()
+        customer_metrics = test_data_builder.build_customer_metrics()
+        stock_info_container = StockInfoContainer()
+        self.__build_container(stock_info_container)
+        portfolio_builder = PortfolioBuilder()
+        portfolio_builder.build_suggested_portfolio(customer_metrics, stock_info_container)
+
+        # Run the function
+        actual_portfolio_str = portfolio_builder.transform_portfolio_to_str(stock_info_container)
+        expected_portfolio_regex = r"TSLA \([0-9.-]+\) - AAPL \([0-9.-]+\) - BNGO \([0-9.-]+\)"
+        self.assertRegex(actual_portfolio_str, expected_portfolio_regex)
+        # self.assertEqual(expected_portfolio_str, actual_portfolio_str)
+
 
     # --------------------------------------------------------------------------
     # Helpers

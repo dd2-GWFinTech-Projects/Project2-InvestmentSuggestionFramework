@@ -245,7 +245,7 @@ def get_recommended_portfolio(investingDuration, investmentAmount, risk, investi
 
     # Generate string portfolio representation
     suggested_portfolio = stock_info_container.get_portfolio()
-    return portfolio_builder.transform_suggested_portfolio_str(suggested_portfolio)
+    return portfolio_builder.transform_portfolio_to_str(suggested_portfolio)
 
 
 # Service functions
