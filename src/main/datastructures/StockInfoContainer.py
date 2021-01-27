@@ -7,7 +7,8 @@ class StockInfoContainer:
 
     def __init__(self):
         self.__ticker_set = set()
-        self.__stock_score_map = {}
+        self.__stock_raw_score_map = {}
+        self.__stock_composite_score_map = {}
         self.__portfolio = {}
         self.__stock_price_history = pd.DataFrame()
         self.__financial_metadata = {}
@@ -23,7 +24,7 @@ class StockInfoContainer:
         for ticker in ticker_list:
             self.__register_ticker(ticker)
 
-    def add_stock_score(self, ticker, analysis_source, score):
+    def add_stock_raw_score(self, ticker, score, analysis_source):
         """
         Add StockInfo for a stock with a score metric.
         :param ticker:
@@ -32,9 +33,13 @@ class StockInfoContainer:
         :return:
         """
         self.__register_ticker(ticker)
-        if not (ticker in self.__stock_score_map):
-            self.__stock_score_map[ticker] = []
-        self.__stock_score_map[ticker].append(StockScore(ticker, score, analysis_source))
+        if not (ticker in self.__stock_raw_score_map):
+            self.__stock_raw_score_map[ticker] = []
+        self.__stock_raw_score_map[ticker].append(StockScore(ticker, score, analysis_source))
+
+    def add_stock_composite_score(self, ticker, composite_score):
+        self.__register_ticker(ticker)
+        self.__stock_composite_score_map[ticker] = StockScore(ticker, composite_score, "Composite")
 
     def add_stock_to_portfolio(self, ticker, num_shares):
         self.__register_ticker(ticker)
@@ -56,13 +61,16 @@ class StockInfoContainer:
     def get_all_tickers(self):
         return list(self.__ticker_set)
 
-    def get_all_scores_single_level(self):
+    def get_all_raw_scores_single_level(self):
         """
         Expose stock score objects in a flat list.
         :return:
         """
-        values_nested_list = self.__stock_score_map.values()
+        values_nested_list = self.__stock_raw_score_map.values()
         return [item for sublist in values_nested_list for item in sublist]
+
+    def get_all_composite_scores_single_level(self):
+        return list(self.__stock_composite_score_map.values())
 
     def get_portfolio(self):
         return self.__portfolio
@@ -77,8 +85,11 @@ class StockInfoContainer:
     # Getters - Individual stock data
     # --------------------------------------------------------------------------
 
-    def get_stock_score_list(self, ticker):
-        return self.__stock_score_map.get(ticker, None)
+    def get_stock_raw_score_list(self, ticker):
+        return self.__stock_raw_score_map.get(ticker, None)
+
+    def get_stock_composite_score(self, ticker):
+        return self.__stock_composite_score_map.get(ticker, None)
 
     def get_stock_num_shares(self, ticker):
         return self.__portfolio.get(ticker, None)

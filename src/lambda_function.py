@@ -1,12 +1,12 @@
 ### Required Libraries ###
 from main.pricegetter.PriceGetter import PriceGetter
-from main.balancesheetgetter import BalanceSheetGetter
+from main.balancesheetgetter.BalanceSheetGetter import BalanceSheetGetter
 from main.stockfilter.StockFilter import StockFilter
 from main.priceanalysis.PriceForecaster import PriceForecaster
 from main.valuation.ValuationCalculator import ValuationCalculator
-from main.portfoliobuilder import PortfolioBuilder
-from main.datastructures import CustomerMetrics
-from main.datastructures import StockInfoContainer
+from main.portfoliobuilder.PortfolioBuilder import PortfolioBuilder
+from main.datastructures.CustomerMetrics import CustomerMetrics
+from main.datastructures.StockInfoContainer import StockInfoContainer
 
 
 ### Main Handler ###
@@ -226,7 +226,7 @@ def get_recommended_portfolio(investingDuration, investmentAmount, risk, investi
     price_getter.get_prices(stock_info_container, trailing_n_days=100)
 
     # Retrieve company financial information (and metadata)
-    balance_sheet_getter.get_financial_info(stock_info_container)
+    balance_sheet_getter.load_financial_info(stock_info_container)
 
     # Apply filter
     stock_filter.filter(stock_info_container)
@@ -245,7 +245,7 @@ def get_recommended_portfolio(investingDuration, investmentAmount, risk, investi
 
     # Generate string portfolio representation
     suggested_portfolio = stock_info_container.get_portfolio()
-    return portfolio_builder.transform_suggested_portfolio_str(suggested_portfolio)
+    return portfolio_builder.transform_portfolio_to_str(suggested_portfolio)
 
 
 # Service functions

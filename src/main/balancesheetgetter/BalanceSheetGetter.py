@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 import requests
 from ..datastructures.StockInfoContainer import StockInfoContainer
+import json
 
 
 class BalanceSheetGetter:
@@ -14,19 +15,20 @@ class BalanceSheetGetter:
         self.__fmp_cloud_key = 'd62b3ac01083146edd0acaa71d57074a'
 
 
-    def get_financial_info(self, stock_info_container):
+    def load_financial_info(self, stock_info_container):
 
         for stock_ticker in stock_info_container.get_all_tickers():
             try:
                 stock_financial_metadata_str = requests.get(f"https://fmpcloud.io/api/v3/financial-statement-full-as-reported/{stock_ticker}?apikey={self.__fmp_cloud_key}")
                 # TODO Other requests for auxilliary data?
+                stock_financial_metadata_json = json.loads(stock_financial_metadata_str.content)
+                stock_financial_metadata = self.__process_stock_financial_metadata_json(stock_financial_metadata_json)
+                stock_info_container.add_stock_financial_metadata(stock_ticker, stock_financial_metadata)
             except:
                 continue
-            stock_financial_metadata_json = stock_financial_metadata_str.json()
-            stock_financial_metadata = self.__process_stock_financial_metadata_json(stock_financial_metadata_json)
-            stock_info_container.add_stock_financial_metadata(stock_ticker, stock_financial_metadata)
 
         return stock_info_container
+
 
     # --------------------------------------------------------------------------
     # Helpers

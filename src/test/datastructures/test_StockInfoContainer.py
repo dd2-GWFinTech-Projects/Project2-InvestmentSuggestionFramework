@@ -4,6 +4,7 @@ import pandas as pd
 from test.lib.TestDataBuilder import TestDataBuilder
 
 
+# NOTE: Fails unless run from this file due to reading data from relative directory.
 class TestStockInfoContainer(TestCase):
 
 
@@ -40,16 +41,31 @@ class TestStockInfoContainer(TestCase):
         self.assertEqual(3, len(all_tickers))
 
 
-    def test_add_stock_score(self):
+    def test_add_stock_raw_score(self):
 
         # Build test data
         container = StockInfoContainer()
-        container.add_stock_score("AAPL", "price analysis", 0.8)
+        container.add_stock_raw_score("AAPL", 0.8, "price analysis")
 
         # Assertions
-        score_info_list = container.get_stock_score_list("AAPL")
+        score_info_list = container.get_stock_raw_score_list("AAPL")
         self.assertEqual("price analysis", score_info_list[0].get_analysis_source())
         self.assertEqual(0.8, score_info_list[0].get_score())
+
+        # Validate that the tickers were registered
+        self.assertEqual(1, len(container.get_all_tickers()))
+
+
+    def test_add_stock_composite_score(self):
+
+        # Build test data
+        container = StockInfoContainer()
+        container.add_stock_composite_score("AAPL", 0.8)
+
+        # Assertions
+        score_info = container.get_stock_composite_score("AAPL")
+        self.assertEqual("Composite", score_info.get_analysis_source())
+        self.assertEqual(0.8, score_info.get_score())
 
         # Validate that the tickers were registered
         self.assertEqual(1, len(container.get_all_tickers()))
@@ -138,14 +154,14 @@ class TestStockInfoContainer(TestCase):
             self.assertTrue(ticker in set(all_tickers))
 
 
-    def test_get_all_scores_single_level(self):
+    def test_get_all_raw_scores_single_level(self):
 
         # Build test data
         test_data_builder = TestDataBuilder()
-        container = test_data_builder.build_simple_scores()
+        container = test_data_builder.build_simple_raw_scores()
 
         # Assertions
-        all_scores_single_level = container.get_all_scores_single_level()
+        all_scores_single_level = container.get_all_raw_scores_single_level()
         expected_scores = {
             "AAPL": 0.8,
             "MSFT": 0.6,
@@ -160,6 +176,26 @@ class TestStockInfoContainer(TestCase):
         for actual_score_info in all_scores_single_level:
             ticker = actual_score_info.get_ticker()
             self.assertEqual(expected_analysis_methods[ticker], actual_score_info.get_analysis_source())
+            self.assertEqual(expected_scores[ticker], actual_score_info.get_score())
+
+
+    def test_get_all_composite_scores_single_level(self):
+
+        # Build test data
+        test_data_builder = TestDataBuilder()
+        container = test_data_builder.build_simple_composite_scores()
+
+        # Assertions
+        all_scores_single_level = container.get_all_composite_scores_single_level()
+        expected_scores = {
+            "AAPL": 0.8,
+            "MSFT": 0.6,
+            "TSLA": 0.4
+        }
+        self.assertEqual(3, len(all_scores_single_level))
+        for actual_score_info in all_scores_single_level:
+            ticker = actual_score_info.get_ticker()
+            self.assertEqual("Composite", actual_score_info.get_analysis_source())
             self.assertEqual(expected_scores[ticker], actual_score_info.get_score())
 
 
@@ -213,16 +249,28 @@ class TestStockInfoContainer(TestCase):
                          actual_financial_metadata["AAPL"].get_latest()["investmentincomeinterestanddividend"])
 
 
-    def test_get_stock_scores(self):
+    def test_get_stock_raw_scores(self):
 
         # Build test data
         test_data_builder = TestDataBuilder()
-        container = test_data_builder.build_simple_scores()
+        container = test_data_builder.build_simple_raw_scores()
 
         # Assertions
-        score_info = container.get_stock_score_list("AAPL")
+        score_info = container.get_stock_raw_score_list("AAPL")
         self.assertEqual("price analysis", score_info[0].get_analysis_source())
         self.assertEqual(0.8, score_info[0].get_score())
+
+
+    def test_get_stock_composite_scores(self):
+
+        # Build test data
+        test_data_builder = TestDataBuilder()
+        container = test_data_builder.build_simple_composite_scores()
+
+        # Assertions
+        score_info = container.get_stock_composite_score("AAPL")
+        self.assertEqual("Composite", score_info.get_analysis_source())
+        self.assertEqual(0.8, score_info.get_score())
 
 
     def test_get_stock_num_shares(self):

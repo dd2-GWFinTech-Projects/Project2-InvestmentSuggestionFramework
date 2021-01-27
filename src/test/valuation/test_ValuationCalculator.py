@@ -6,23 +6,30 @@ class TestValuationCalculator(TestCase):
 
     def test_valuation_calculator_analyze(self):
 
-        valuation_calculator = ValuationCalculator()
+        # Build test data
         test_helper = TestDataBuilder()
         stock_info_container = test_helper.build_container_financial_metadata()
         stock_info_container = test_helper.build_container_price_history(stock_info_container)
+
+        # Run the function
+        valuation_calculator = ValuationCalculator()
         valuation_calculator.analyze(stock_info_container)
 
+        # Assertions
         all_tickers = stock_info_container.get_all_tickers()
-        self.assertEqual(3, all_tickers)
+        self.assertEqual(3, len(all_tickers))
 
-        all_financial_metadata = stock_info_container.get_all_financial_metadata()
+        score_aapl = stock_info_container.get_stock_raw_score_list("AAPL")[0]
+        score_bngo = stock_info_container.get_stock_raw_score_list("BNGO")[0]
+        score_ciic = stock_info_container.get_stock_raw_score_list("CIIC")[0]
 
-        # self.assertTrue(score_appl.get_score() != 0)
-        # self.assertTrue(score_tsla.get_score() != 0)
-        # self.assertTrue(score_msft.get_score() != 0)
-        # self.assertEqual("PriceForecasting.ARMA", score_appl.get_analysis_source())
-        # self.assertEqual("PriceForecasting.ARMA", score_tsla.get_analysis_source())
-        # self.assertEqual("PriceForecasting.ARMA", score_msft.get_analysis_source())
+        self.assertTrue(score_aapl.get_score() != 0)
+        self.assertTrue(score_bngo.get_score() != 0)
+        self.assertTrue(score_ciic.get_score() != 0)
+
+        self.assertEqual("Valuation.DCF", score_aapl.get_analysis_source())
+        self.assertEqual("Valuation.DCF", score_bngo.get_analysis_source())
+        self.assertEqual("Valuation.DCF", score_ciic.get_analysis_source())
 
 
     # def test_compute_value__dcf(self):

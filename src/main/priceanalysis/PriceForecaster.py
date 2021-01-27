@@ -125,7 +125,7 @@ class PriceForecaster(AnalysisMethod):
             last_actual_value = stock_price_history[stock_ticker].tail(1).iloc[0]
             last_predicted_value = predicted_values[stock_ticker].tail(1).iloc[0]
             score = self.__compute_score_from_prediction_scalar(last_actual_value, last_predicted_value)
-            stock_info_container.add_stock_score(stock_ticker, score, self.__const_analysis_method + "." + sub_analysis_method_str)
+            stock_info_container.add_stock_raw_score(stock_ticker, score, self.__const_analysis_method + "." + sub_analysis_method_str)
         return stock_info_container
 
 

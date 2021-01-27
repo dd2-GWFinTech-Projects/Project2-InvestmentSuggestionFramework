@@ -23,13 +23,26 @@ class PortfolioBuilder:
         """
 
         # Compute composite score and sort
-        stock_score_list = self.__compute_composite_scores(customer_metrics, stock_info_container)
-        stock_score_list = self.__sort_stock_score_list(stock_score_list)
+        self.__compute_composite_scores(customer_metrics, stock_info_container)
+        stock_score_list = self.__sort_stock_score_list(stock_info_container)
 
         # Compute number of shares
-        stock_shares_list = self.__compute_shares(customer_metrics, stock_score_list)
-        return stock_shares_list
+        stock_info_container = self.__compute_shares(customer_metrics, stock_score_list, stock_info_container)
+        return stock_info_container
+
+
+    def transform_portfolio_to_str(self, stock_info_container):
+
         # Transform to string representation
+        portfolio_str = ""
+        i = 0
+        for (stock_ticker, num_shares) in stock_info_container.get_portfolio().items():
+            if i > 0:
+                portfolio_str += " - "
+            portfolio_str += f"{stock_ticker} ({num_shares})"
+            i += 1
+
+        return portfolio_str
 
 
     def add_hedge_positions(self, stock_info_container):
@@ -37,59 +50,68 @@ class PortfolioBuilder:
         return stock_info_container
 
 
-    def transform_suggested_portfolio_str(self, portfolio):
-        recommendation_string = ""
-        i = 0
-        for share_count in portfolio:
-            ticker = share_count.ticker
-            nshares = share_count.score
-            if i > 0:
-                recommendation_string += " - "
-            recommendation_string += f"{ticker} ({nshares})"
-            i += 1
-
-        return recommendation_string
-
-
     # --------------------------------------------------------------------------
     # Helpers
     # --------------------------------------------------------------------------
 
 
-    def __compute_composite_scores(self, customer_metrics, stock_score_container):
-        return stock_score_container
-        # portfolio_composite_scores = {}
-        # for analysis_source in stock_score_container.stock_info_map.keys():
-        #
-        #     w = self.__weighting[analysis_source]
-        #
-        #     # Accumulate raw scores across all analysis methods
-        #     for stock_score in stock_score_container.stock_info_map[analysis_source]:
-        #         ticker = stock_score.ticker
-        #         raw_score = stock_score.score
-        #         if not (ticker in portfolio_composite_scores):
-        #             portfolio_composite_scores[ticker] = StockInfo(ticker, w * raw_score)
-        #         else:
-        #             old_score = portfolio_composite_scores[ticker]
-        #             portfolio_composite_scores[ticker] = StockInfo(ticker, w * raw_score + old_score.score)
-        #
-        # # Sort
-        # return list(portfolio_composite_scores.values())
+    def __compute_composite_scores(self, customer_metrics, stock_info_container):
+
+        # Number of raw scores used to compute composite
+        portfolio_composite_score_counts = {}
+
+        # Sum the weighted scores
+        for stock_score in stock_info_container.get_all_raw_scores_single_level():
+
+            stock_ticker = stock_score.get_ticker()
+            raw_score = stock_score.get_score()
+            analysis_source = stock_score.get_analysis_source()
+            w = self.__weighting[analysis_source]
+
+            # Initialize dictionaries
+            if stock_info_container.get_stock_composite_score(stock_ticker) is None:
+                stock_info_container.add_stock_composite_score(stock_ticker, 0.0)
+            if not (stock_ticker in portfolio_composite_score_counts):
+                portfolio_composite_score_counts[stock_ticker] = 0
+
+            # Add scores
+            current_composite_score = stock_info_container.get_stock_composite_score(stock_ticker).get_score()
+            new_score = current_composite_score + w * raw_score
+            stock_info_container.add_stock_composite_score(stock_ticker, new_score)
+            portfolio_composite_score_counts[stock_ticker] += 1
+
+        # Average over the number of analysis methods
+        for composite_score in stock_info_container.get_all_composite_scores_single_level():
+            stock_ticker = composite_score.get_ticker()
+            current_composite_score = composite_score.get_score()
+            new_score = current_composite_score / portfolio_composite_score_counts[stock_ticker]
+            stock_info_container.add_stock_composite_score(stock_ticker, new_score)
+
+        return stock_info_container
 
 
-    def __sort_stock_score_list(self, score_list):
+    def __sort_stock_score_list(self, stock_info_container):
+
         def score_sort(stock_score):
-            return stock_score.score
+            return stock_score.get_score()
+
+        score_list = stock_info_container.get_all_composite_scores_single_level()
         score_list.sort(reverse=True, key=score_sort)
         return score_list
 
 
-    def __compute_shares(self, customer_metrics, stock_score_list):
-        # TODO Calculate price * nshares to equal investment
-        total_nbr_shares = 400 #customer_metrics.investmentAmount
-        stock_shares_list = []
-        # for stock_score in stock_score_list:
-        #     ticker = stock_score.ticker
-        #     score = stock_score.score
-        #     stock_shares_list.append(StockInfo(ticker, 100))
-        return stock_shares_list
+    def __compute_shares(self, customer_metrics, stock_score_list, stock_info_container):
+
+        total_nbr_shares = 400  #customer_metrics.investmentAmount
+
+        # Compute total score
+        total_score = 0.0
+        for stock_score in stock_score_list:
+            total_score += stock_score.get_score()
+
+        # Scale shares proportionally   #TODO this is wrong bc it does not take money into account
+        for stock_score in stock_score_list:
+            num_shares = total_nbr_shares * stock_score.get_score() / total_score
+            stock_info_container.add_stock_to_portfolio(stock_score.get_ticker(), num_shares)
+
+        return stock_info_container

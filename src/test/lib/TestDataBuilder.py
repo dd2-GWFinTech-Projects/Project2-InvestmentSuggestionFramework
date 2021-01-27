@@ -17,13 +17,21 @@ from main.datastructures.CustomerMetrics import CustomerMetrics
 
 class TestDataBuilder:
 
+
     def __init__(self, debug_level=0):
         self.debug_level = debug_level
         self.__fmp_cloud_key = 'd62b3ac01083146edd0acaa71d57074a'
 
+
+    # --------------------------------------------------------------------------
+    # Integration Test Helpers
+    # --------------------------------------------------------------------------
+
+
     def build_customer_metrics(self):
         customer_metrics = CustomerMetrics("Long", 5000, "Medium", "Intermediate")
         return customer_metrics
+
 
     def build_container_stocktickers(self, stock_info_container=None):
         if stock_info_container is None:
@@ -32,15 +40,17 @@ class TestDataBuilder:
         stock_info_container.add_ticker("BNGO")
         stock_info_container.add_ticker("CIIC")
 
-    def build_container_stockscores(self, stock_info_container=None):
+
+    def build_container_raw_stockscores(self, stock_info_container=None):
         if stock_info_container is None:
             stock_info_container = StockInfoContainer()
-        stock_info_container.add_stock_score("AAPL", 0.95, "Price")
-        stock_info_container.add_stock_score("BNGO", 0.98, "Price")
-        stock_info_container.add_stock_score("AAPL", 0.85, "Valuation")
-        stock_info_container.add_stock_score("BNGO", 0.84, "Valuation")
-        stock_info_container.add_stock_score("CIIC", 0.30, "Price")
+        stock_info_container.add_stock_raw_score("AAPL", 0.95, "Price")
+        stock_info_container.add_stock_raw_score("BNGO", 0.98, "Price")
+        stock_info_container.add_stock_raw_score("AAPL", 0.85, "Valuation")
+        stock_info_container.add_stock_raw_score("BNGO", 0.84, "Valuation")
+        stock_info_container.add_stock_raw_score("CIIC", 0.30, "Price")
         return stock_info_container
+
 
     def build_container_portfolio(self, stock_info_container=None):
         if stock_info_container is None:
@@ -68,6 +78,7 @@ class TestDataBuilder:
         stock_info_container.add_stock_price_history(stock_closing_prices_df)
         return stock_info_container
 
+
     def build_container_financial_metadata(self, stock_info_container=None):
         if stock_info_container is None:
             stock_info_container = StockInfoContainer()
@@ -86,45 +97,56 @@ class TestDataBuilder:
         return stock_info_container
 
 
-
-
     # --------------------------------------------------------------------------
     # StockInfoContainer Helpers
     # --------------------------------------------------------------------------
 
 
-    def build_simple_portfolio(self):
-        container = StockInfoContainer()
-        container.add_stock_to_portfolio("AAPL", 102)
-        container.add_stock_to_portfolio("MSFT", 103)
-        container.add_stock_to_portfolio("TSLA", 104)
-        return container
+    def build_simple_portfolio(self, stock_info_container=None):
+        if stock_info_container is None:
+            stock_info_container = StockInfoContainer()
+        stock_info_container.add_stock_to_portfolio("AAPL", 102)
+        stock_info_container.add_stock_to_portfolio("MSFT", 103)
+        stock_info_container.add_stock_to_portfolio("TSLA", 104)
+        return stock_info_container
 
 
-    def build_simple_scores(self):
-        container = StockInfoContainer()
-        container.add_stock_score("AAPL", "price analysis", 0.8)
-        container.add_stock_score("MSFT", "valuation analysis", 0.6)
-        container.add_stock_score("TSLA", "other analysis", 0.4)
-        return container
+    def build_simple_raw_scores(self, stock_info_container=None):
+        if stock_info_container is None:
+            stock_info_container = StockInfoContainer()
+        stock_info_container.add_stock_raw_score("AAPL", 0.8, "price analysis")
+        stock_info_container.add_stock_raw_score("MSFT", 0.6, "valuation analysis")
+        stock_info_container.add_stock_raw_score("TSLA", 0.4, "other analysis")
+        return stock_info_container
 
 
-    def build_stock_price_data(self):
-        container = StockInfoContainer()
+    def build_simple_composite_scores(self, stock_info_container=None):
+        if stock_info_container is None:
+            stock_info_container = StockInfoContainer()
+        stock_info_container.add_stock_composite_score("AAPL", 0.8)
+        stock_info_container.add_stock_composite_score("MSFT", 0.6)
+        stock_info_container.add_stock_composite_score("TSLA", 0.4)
+        return stock_info_container
+
+
+    def build_stock_price_data(self, stock_info_container=None):
+        if stock_info_container is None:
+            stock_info_container = StockInfoContainer()
         expected_index = [
             pd.Timestamp("01-01-2021", tz="America/New_York"),
             pd.Timestamp("01-02-2021", tz="America/New_York"),
             pd.Timestamp("01-03-2021", tz="America/New_York")
         ]
         expected_stock_price_history = pd.DataFrame({"AAPL": [100.0, 101.0, 102.3], "MSFT": [56.0, 56.2, 59.3]}, index=expected_index)
-        return (container, expected_index, expected_stock_price_history)
+        return (stock_info_container, expected_index, expected_stock_price_history)
 
 
-    def build_financial_metadata(self):
-        container = StockInfoContainer()
+    def build_financial_metadata(self, stock_info_container=None):
+        if stock_info_container is None:
+            stock_info_container = StockInfoContainer()
         file_path = Path("../lib/data/fmpcloud_sample_aapl.json")
         with open(file_path, "r") as json_file:
             expected_financial_metadata_str = json_file.read()
             expected_financial_metadata = json.loads(expected_financial_metadata_str)
-            container.add_stock_financial_metadata("AAPL", expected_financial_metadata)
-        return (container, expected_financial_metadata)
+            stock_info_container.add_stock_financial_metadata("AAPL", expected_financial_metadata)
+        return (stock_info_container, expected_financial_metadata)
