@@ -1,0 +1,3 @@
+# Ignoring local dependency package dir
+.package/
+
