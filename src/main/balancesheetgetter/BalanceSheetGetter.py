@@ -3,6 +3,7 @@ import pandas as pd
 import requests
 from ..datastructures.StockInfoContainer import StockInfoContainer
 import json
+from main.lib.tools.DataListMapLoader import DataListMapLoader
 
 
 class BalanceSheetGetter:
@@ -11,8 +12,23 @@ class BalanceSheetGetter:
     def __init__(self, debug_level=0):
         self.__debug_level = 0
 
-        # Fmp Cloud API Key
+        # Fmp Cloud variables
         self.__fmp_cloud_key = 'd62b3ac01083146edd0acaa71d57074a'
+        self.__data_url_list = [
+            [ "https://fmpcloud.io/api/v3/income-statement/", "?limit=120&apikey=" ],
+            [ "https://fmpcloud.io/api/v3/balance-sheet-statement/", "?limit=120&apikey=" ],
+            [ "https://fmpcloud.io/api/v3/cash-flow-statement/", "?limit=120&apikey=" ],
+            [ "https://fmpcloud.io/api/v3/income-statement-as-reported/", "?limit=10&apikey=" ],
+            [ "https://fmpcloud.io/api/v3/balance-sheet-statement-as-reported/", "?limit=10&apikey=" ],
+            [ "https://fmpcloud.io/api/v3/cash-flow-statement-as-reported/", "?limit=10&apikey=" ],
+            [ "https://fmpcloud.io/api/v3/financial-statement-full-as-reported/", "?apikey=" ],
+            [ "https://fmpcloud.io/api/v3/ratios/", "?limit=40&apikey=" ],
+            [ "https://fmpcloud.io/api/v3/key-metrics/", "?limit=40&apikey=" ],
+            [ "https://fmpcloud.io/api/v3/financial-growth/", "?limit=20&apikey=" ],
+            [ "https://fmpcloud.io/api/v3/market-capitalization/", "?apikey=" ],
+            [ "https://fmpcloud.io/api/v3/discounted-cash-flow/", "?apikey=" ]
+        ]
+        self.__data_list_map_loader = DataListMapLoader()
 
 
     def load_financial_info(self, stock_info_container):
