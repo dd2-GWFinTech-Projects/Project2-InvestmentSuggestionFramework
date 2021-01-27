@@ -23,9 +23,8 @@ class PriceForecaster(AnalysisMethod):
         self.__const_analysis_method = "PriceForecasting"
 
         # Load environment variables
-        load_dotenv()
-        self.__kraken_public_key = os.getenv("KRAKEN_API_KEY")
-        self.__kraken_secret_key = os.getenv("KRAKEN_SECRET_KEY")
+        self.__kraken_public_key = "/v0eRFBimcTXNmjv5vUdNlppVKdcdlWCvxFNubBSmnlkttijwqwodoyM"
+        self.__kraken_secret_key = "Ca2phfU4uhOBSveZTnFTHMQfEAf23Ng2Ojvu71IhijHMxpPsWClFXv59lCcw5kcqOqkcGT9GsM2Sa+Mje45mtA=="
 
 
     def analyze(self, stock_info_container):
