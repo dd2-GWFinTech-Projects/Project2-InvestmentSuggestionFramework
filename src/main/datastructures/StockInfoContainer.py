@@ -39,9 +39,7 @@ class StockInfoContainer:
 
     def add_stock_composite_score(self, ticker, composite_score):
         self.__register_ticker(ticker)
-        if not (ticker in self.__stock_composite_score_map):
-            self.__stock_composite_score_map[ticker] = []
-        self.__stock_composite_score_map[ticker].append(StockScore(ticker, composite_score, "Composite"))
+        self.__stock_composite_score_map[ticker] = StockScore(ticker, composite_score, "Composite")
 
     def add_stock_to_portfolio(self, ticker, num_shares):
         self.__register_ticker(ticker)
@@ -72,12 +70,7 @@ class StockInfoContainer:
         return [item for sublist in values_nested_list for item in sublist]
 
     def get_all_composite_scores_single_level(self):
-        """
-        Expose stock score objects in a flat list.
-        :return:
-        """
-        values_nested_list = self.__stock_composite_score_map.values()
-        return [item for sublist in values_nested_list for item in sublist]
+        return list(self.__stock_composite_score_map.values())
 
     def get_portfolio(self):
         return self.__portfolio
@@ -95,7 +88,7 @@ class StockInfoContainer:
     def get_stock_raw_score_list(self, ticker):
         return self.__stock_raw_score_map.get(ticker, None)
 
-    def get_stock_composite_score_list(self, ticker):
+    def get_stock_composite_score(self, ticker):
         return self.__stock_composite_score_map.get(ticker, None)
 
     def get_stock_num_shares(self, ticker):

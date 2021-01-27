@@ -8,6 +8,11 @@ from test.lib.TestDataBuilder import TestDataBuilder
 class TestPortfolioBuilder(TestCase):
 
 
+    # --------------------------------------------------------------------------
+    # Interface Tests
+    # --------------------------------------------------------------------------
+
+
     def test_build_suggested_portfolio(self):
 
         # Build test data
@@ -20,12 +25,24 @@ class TestPortfolioBuilder(TestCase):
         portfolio_builder = PortfolioBuilder()
         portfolio_builder.build_suggested_portfolio(customer_metrics, stock_info_container)
 
-        # Length assertions
+        # Composite score assertions
+        composite_score_list = stock_info_container.get_all_composite_scores_single_level()
+        self.assertEqual(3, len(composite_score_list))
+        expected_composite_scores = {
+            "AAPL": 0.45,
+            "TSLA": 0.455,
+            "BNGO": 0.15
+        }
+        for composite_score in composite_score_list:
+            stock_ticker = composite_score.get_ticker()
+            self.assertEqual(expected_composite_scores[stock_ticker], composite_score.get_score())
+
+        # Portfolio length assertions
         self.assertEqual(3, len(stock_info_container.get_all_tickers()))
         portfolio = stock_info_container.get_portfolio()
         self.assertEqual(3, len(portfolio))
 
-        # Value assertions
+        # Portfolio value assertions
         self.assertIsNotNone(portfolio["AAPL"])
         self.assertIsNotNone(portfolio["TSLA"])
         self.assertIsNotNone(portfolio["BNGO"])
@@ -35,7 +52,11 @@ class TestPortfolioBuilder(TestCase):
         self.assertGreater(portfolio["BNGO"], 0)
 
 
+    def test_add_hedge_positions(self):
+        self.fail()
 
+    def test_transform_portfolio_to_str(self):
+        self.fail()
 
         # portfolio_expected = "TSLA (100) - AAPL (100) - BNGO (100)"
         # self.assertEqual(portfolio_expected, portfolio_actual)
@@ -52,11 +73,3 @@ class TestPortfolioBuilder(TestCase):
         container.add_stock_raw_score("AAPL", 0.85, "Valuation")
         container.add_stock_raw_score("TSLA", 0.84, "Valuation")
         container.add_stock_raw_score("BNGO", 0.30, "Price")
-
-
-    def test_add_hedge_positions(self):
-        self.fail()
-
-
-    def test_transform_suggested_portfolio_str(self):
-        self.fail()

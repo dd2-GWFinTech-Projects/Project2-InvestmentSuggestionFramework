@@ -23,8 +23,8 @@ class PortfolioBuilder:
         """
 
         # Compute composite score and sort
-        stock_score_list = self.__compute_composite_scores(customer_metrics, stock_info_container)
-        stock_score_list = self.__sort_stock_score_list(stock_score_list)
+        self.__compute_composite_scores(customer_metrics, stock_info_container)
+        stock_score_list = self.__sort_stock_score_list(stock_info_container)
 
         # Compute number of shares
         stock_info_container = self.__compute_shares(customer_metrics, stock_score_list, stock_info_container)
@@ -57,9 +57,6 @@ class PortfolioBuilder:
 
     def __compute_composite_scores(self, customer_metrics, stock_info_container):
 
-        # Ticker -> Composite Score dictionary
-        portfolio_composite_scores = {}
-
         # Number of raw scores used to compute composite
         portfolio_composite_score_counts = {}
 
@@ -67,30 +64,38 @@ class PortfolioBuilder:
         for stock_score in stock_info_container.get_all_raw_scores_single_level():
 
             stock_ticker = stock_score.get_ticker()
-            score = stock_score.get_score()
+            raw_score = stock_score.get_score()
             analysis_source = stock_score.get_analysis_source()
             w = self.__weighting[analysis_source]
 
             # Initialize dictionaries
-            if not (stock_ticker in portfolio_composite_scores):
-                portfolio_composite_scores[stock_ticker] = 0
+            if stock_info_container.get_stock_composite_score(stock_ticker) is None:
+                stock_info_container.add_stock_composite_score(stock_ticker, 0.0)
             if not (stock_ticker in portfolio_composite_score_counts):
                 portfolio_composite_score_counts[stock_ticker] = 0
 
             # Add scores
-            portfolio_composite_scores[stock_ticker] += w * score
+            current_composite_score = stock_info_container.get_stock_composite_score(stock_ticker).get_score()
+            new_score = current_composite_score + w * raw_score
+            stock_info_container.add_stock_composite_score(stock_ticker, new_score)
             portfolio_composite_score_counts[stock_ticker] += 1
 
         # Average over the number of analysis methods
-        for stock_ticker in portfolio_composite_scores.keys():
-            portfolio_composite_scores[stock_ticker] /= portfolio_composite_score_counts[stock_ticker]
+        for composite_score in stock_info_container.get_all_composite_scores_single_level():
+            stock_ticker = composite_score.get_ticker()
+            current_composite_score = composite_score.get_score()
+            new_score = current_composite_score / portfolio_composite_score_counts[stock_ticker]
+            stock_info_container.add_stock_composite_score(stock_ticker, new_score)
 
-        return list(portfolio_composite_scores.values())
+        return stock_info_container
 
 
-    def __sort_stock_score_list(self, score_list):
+    def __sort_stock_score_list(self, stock_info_container):
+
         def score_sort(stock_score):
             return stock_score.get_score()
+
+        score_list = stock_info_container.get_all_composite_scores_single_level()
         score_list.sort(reverse=True, key=score_sort)
         return score_list
 
