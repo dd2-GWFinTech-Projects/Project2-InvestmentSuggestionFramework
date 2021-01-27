@@ -1,5 +1,5 @@
 import numpy as np
-import random
+
 from ..datastructures.AnalysisMethod import AnalysisMethod
 
 

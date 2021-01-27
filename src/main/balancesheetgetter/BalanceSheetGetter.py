@@ -1,8 +1,6 @@
-import requests
-import pandas as pd
-import requests
-from ..datastructures.StockInfoContainer import StockInfoContainer
 import json
+
+import requests
 
 
 class BalanceSheetGetter:

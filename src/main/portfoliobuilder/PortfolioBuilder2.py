@@ -1,14 +1,13 @@
 # Contributors: Adam
-import pandas as pd
-import numpy as np
-import plotly.express as px
-import plotly.graph_objects as go
-from time import time
-import re
-import matplotlib
-import matplotlib.pyplot as plt
 import random
-import statsmodels.api as sm
+import re
+from time import time
+
+import matplotlib
+import numpy as np
+import pandas as pd
+import plotly.graph_objects as go
+
 
 class PortfolioBuilder2:
 
