@@ -12,8 +12,41 @@
 #aws configure
 
 
-# Download dependencies to local directory
+
+# Make virtual environment
+#virtualenv venv
+source venv/bin/activate
+
+# Download dependencies to local directory - Targeted directory
 pip install --target ./package requests
+pip install --target ./package python-dotenv
+pip install --target ./package alpaca-trade-api
+pip install --target ./package pandas
+
+# Install dependencies - Virtual Environment
+#pip install python-dotenv
+#pip install alpaca-trade-api
+#pip install requests
+#pip install pandas
+##pip install scikit-learn
+##pip install imbalanced-learn
+##pip install pydotplus
+##pip install spacy
+##pip install python -m spacy download en_core_web_sm
+##pip install imblearn
+##pip install psycopg2
+##pip install arch
+##pip install intake
+##pip install intake-parquet
+##pip install wordcloud
+##pip install tabulate
+##pip install asyncio
+##pip install iexfinance
+##pip install tesseract
+##pip install chatterbot
+##pip install --upgrade tensorflow
+##npm install dotenv
+##pip install newsapi-python==0.2.5
 
 
 
@@ -44,4 +77,3 @@ zip litquidity-chatbot.zip -r lambda_function.py main/ package/
 #    package
 
 aws lambda update-function-code --function-name project2_get_recommended_portfolio --zip-file fileb://litquidity-chatbot.zip
-
