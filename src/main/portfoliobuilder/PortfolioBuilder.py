@@ -1,3 +1,4 @@
+import numpy as np
 
 
 class PortfolioBuilder:
@@ -5,7 +6,14 @@ class PortfolioBuilder:
 
     def __init__(self, debug_level=0):
         self.__debug_level = debug_level
-        self.__weighting = {"Price": 0.5, "Valuation": 0.5}
+        self.__weighting = {
+            "PriceForecasting.ARMA": 10.0,
+            "PriceForecasting.ARIMA": 10.0,
+            "Valuation.DividendDiscountModel": 0.5,
+            "Valuation.DCF": 0.00001,
+            "Valuation.CapRateMarketModel": 0.5,
+            "Valuation.MarketValue": 0.5
+        }
 
 
     # --------------------------------------------------------------------------
@@ -31,12 +39,12 @@ class PortfolioBuilder:
         return stock_info_container
 
 
-    def transform_portfolio_to_str(self, stock_info_container):
+    def transform_portfolio_to_str(self, portfolio):
 
         # Transform to string representation
         portfolio_str = ""
         i = 0
-        for (stock_ticker, num_shares) in stock_info_container.get_portfolio().items():
+        for (stock_ticker, num_shares) in portfolio.items():
             if i > 0:
                 portfolio_str += " - "
             portfolio_str += f"{stock_ticker} ({num_shares})"
@@ -66,7 +74,7 @@ class PortfolioBuilder:
             stock_ticker = stock_score.get_ticker()
             raw_score = stock_score.get_score()
             analysis_source = stock_score.get_analysis_source()
-            w = self.__weighting[analysis_source]
+            w = self.__get_weighting(analysis_source)
 
             # Initialize dictionaries
             if stock_info_container.get_stock_composite_score(stock_ticker) is None:
@@ -111,7 +119,14 @@ class PortfolioBuilder:
 
         # Scale shares proportionally   #TODO this is wrong bc it does not take money into account
         for stock_score in stock_score_list:
-            num_shares = total_nbr_shares * stock_score.get_score() / total_score
+            num_shares = np.floor(total_nbr_shares * stock_score.get_score() / total_score)
             stock_info_container.add_stock_to_portfolio(stock_score.get_ticker(), num_shares)
 
         return stock_info_container
+
+
+    def __get_weighting(self, analysis_source):
+        if analysis_source in self.__weighting:
+            return self.__weighting[analysis_source]
+        else:
+            return 1.0

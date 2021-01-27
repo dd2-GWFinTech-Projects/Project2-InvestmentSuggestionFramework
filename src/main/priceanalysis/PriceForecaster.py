@@ -61,7 +61,7 @@ class PriceForecaster(AnalysisMethod):
         stock_price_history = stock_info_container.get_all_price_history()
         stock_price_history = self.__clean_dataframe(stock_price_history)
         stock_price_pct_change = stock_price_history.pct_change()
-        stock_price_pct_change = stock_price_pct_change.dropna()
+        # stock_price_pct_change = stock_price_pct_change.dropna()
 
         # --------------------------------------------------------------------------
         # ARMA prediction and compute score
@@ -91,7 +91,8 @@ class PriceForecaster(AnalysisMethod):
     def __compute_forecast_arma(self, stock_info_container, stock_price_history, order=(1,1), num_steps=10):
         results_df = pd.DataFrame()
         for stock_ticker in stock_info_container.get_all_tickers():
-            model = ARMA(stock_price_history[stock_ticker].values, order=order)
+            stock_price_history_individual = stock_price_history[stock_ticker].dropna()
+            model = ARMA(stock_price_history_individual.values, order=order)
             results = model.fit()
             results_df[stock_ticker] = results.forecast(steps=num_steps)[0]
         return results_df
@@ -102,7 +103,8 @@ class PriceForecaster(AnalysisMethod):
         # Lag 2 order=(2,1,1)
         results_df = pd.DataFrame()
         for stock_ticker in stock_info_container.get_all_tickers():
-            model = ARIMA(stock_price_history[stock_ticker].values, order=order)
+            stock_price_history_individual = stock_price_history[stock_ticker].dropna()
+            model = ARIMA(stock_price_history_individual.values, order=order)
             results = model.fit()
             results_df[stock_ticker] = results.forecast(steps=num_steps)[0]
         return results_df
