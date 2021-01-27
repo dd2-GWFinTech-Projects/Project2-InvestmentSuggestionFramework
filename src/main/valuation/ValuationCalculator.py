@@ -35,7 +35,18 @@ class ValuationCalculator(AnalysisMethod):
             "Wireless telecommunications services": 6.64
         }
         self.__industry_info = {
-            "Technology": IndustryInfo(False, True, False)
+            "Technology": IndustryInfo(False, True, False),
+            # "Consumer Discretionary"
+            # Consumer Staples
+            # Energy
+            # Financials
+            # Health Care
+            # Industrials
+            # Information Technology
+            # Materials
+            # Telecommunication Services
+            # Utilities
+            # Real Estate Investment Trust"
         }
         # Constants
         self.__const_analysis_method = "Valuation"

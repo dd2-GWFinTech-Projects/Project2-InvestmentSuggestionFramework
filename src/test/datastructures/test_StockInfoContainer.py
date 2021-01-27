@@ -25,6 +25,20 @@ class TestStockInfoContainer(TestCase):
         self.assertEqual(3, len(container.get_all_tickers()))
 
 
+    def test_remove_ticker(self):
+
+        # Build test data
+        container = StockInfoContainer()
+        container.add_ticker("AAPL")
+        container.add_ticker("MSFT")
+        container.add_ticker("TSLA")
+
+        # Assertions and tests
+        self.assertEqual(3, len(container.get_all_tickers()))
+        container.remove_ticker("MSFT")
+        self.assertEqual(2, len(container.get_all_tickers()))
+
+
     def test_add_ticker_list(self):
 
         # Build test data
