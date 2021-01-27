@@ -18,10 +18,10 @@
 source venv/bin/activate
 
 # Download dependencies to local directory - Targeted directory
-pip install --target ./package requests
-pip install --target ./package python-dotenv
-pip install --target ./package alpaca-trade-api
-pip install --target ./package pandas
+pip install --target ./.package requests
+pip install --target ./.package python-dotenv
+pip install --target ./.package alpaca-trade-api
+pip install --target ./.package pandas
 
 # Install dependencies - Virtual Environment
 #pip install python-dotenv
