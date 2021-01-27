@@ -2,5 +2,5 @@
 .package/
 
 # Ignoring build deployment package
-litquidity-chatbot.zip
+*.zip
 
