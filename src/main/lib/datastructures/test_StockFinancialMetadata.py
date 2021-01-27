@@ -1,5 +1,5 @@
 from unittest import TestCase
-from main.datastructures.StockFinancialMetadata import StockFinancialMetadata
+from main.lib.datastructures.StockFinancialMetadata import StockFinancialMetadata
 
 class TestStockFinancialMetadata(TestCase):
     def test_get_industry(self):

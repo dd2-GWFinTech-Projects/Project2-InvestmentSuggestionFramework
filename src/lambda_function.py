@@ -5,8 +5,8 @@ from main.stockfilter.StockFilter import StockFilter
 from main.priceanalysis.PriceForecaster import PriceForecaster
 from main.valuation.ValuationCalculator import ValuationCalculator
 from main.portfoliobuilder.PortfolioBuilder import PortfolioBuilder
-from main.datastructures.CustomerMetrics import CustomerMetrics
-from main.datastructures.StockInfoContainer import StockInfoContainer
+from main.lib.datastructures.CustomerMetrics import CustomerMetrics
+from main.lib.datastructures.StockInfoContainer import StockInfoContainer
 
 
 ### Main Handler ###

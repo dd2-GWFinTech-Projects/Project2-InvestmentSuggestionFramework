@@ -1,6 +1,5 @@
 from unittest import TestCase
-from main.datastructures.StockInfoContainer import StockInfoContainer
-import pandas as pd
+from main.lib.datastructures.StockInfoContainer import StockInfoContainer
 from test.lib.TestDataBuilder import TestDataBuilder
 
 

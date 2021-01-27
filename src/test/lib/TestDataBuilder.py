@@ -1,19 +1,13 @@
 # Initial imports
 import os
-import requests
-import pandas as pd
-from dotenv import load_dotenv
 import alpaca_trade_api as tradeapi
-import requests
 import pandas as pd
 import requests
 from pathlib import Path
 import json
 
-
-from main.portfoliobuilder.PortfolioBuilder import PortfolioBuilder
-from main.datastructures.StockInfoContainer import StockInfoContainer
-from main.datastructures.CustomerMetrics import CustomerMetrics
+from main.lib.datastructures.StockInfoContainer import StockInfoContainer
+from main.lib.datastructures.CustomerMetrics import CustomerMetrics
 
 class TestDataBuilder:
 

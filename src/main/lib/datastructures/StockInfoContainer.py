@@ -1,6 +1,6 @@
 import pandas as pd
 from ..datastructures.StockScore import StockScore
-from ..datastructures.StockFinancialMetadata import StockFinancialMetadata
+from main.lib.datastructures.StockFinancialMetadata import StockFinancialMetadata
 
 
 class StockInfoContainer:

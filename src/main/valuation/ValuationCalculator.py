@@ -1,6 +1,5 @@
 import numpy as np
-import random
-from ..datastructures.AnalysisMethod import AnalysisMethod
+from main.lib.datastructures.AnalysisMethod import AnalysisMethod
 
 
 class IndustryInfo:

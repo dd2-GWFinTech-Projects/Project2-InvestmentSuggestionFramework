@@ -1,6 +1,6 @@
 from unittest import TestCase
 from main.pricegetter.PriceGetter import PriceGetter
-from main.datastructures.StockInfoContainer import StockInfoContainer
+from main.lib.datastructures.StockInfoContainer import StockInfoContainer
 
 class TestPriceGetter(TestCase):
 

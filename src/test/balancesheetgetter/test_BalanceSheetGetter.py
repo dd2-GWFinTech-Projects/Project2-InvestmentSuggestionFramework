@@ -1,6 +1,5 @@
 from unittest import TestCase
-from test.lib.TestDataBuilder import TestDataBuilder
-from main.datastructures.StockInfoContainer import StockInfoContainer
+from main.lib.datastructures.StockInfoContainer import StockInfoContainer
 from main.balancesheetgetter.BalanceSheetGetter import BalanceSheetGetter
 
 

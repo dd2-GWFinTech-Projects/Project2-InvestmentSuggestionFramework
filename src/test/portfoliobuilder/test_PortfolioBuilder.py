@@ -1,7 +1,6 @@
 from unittest import TestCase
 from main.portfoliobuilder.PortfolioBuilder import PortfolioBuilder
-from main.datastructures.CustomerMetrics import CustomerMetrics
-from main.datastructures.StockInfoContainer import StockInfoContainer
+from main.lib.datastructures.StockInfoContainer import StockInfoContainer
 from test.lib.TestDataBuilder import TestDataBuilder
 
 

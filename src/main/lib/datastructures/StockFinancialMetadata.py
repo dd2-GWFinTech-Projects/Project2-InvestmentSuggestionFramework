@@ -22,6 +22,7 @@ class StockFinancialMetadata:
     def get_latest(self):
         return self.__data_list_map[0]
 
+    # TODO
     def get_industry(self):
         # return self.__stock_industry_dictionary[self.__stock_ticker]
         return "Technology"  # TODO
@@ -39,6 +40,7 @@ class StockFinancialMetadata:
     # Helpers
     # --------------------------------------------------------------------------
 
+    # TODO fix dictionary to map symbol to industry
     @staticmethod
     def __load_stock_industries(stock_industries_filepath):
         stock_industries_df = pd.read_csv(stock_industries_filepath)
