@@ -35,7 +35,30 @@ class ValuationCalculator(AnalysisMethod):
             "Wireless telecommunications services": 6.64
         }
         self.__industry_info = {
-            "Technology": IndustryInfo(False, True, False),
+        # TODO CORRECT DATA FROM CINDY
+        #     Industry
+        # has_dividend
+        # use_dcf
+        # use_cap_rate_market_model
+        # Sum
+        # of
+        # the
+        # parts(SoTP)
+        # Comparables
+        # "Consumer Discretionary"	FALSE	TRUE	FALSE	TRUE	TRUE
+        # Consumer Staples	FALSE	TRUE	FALSE	TRUE	TRUE
+        # Energy	FALSE	TRUE	FALSE	TRUE	FALSE
+        # Financials	FALSE	TRUE	FALSE	FALSE	TRUE
+        # Health Care	FALSE	TRUE	FALSE	TRUE	FALSE
+        # Industrials	FALSE	TRUE	FALSE	TRUE	FALSE
+        # Information Technology	FALSE	TRUE	FALSE	FALSE	TRUE
+        # Materials	FALSE	TRUE	FALSE	FALSE	TRUE
+        # Telecommunication Services	FALSE	TRUE	FALSE	FALSE	TRUE
+        # Utilities	FALSE	TRUE	FALSE	FALSE	FALSE
+        # Real Estate Investment Trust"	TRUE	TRUE	TRUE	TRUE	FALSE
+        # END CORRECT DATA FROM CINDY
+
+        "Technology": IndustryInfo(False, True, False),
             # "Consumer Discretionary"
             # Consumer Staples
             # Energy

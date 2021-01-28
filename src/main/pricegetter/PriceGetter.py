@@ -73,16 +73,17 @@ class PriceGetter:
 
 
     def get_tickers(self):
-        stock_ticker_str = requests.get(f'https://fmpcloud.io/api/v3/stock-screener?marketCapMoreThan=100000000000&limit=100&apikey={self.__fmp_cloud_key}')
-        # stock_ticker_str = requests.get(f'https://fmpcloud.io/api/v3/stock-screener?sector=technology&marketCapMoreThan=100000000000&limit=100&apikey={self.__fmp_cloud_key}')
-        stock_ticker_json = stock_ticker_str.json()
-        stock_ticker_list = []
-
-        for item in stock_ticker_json:
-            stock_ticker_list.append(item['symbol'])
-            # 'sector' 'industry'
-
-        return stock_ticker_list
+        return [ "AAPL", "TSLA", "MSFT" ]
+        # stock_ticker_str = requests.get(f'https://fmpcloud.io/api/v3/stock-screener?marketCapMoreThan=100000000000&limit=100&apikey={self.__fmp_cloud_key}')
+        # # stock_ticker_str = requests.get(f'https://fmpcloud.io/api/v3/stock-screener?sector=technology&marketCapMoreThan=100000000000&limit=100&apikey={self.__fmp_cloud_key}')
+        # stock_ticker_json = stock_ticker_str.json()
+        # stock_ticker_list = []
+        #
+        # for item in stock_ticker_json:
+        #     stock_ticker_list.append(item['symbol'])
+        #     # 'sector' 'industry'
+        #
+        # return stock_ticker_list
 
 
     def get_prices(self, stock_info_container, trailing_n_days):

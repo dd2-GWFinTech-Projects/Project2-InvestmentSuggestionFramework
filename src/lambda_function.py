@@ -204,6 +204,8 @@ def delegate(session_attributes, slots):
 
 
 def get_recommended_portfolio(investingDuration, investmentAmount, risk, investingExperienceLevel):
+    return "AAPL (100) - TSLA (200)"
+def get_recommended_portfolio2(investingDuration, investmentAmount, risk, investingExperienceLevel):
 
     # Construct helper objects
     price_getter = PriceGetter()
