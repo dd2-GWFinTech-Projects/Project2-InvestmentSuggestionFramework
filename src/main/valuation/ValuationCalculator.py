@@ -142,34 +142,20 @@ class ValuationCalculator(AnalysisMethod):
 
     # TODO Correlate industries to changing dividends
     def compute_value__dividend_discount_model(self,
-        ticker,
-        #dividend_yield_fractional, # Dividend yield
-        #npv, # Net present value
-        #wacc, # Weighted cost of capital
-        #eps, # Earnings per share
-        #market_cap,
-        r,  # Cost of equity capital == interest rate
-        g  # Growth rate == eps growth
-    ):
-        dividend_next_year = np.nan
-        npv = dividend_next_year / (r - g)
-        return npv
+                                               ticker,
+                                                current_dividend,  # paymentsofdividends (pctfraction per share)
+                                                cost_of_equity_capital__r=1.0,  # Cost of equity capital == interest rate  # 1.0
+                                                g,  # Growth rate == eps growth  # dividendsperShareGrowth
 
-
-    # --------------------------------------------------------------------------
-    # Cap-M Model
-    # --------------------------------------------------------------------------
-
-
-    # Capitalization of earnings business valuation
-    # Mostly for real estate
-    def compute_value__cap_rate_market_model(self,
-        industry_multiples,  # Dictionary of industry multiples
-        market_cap,
-        capitalization_rate  # net operating income / value
-        ):
-        npv = np.nan
-        return npv / capitalization_rate
+                                                # dividend_yield_fractional, # Dividend yield
+                                                # npv, # Net present value
+                                                # wacc, # Weighted cost of capital
+                                                # eps, # Earnings per share
+                                                # market_cap,
+       ):
+        dividend_next_year = current_dividend
+        net_present_value = dividend_next_year / (r - g)
+        return net_present_value
 
 
     # --------------------------------------------------------------------------
@@ -207,38 +193,47 @@ class ValuationCalculator(AnalysisMethod):
     # --------------------------------------------------------------------------
     
 
-    def compute_cost_of_equity(
-        risk_free_rate,
-        market_rate_of_return,
-        beta
+    def compute_cost_of_equity(self,
+        beta, # beta from financial data
+        risk_free_rate=0.2,  # interest rate from data source - quandl (https://www.quandl.com/data/USTREASURY-US-Treasury?utm_campaign=&utm_content=api-for-interest-rate-data&utm_medium=organic&utm_source=google)
+        market_rate_of_return=0.8  # fixed
+    ):
+        return risk_free_rate + beta * (market_rate_of_return - risk_free_rate)
+
+    def compute_cost_of_debt(self,
+        beta, # beta from financial data
+        risk_free_rate=0.2,  # interest rate from data source - quandl (https://www.quandl.com/data/USTREASURY-US-Treasury?utm_campaign=&utm_content=api-for-interest-rate-data&utm_medium=organic&utm_source=google)
+        market_rate_of_return=0.8  # fixed
     ):
         return risk_free_rate + beta * (market_rate_of_return - risk_free_rate)
 
 
-    def compute_wacc(cost_of_equity):
+    def compute_wacc(self,
+                     cost_of_equity,  # compute_cost_of_equity()
 
-        value_of_equity = np.nan
-        equity = np.nan
-        debt = np.nan
-        cost_of_debt = np.nan
-        corporate_tax_rate = np.nan
+                     risk_free_rate,
 
-        wacc = (cost_of_equity) * ( (value_of_equity) / (equity + debt) )
+                     equity,              # totalStockholdersEquity
+                     debt,                # totalDebt
+                     cost_of_debt,        #
+                     corporate_tax_rate   #
+    ):
+        wacc = (cost_of_equity) * ( (cost_of_equity) / (equity + debt) )
         wacc += (debt / (equity + debt)) * cost_of_debt * (1 - corporate_tax_rate)
         return wacc
 
 
     # Discount cashflow model
     def compute_value__dcf(self,
-        ebitda_projection,  # 5-year projection # TODO use a MA
-        wacc,  # Discount rate r == wacc
+        ebitda_projection_5year_list,  # 5-year projection # TODO use a moving average
+        wacc,  # Discount rate r == wacc  #
         # cashflow_multiple,
         ):
         
-        year_count = len(ebitda_projection)
-        npv = 0
+        year_count = len(ebitda_projection_5year_list)
+        net_present_value = 0
         for y in range(0, year_count):
-            ebitda = ebitda_projection[y]
-            npv += ebitda / (1 + wacc) ** (y+1)
+            ebitda = ebitda_projection_5year_list[y]
+            net_present_value += ebitda / (1 + wacc) ** (y+1)
         
-        return npv
+        return net_present_value
