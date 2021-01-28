@@ -1,5 +1,7 @@
 # **Project2**
 
+![Banner](doc/images/Banner.png)
+
 # **Summary**
 
 The goal of the Litquidity project is to produce an automated portfolio design platform for stock investments.
@@ -17,6 +19,8 @@ The full platform solution consists of the following parts:
 ## **Offline Testing**
 
 Testing and R&D was performed in Jupyter notebooks using Pyviz visualizations.
+
+![Jupyter Lab Notebook](doc/images/Notebook.png)
 
 ## **Deployed Solution**
 
@@ -46,20 +50,31 @@ Documentation includes a PowerPoint presentation and ReadMe.md file.
 
 Offline testing notebooks and data are stored in the `notebooks` directory.
 
+### **CompanyValuations**
 
+*BalanceSheet.ipynb*: Pulls company financial data and computes equity, assets, and liabilities.
 
+*Stock Market and Bitcoin Price Relationship.ipynb*: Pulls S&P 500 and Bitcoin price histories and computes a correlation matrix.
 
+*Valuation Computation.ipynb*: Computes company valuation based on the price-to-sales ratio; prestents the gross profit ratio and price-to-sales ratios to enable an investment decision.
 
+*Value-at-Risk versus Expected Shortfall.ipynb*: Computes value-at-risk (VaR) and expected shortfall (ES) for a company to enhance risk assessment.
 
+### **PriceForecasting**
 
+*Machine_Learning.ipynb*: Implements the LSTM model.
 
+*Portfolio_Analysis.ipynb*: Analyzes price history and uses ARMA, ARIMA, and other models to predict future price movements.
 
+*Portfolio_Optimization.ipynb*: Compares industries and stocks based on annualized returns, volatility, and the Sharpe ratio. The initial industries selected for this comparieson are real estate and communications services industries.
 
+*stock_sentiment.ipynb*: Sentiment is computed for stocks using Natural Language Processing (NLP) techniques.
 
+*stock_sentiment_twitter.ipynb*: Sentiment is computed for stocks using Natural Language Processing (NLP) techniques.
 
+*app.py*: Website component prototype to enable testing interactive plots based on generated data.
 
-
-
+Various other data files and files for testing are also listed in the directory.
 
 ## **Deployed Solution**
 
@@ -156,15 +171,3 @@ pip install python-dotenv
 pip install requests
 pip install statsmodels
 ```
-
-# **TODO**
-
-TODO Exclude cap rate
-
-TODO DCF and DDM
-
-TODO Document all functions
-
-TODO Apply checks for data types etc. inside all functions
-
-TODO Bounds testing unit tests

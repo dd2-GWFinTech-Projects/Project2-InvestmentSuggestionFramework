@@ -202,10 +202,7 @@ def delegate(session_attributes, slots):
 # Option 2: Modify portfolio based on: Filter output; combine with pre-defined sectors; or pre-defined map.
 
 
-
 def get_recommended_portfolio(investingDuration, investmentAmount, risk, investingExperienceLevel):
-    return "AAPL (100) - TSLA (200)"
-def get_recommended_portfolio2(investingDuration, investmentAmount, risk, investingExperienceLevel):
 
     # Construct helper objects
     price_getter = PriceGetter()
