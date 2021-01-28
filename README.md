@@ -176,14 +176,14 @@ pip install statsmodels
 
 ## High Priority
 
-* Exclude cap rate as a model
 * Ensure DCF and DDM are implemented
 * Fix up the portfolio builder to distribute the investment amount into #shares correctly
 * Condition data for price prediction models
 * Catch exceptions from price prediction models
 
-* Fix up the composite score calculation to implement basic weighted sum of scores correctly
 * In filter, remove items with invalid financial data
+
+* Fix up the composite score calculation to implement basic weighted sum of scores correctly
 * Configure proper industry retrieval and handling
 * Increase execution speed for testing/demo - Implement Implement use_predefined_test_stock_list in stock filter
 * Fix up the portfolio builder to use the customer metrics somehow

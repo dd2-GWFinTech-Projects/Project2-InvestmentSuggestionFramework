@@ -200,14 +200,13 @@ class ValuationCalculator(AnalysisMethod):
     ):
         return risk_free_rate + beta * (market_rate_of_return - risk_free_rate)
 
-    def compute_cost_of_debt(self,
-        beta, # beta from financial data
-        risk_free_rate=0.2,  # interest rate from data source - quandl (https://www.quandl.com/data/USTREASURY-US-Treasury?utm_campaign=&utm_content=api-for-interest-rate-data&utm_medium=organic&utm_source=google)
-        market_rate_of_return=0.8  # fixed
-    ):
-        return risk_free_rate + beta * (market_rate_of_return - risk_free_rate)
+    # def compute_cost_of_debt(self,
+    #                          total_debt,
+    # ):
+    #     return (debt / (market_value_of_debt + equity)) * cost_of_debt * 1 - corporate_tax_rate
 
 
+    #weighted average cost of capital
     def compute_wacc(self,
                      cost_of_equity,  # compute_cost_of_equity()
 
@@ -216,7 +215,7 @@ class ValuationCalculator(AnalysisMethod):
                      equity,              # totalStockholdersEquity
                      debt,                # totalDebt
                      cost_of_debt,        #
-                     corporate_tax_rate   #
+                     corporate_tax_rate=0.21   # fixed from irs
     ):
         wacc = (cost_of_equity) * ( (cost_of_equity) / (equity + debt) )
         wacc += (debt / (equity + debt)) * cost_of_debt * (1 - corporate_tax_rate)
