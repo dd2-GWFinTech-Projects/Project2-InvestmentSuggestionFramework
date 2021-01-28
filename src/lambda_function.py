@@ -134,7 +134,7 @@ def validate_data(investmentAmount):
 
         # Validate investmentAmount
 
-        # TODO Remove "$"
+        # TODO Sanitize - remove "$"
 
         if float(investmentAmount) is None:
             return build_validation_result(
@@ -221,7 +221,7 @@ def get_recommended_portfolio(investingDuration, investmentAmount, risk, investi
 
     # Retrieve stock list
     try:
-        stock_ticker_list = price_getter.get_tickers()
+        stock_ticker_list = price_getter.get_tickers(use_predefined_test_stock_list=True)
         # stock_ticker_list = ["AAPL", "BNGO", "CIIC"]
         stock_info_container.add_ticker_list(stock_ticker_list)
     except:
@@ -241,7 +241,7 @@ def get_recommended_portfolio(investingDuration, investmentAmount, risk, investi
 
     # Apply filter
     try:
-        stock_filter.filter(stock_info_container)
+        stock_filter.filter(stock_info_container, apply_whitelist=False)
     except:
         return "EXCEPTION in: Apply filter"
 
