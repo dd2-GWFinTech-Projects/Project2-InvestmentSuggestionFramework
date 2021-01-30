@@ -197,7 +197,17 @@ pip install statsmodels
 * Apply checks for data types etc. inside all functions
 * Bounds testing unit tests
 
+## Long-Term Development & Improvements
 
+- Build more advanced models
+- Valuation doesn't reliably predict price response, so need to re-think score computation.
+- Composite score formulation
 
+### Architecture improvements
 
-
+- Testing area ("digital playground") for formulation and validation of models
+- Interfaces - Chatbot, Configurator to specify input parameters, Data output, Alerts & trading signals output, Optimization interface
+- Rolling portfolio optimization workflow
+- Live instance with up-to-date rolling validation
+- Sensor fusion framework
+- Data processing pipeline improvements
