@@ -1,6 +1,6 @@
 import pandas as pd
 
-from ..datastructures.StockFinancialMetadata import StockFinancialMetadata
+from main.lib.datastructures.StockFinancialMetadata import StockFinancialMetadata
 from ..datastructures.StockScore import StockScore
 
 
@@ -56,7 +56,7 @@ class StockInfoContainer:
 
     def add_stock_financial_metadata(self, ticker, stock_financial_metadata_listmap):
         self.__register_ticker(ticker)
-        self.__financial_metadata[ticker] = StockFinancialMetadata(stock_financial_metadata_listmap)
+        self.__financial_metadata[ticker] = StockFinancialMetadata(ticker, stock_financial_metadata_listmap)
 
     # --------------------------------------------------------------------------
     # Getters - All stock data

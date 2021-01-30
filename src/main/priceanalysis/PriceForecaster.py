@@ -13,7 +13,8 @@ from statsmodels.tsa.arima_model import ARMA
 warnings.filterwarnings('ignore')
 
 from dotenv import load_dotenv
-from ..datastructures.AnalysisMethod import AnalysisMethod
+from ..priceanalysis.MCForecastTools import MCSimulation
+from main.lib.datastructures.AnalysisMethod import AnalysisMethod
 
 class PriceForecaster(AnalysisMethod):
 
