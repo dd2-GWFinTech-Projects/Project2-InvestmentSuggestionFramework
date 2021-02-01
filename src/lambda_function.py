@@ -79,7 +79,7 @@ def get_recommended_portfolio_intent_handler(intent_request):
 
     # Get the initial investment recommendation
 
-    recommended_portfolio = get_recommended_portfolio(investingDuration, investmentAmount, risk, investingExperienceLevel)
+    recommended_portfolio = get_recommended_portfolio(investingDuration, investmentAmount, risk, investingExperienceLevel, use_test_data=True)
 
     # Return a message with the initial recommendation based on the risk level.
     return close(

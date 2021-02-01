@@ -13,7 +13,6 @@ from statsmodels.tsa.arima_model import ARMA
 warnings.filterwarnings('ignore')
 
 from dotenv import load_dotenv
-from ..priceanalysis.MCForecastTools import MCSimulation
 from main.lib.datastructures.AnalysisMethod import AnalysisMethod
 
 class PriceForecaster(AnalysisMethod):
@@ -43,23 +42,29 @@ class PriceForecaster(AnalysisMethod):
         # ARMA prediction and compute score
         # --------------------------------------------------------------------------
 
-        # ARMA prediction
-        pctchange_results_arma = self.__compute_forecast_arma(stock_info_container, stock_price_pct_change, order=(1,1), num_steps=10)
-        predicted_values_arma = self.__compute_values_from_pctchange(stock_info_container, stock_price_history, pctchange_results_arma)
+        try:
+            # ARMA prediction
+            pctchange_results_arma = self.__compute_forecast_arma(stock_info_container, stock_price_pct_change, order=(1,1), num_steps=10)
+            predicted_values_arma = self.__compute_values_from_pctchange(stock_info_container, stock_price_history, pctchange_results_arma)
 
-        # Compute score
-        stock_info_container = self.__compute_score_from_prediction(stock_info_container, stock_price_history, predicted_values_arma, "ARMA")
+            # Compute score
+            stock_info_container = self.__compute_score_from_prediction(stock_info_container, stock_price_history, predicted_values_arma, "ARMA")
+        except:
+            print("ERROR - ARMA calculation threw an exception.")
 
         # --------------------------------------------------------------------------
         # ARIMA prediction and compute score
         # --------------------------------------------------------------------------
 
-        # ARIMA prediction and compute score
-        pctchange_results_arima = self.__compute_forecast_arima(stock_info_container, stock_price_pct_change, order=(1, 1, 1), num_steps=10)
-        predicted_values_arima = self.__compute_values_from_pctchange(stock_info_container, stock_price_history, pctchange_results_arima)
+        try:
+            # ARIMA prediction and compute score
+            pctchange_results_arima = self.__compute_forecast_arima(stock_info_container, stock_price_pct_change, order=(1, 1, 1), num_steps=10)
+            predicted_values_arima = self.__compute_values_from_pctchange(stock_info_container, stock_price_history, pctchange_results_arima)
 
-        # Compute score
-        stock_info_container = self.__compute_score_from_prediction(stock_info_container, stock_price_history, predicted_values_arima, "ARIMA")
+            # Compute score
+            stock_info_container = self.__compute_score_from_prediction(stock_info_container, stock_price_history, predicted_values_arima, "ARIMA")
+        except:
+            print("ERROR - ARIMA calculation threw an exception.")
 
         return stock_info_container
 

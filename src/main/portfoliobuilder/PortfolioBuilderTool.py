@@ -67,6 +67,17 @@ class PortfolioBuilderTool:
 
         return stock_info_container
 
+
+    def sort_stock_score_list(self, stock_info_container):
+
+        def score_sort(stock_score):
+            return stock_score.get_score()
+
+        score_list = stock_info_container.get_all_composite_scores_single_level()
+        score_list.sort(reverse=True, key=score_sort)
+        return score_list
+
+
     # --------------------------------------------------------------------------
     # Helpers
     # --------------------------------------------------------------------------

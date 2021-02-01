@@ -1,6 +1,6 @@
 import json
 
-from main.lib.tools.DataListMapLoader import DataListMapLoader
+from main.balancesheetgetter.DataListMapBuilder import DataListMapBuilder
 import requests
 
 
@@ -26,23 +26,26 @@ class BalanceSheetGetter:
             [ "https://fmpcloud.io/api/v3/market-capitalization/", "?apikey=" ],
             [ "https://fmpcloud.io/api/v3/discounted-cash-flow/", "?apikey=" ]
         ]
-        self.__data_list_map_loader = DataListMapLoader()
+        self.__data_list_map_builder = DataListMapBuilder()
 
 
     def load_financial_info(self, stock_info_container):
 
         for stock_ticker in stock_info_container.get_all_tickers():
             try:
-                stock_financial_metadata_str = requests.get(f"https://fmpcloud.io/api/v3/financial-statement-full-as-reported/{stock_ticker}?apikey={self.__fmp_cloud_key}")
+                stock_financial_metadata_collection = {}
+                for data_url in self.__data_url_list:
+                    try:
+                        url = data_url[0] + stock_ticker + data_url[1] + self.__fmp_cloud_key
+                        stock_financial_metadata_str = requests.get(url)
+                        stock_financial_metadata_json = json.loads(stock_financial_metadata_str.content)
+                        stock_financial_metadata = self.__process_stock_financial_metadata_json(stock_financial_metadata_json)
+                        stock_financial_metadata_collection = self.__data_list_map_builder.combine(stock_financial_metadata_collection, stock_financial_metadata)
 
-                for dat_url in self.__data_url_list:
-                    TODO
+                    except:
+                        continue
 
-
-                # TODO Other requests for auxilliary data?
-                stock_financial_metadata_json = json.loads(stock_financial_metadata_str.content)
-                stock_financial_metadata = self.__process_stock_financial_metadata_json(stock_financial_metadata_json)
-                stock_info_container.add_stock_financial_metadata(stock_ticker, stock_financial_metadata)
+                stock_info_container.add_stock_financial_metadata(stock_ticker, stock_financial_metadata_collection)
             except:
                 continue
 
