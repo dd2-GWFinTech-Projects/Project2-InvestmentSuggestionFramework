@@ -1,6 +1,5 @@
 import json
 
-from main.balancesheetgetter.DataListMapBuilder import DataListMapBuilder
 import requests
 
 
@@ -26,7 +25,6 @@ class BalanceSheetGetter:
             [ "https://fmpcloud.io/api/v3/market-capitalization/", "?apikey=" ],
             [ "https://fmpcloud.io/api/v3/discounted-cash-flow/", "?apikey=" ]
         ]
-        self.__data_list_map_builder = DataListMapBuilder()
 
 
     def load_financial_info(self, stock_info_container):
@@ -40,8 +38,7 @@ class BalanceSheetGetter:
                         stock_financial_metadata_str = requests.get(url)
                         stock_financial_metadata_json = json.loads(stock_financial_metadata_str.content)
                         stock_financial_metadata = self.__process_stock_financial_metadata_json(stock_financial_metadata_json)
-                        stock_financial_metadata_collection = self.__data_list_map_builder.combine(stock_financial_metadata_collection, stock_financial_metadata)
-
+                        stock_financial_metadata_collection = stock_financial_metadata_collection.combine_data_list_map(stock_financial_metadata)
                     except:
                         continue
 
