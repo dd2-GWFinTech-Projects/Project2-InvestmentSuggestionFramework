@@ -83,3 +83,14 @@ class TestPortfolioBuilder(TestCase):
         container.add_stock_raw_score("AAPL", 0.85, "Valuation")
         container.add_stock_raw_score("TSLA", 0.84, "Valuation")
         container.add_stock_raw_score("BNGO", 0.30, "Price")
+
+
+class TestPortfolioBuilderTool(TestCase):
+
+    def test_compute_composite_scores(self):
+        self.fail()
+
+
+    def test_compute_shares(self):
+        self.fail()
+

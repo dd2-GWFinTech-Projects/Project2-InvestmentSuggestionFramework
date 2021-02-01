@@ -34,6 +34,11 @@ class BalanceSheetGetter:
         for stock_ticker in stock_info_container.get_all_tickers():
             try:
                 stock_financial_metadata_str = requests.get(f"https://fmpcloud.io/api/v3/financial-statement-full-as-reported/{stock_ticker}?apikey={self.__fmp_cloud_key}")
+
+                for dat_url in self.__data_url_list:
+                    TODO
+
+
                 # TODO Other requests for auxilliary data?
                 stock_financial_metadata_json = json.loads(stock_financial_metadata_str.content)
                 stock_financial_metadata = self.__process_stock_financial_metadata_json(stock_financial_metadata_json)

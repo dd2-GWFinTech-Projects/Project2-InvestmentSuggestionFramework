@@ -4,10 +4,12 @@ from main.lib.datastructures.AnalysisMethod import AnalysisMethod
 
 
 class IndustryInfo:
-    def __init__(self, has_dividend, use_dcf, use_cap_rate_market_model):
+    def __init__(self, has_dividend, use_dcf, use_cap_rate_market_model, sum_of_the_parts_SoTP, comparables):
         self.has_dividend = has_dividend
         self.use_dcf = use_dcf
         self.use_cap_rate_market_model = use_cap_rate_market_model
+        self.sum_of_the_parts_SoTP = sum_of_the_parts_SoTP
+        self.comparables = comparables
 
 
 class ValuationCalculator(AnalysisMethod):
@@ -35,52 +37,23 @@ class ValuationCalculator(AnalysisMethod):
             "Wireless telecommunications services": 6.64
         }
         self.__industry_info = {
-        # TODO CORRECT DATA FROM CINDY
-        #     Industry
-        # has_dividend
-        # use_dcf
-        # use_cap_rate_market_model
-        # Sum
-        # of
-        # the
-        # parts(SoTP)
-        # Comparables
-        # "Consumer Discretionary"	FALSE	TRUE	FALSE	TRUE	TRUE
-        # Consumer Staples	FALSE	TRUE	FALSE	TRUE	TRUE
-        # Energy	FALSE	TRUE	FALSE	TRUE	FALSE
-        # Financials	FALSE	TRUE	FALSE	FALSE	TRUE
-        # Health Care	FALSE	TRUE	FALSE	TRUE	FALSE
-        # Industrials	FALSE	TRUE	FALSE	TRUE	FALSE
-        # Information Technology	FALSE	TRUE	FALSE	FALSE	TRUE
-        # Materials	FALSE	TRUE	FALSE	FALSE	TRUE
-        # Telecommunication Services	FALSE	TRUE	FALSE	FALSE	TRUE
-        # Utilities	FALSE	TRUE	FALSE	FALSE	FALSE
-        # Real Estate Investment Trust"	TRUE	TRUE	TRUE	TRUE	FALSE
-        # END CORRECT DATA FROM CINDY
-
-        "Technology": IndustryInfo(False, True, False),
-            # "Consumer Discretionary"
-            # Consumer Staples
-            # Energy
-            # Financials
-            # Health Care
-            # Industrials
-            # Information Technology
-            # Materials
-            # Telecommunication Services
-            # Utilities
-            # Real Estate Investment Trust"
+            "Consumer Discretionary":           IndustryInfo(False, True,  False, True,  True),
+            "Consumer Staples":                 IndustryInfo(False, True,  False, True,  True),
+            "Energy":                           IndustryInfo(False, True,  False, True,  False),
+            "Financials":                       IndustryInfo(False, True,  False, False, True),
+            "Health Care":                      IndustryInfo(False, True,  False, True,  False),
+            "Industrials":                      IndustryInfo(False, True,  False, True,  False),
+            "Information Technology":           IndustryInfo(False, True,  False, False, True),
+            "Materials":                        IndustryInfo(False, True,  False, False, True),
+            "Telecommunication Services":       IndustryInfo(False, True,  False, False, True),
+            "Utilities":                        IndustryInfo(False, True,  False, False, False),
+            "Real Estate Investment Trust":     IndustryInfo(True,  True,  True,  True,  False)
         }
         # Constants
         self.__const_analysis_method = "Valuation"
 
 
     def analyze(self, stock_info_container):
-        stock_info_container = self.__compute_valuation_scores(stock_info_container)
-        return stock_info_container
-
-
-    def __compute_valuation_scores(self, stock_info_container):
 
         stock_price_history = stock_info_container.get_all_price_history()
 
@@ -97,6 +70,7 @@ class ValuationCalculator(AnalysisMethod):
 
         return stock_info_container
 
+
     def __select_analysis_submethod(self, stock_financial_metadata):
         industry = stock_financial_metadata.get_industry()
         if self.__industry_info[industry].has_dividend:
@@ -107,6 +81,7 @@ class ValuationCalculator(AnalysisMethod):
             return "CapRateMarketModel"
         else:
             return "MarketValue"
+
 
     def __compute_valuation(self, stock_financial_metadata, analysis_submethod):
         industry = stock_financial_metadata.get_industry()

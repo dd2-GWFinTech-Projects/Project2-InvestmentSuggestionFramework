@@ -202,7 +202,7 @@ def delegate(session_attributes, slots):
 # Option 2: Modify portfolio based on: Filter output; combine with pre-defined sectors; or pre-defined map.
 
 
-def get_recommended_portfolio(investingDuration, investmentAmount, risk, investingExperienceLevel):
+def get_recommended_portfolio(investingDuration, investmentAmount, risk, investingExperienceLevel, use_test_data=False):
 
     # Construct helper objects
     price_getter = PriceGetter()
@@ -221,8 +221,7 @@ def get_recommended_portfolio(investingDuration, investmentAmount, risk, investi
 
     # Retrieve stock list
     try:
-        stock_ticker_list = price_getter.get_tickers(use_predefined_test_stock_list=True)
-        # stock_ticker_list = ["AAPL", "BNGO", "CIIC"]
+        stock_ticker_list = price_getter.get_tickers(use_test_data=True)
         stock_info_container.add_ticker_list(stock_ticker_list)
     except:
         return "EXCEPTION in: Retrieve stock list"
@@ -241,7 +240,7 @@ def get_recommended_portfolio(investingDuration, investmentAmount, risk, investi
 
     # Apply filter
     try:
-        stock_filter.filter(stock_info_container, apply_whitelist=False)
+        stock_filter.filter(stock_info_container)
     except:
         return "EXCEPTION in: Apply filter"
 
