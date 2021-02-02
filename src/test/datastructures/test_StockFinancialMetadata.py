@@ -13,7 +13,7 @@ class TestStockFinancialMetadata(TestCase):
         combined_list_map_data = combined_list_map.get_all_data()
 
         self.assertEqual(3, len(combined_list_map_data))
-        self.assertEqual(3, len(combined_list_map_data[0]))
+        self.assertEqual(4, len(combined_list_map_data[0]))
 
         self.__apply_assertion(combined_list_map_data, 0, [0, 0, 0])
         self.__apply_assertion(combined_list_map_data, 1, [1, 1, 1])
