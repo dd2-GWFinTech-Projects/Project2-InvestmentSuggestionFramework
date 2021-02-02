@@ -12,6 +12,8 @@ class StockInfoContainer:
         self.__stock_composite_score_map = {}
         self.__portfolio = {}
         self.__stock_price_history = pd.DataFrame()
+
+        # Dictionary of { stock_ticker -> StockFinancialMetadata }
         self.__financial_metadata = {}
 
     # --------------------------------------------------------------------------

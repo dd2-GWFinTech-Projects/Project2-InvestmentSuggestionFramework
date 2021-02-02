@@ -1,7 +1,9 @@
 from pathlib import Path
 import pandas as pd
+import numpy as np
 
 class StockFinancialMetadata:
+
 
     def __init__(self, stock_ticker, data_list_map):
         """
@@ -10,27 +12,41 @@ class StockFinancialMetadata:
         :param data_list_map: A list of financial mnetadata maps.
         """
         self.__stock_ticker = stock_ticker
+
+        # List of historical financial data maps:  [ { financial_data_field -> financial_data_value } ]
         self.__data_list_map = data_list_map
 
         # Stock industries mapping
-        self.__stock_industries_filepath = Path("data/stock_industries.csv")
+        import os
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        self.__stock_industries_filepath = os.path.join(dir_path, Path("data/stock_industries.csv"))
         self.__stock_industry_dictionary = self.__load_stock_industries(self.__stock_industries_filepath)
+
 
     def get_stock_ticker(self):
         return self.__stock_ticker
 
+
+    def get_all_data(self):
+        return self.__data_list_map
+
+
     def get_latest(self):
         return self.__data_list_map[0]
+
 
     def get_industry(self):
         # return self.__stock_industry_dictionary[self.__stock_ticker]
         return "Technology"  # TODO
 
+
     def get_assets(self):
         return None
 
+
     def get_liabilities(self):
         return None
+
 
     def get_ebidtaba(self):
         return None
@@ -38,28 +54,20 @@ class StockFinancialMetadata:
 
     def combine_data_list_map(self, other):
 
-        for stock_ticker in other.__data_list_map.keys():
+        this_size = len(self.__data_list_map)
+        other_size = len(other.__data_list_map)
 
-            # Initialize empty list
-            if not stock_ticker in self.__data_list_map:
-                self.__data_list_map[stock_ticker] = []
+        for i in range(0, other_size):
+            other_data_map = other.__data_list_map[i]
 
-            this_size = len(self.__data_list_map[stock_ticker])
-            other_size = len(other.__data_list_map[stock_ticker])
+            # Shortcut for new list entry
+            if i >= this_size:
+                self.__data_list_map.append(other_data_map)
+                continue
 
-            max_size = np.max(this_size, other_size)
-
-            for i in range(0, max_size):
-                other_data_map = other.__data_list_map[stock_ticker][i]
-
-                # Shortcut for new list entry
-                if i >= this_size:
-                    self.__data_list_map[stock_ticker].append(other_data_map)
-                    continue
-
-                # Destructively combine the maps (TODO does not maintain data integrity)
-                for key, value in other_data_map.items():
-                    self.__data_list_map[stock_ticker][i][key] = value
+            # Destructively combine the maps (TODO does not maintain data integrity)
+            for key, value in other_data_map.items():
+                self.__data_list_map[i][key] = value
 
         return self
 
@@ -67,6 +75,7 @@ class StockFinancialMetadata:
     # --------------------------------------------------------------------------
     # Helpers
     # --------------------------------------------------------------------------
+
 
     # TODO fix dictionary to map symbol to industry
     @staticmethod
