@@ -174,14 +174,16 @@ class ValuationCalculator(AnalysisMethod):
         market_rate_of_return=0.8
     ):
         """
-        Computes the cost of equity
+        Computes the opportunity cost of owning a particular stock in comparison to holding a diversified position in a broad market index.
+
         :param beta: Stock price beta from financial data.
         :param risk_free_rate: Current interest rate.
             Available through Quandl (https://www.quandl.com/data/USTREASURY-US-Treasury?utm_campaign=&utm_content=api-for-interest-rate-data&utm_medium=organic&utm_source=google)
         :param market_rate_of_return: Fixed average market rate of return.
-        :return: Cost of equity.
+        :return: The effective opportunity cost of equity.
         """
         return risk_free_rate + beta * (market_rate_of_return - risk_free_rate)
+
 
     # def compute_cost_of_debt(self,
     #                          total_debt,
@@ -189,25 +191,26 @@ class ValuationCalculator(AnalysisMethod):
     #     return (debt / (market_value_of_debt + equity)) * cost_of_debt * 1 - corporate_tax_rate
 
 
-    #weighted average cost of capital
     def compute_wacc(self,
-                     cost_of_equity,  # compute_cost_of_equity()
+                     cost_of_equity,
 
                      risk_free_rate,
 
                      equity,              # totalStockholdersEquity
                      debt,                # totalDebt
                      cost_of_debt,        #
-                     corporate_tax_rate=0.21   # fixed from irs
+                     corporate_tax_rate=0.21   #
     ):
         """
+        Compute the weighted-average cost of capital.
 
-        :param cost_of_equity:
-        :param risk_free_rate:
-        :param equity:
-        :param debt:
-        :param cost_of_debt:
-        :param corporate_tax_rate:
+        :param cost_of_equity: Cost of owning equity.
+        :param risk_free_rate: Current interest rate.
+            This is effectively the rate of return obtained without owning equity.
+        :param equity: Equity held by stockholders. (totalStockholdersEquity)
+        :param debt: (totalDebt)
+        :param cost_of_debt: Opportunity cost of owning debt.
+        :param corporate_tax_rate: Corporate tax rate, fixed value obtained from the IRS website.
         :return:
         """
         wacc = (cost_of_equity) * ( (cost_of_equity) / (equity + debt) )
