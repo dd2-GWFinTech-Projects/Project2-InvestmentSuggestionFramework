@@ -1,6 +1,6 @@
 from unittest import TestCase
 from main.lib.datastructures.StockInfoContainer import StockInfoContainer
-from main.balancesheetgetter.BalanceSheetGetter import BalanceSheetGetter
+from main.externalapi.balancesheetgetter.BalanceSheetGetter import BalanceSheetGetter
 
 
 class TestBalanceSheetGetter(TestCase):

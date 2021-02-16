@@ -1,12 +1,12 @@
 ### Required Libraries ###
-from main.balancesheetgetter.BalanceSheetGetter import BalanceSheetGetter
+from main.externalapi.balancesheetgetter.BalanceSheetGetter import BalanceSheetGetter
 from main.lib.datastructures.CustomerMetrics import CustomerMetrics
 from main.lib.datastructures.StockInfoContainer import StockInfoContainer
 from main.portfoliobuilder.PortfolioBuilder import PortfolioBuilder
-from main.priceanalysis.PriceForecaster import PriceForecaster
-from main.pricegetter.PriceGetter import PriceGetter
+from main.analysis.priceanalysis.PriceForecaster import PriceForecaster
+from main.externalapi.pricegetter import PriceGetter
 from main.stockfilter.StockFilter import StockFilter
-from main.valuation.ValuationCalculator import ValuationCalculator
+from main.analysis.valuation.ValuationCalculator import ValuationCalculator
 
 
 ### Main Handler ###
@@ -198,10 +198,6 @@ def delegate(session_attributes, slots):
     }
 
 
-# Option 1: Build portfolio.
-# Option 2: Modify portfolio based on: Filter output; combine with pre-defined sectors; or pre-defined map.
-
-
 def get_recommended_portfolio(investingDuration, investmentAmount, risk, investingExperienceLevel, use_test_data=False):
 
     # Construct helper objects
@@ -213,11 +209,8 @@ def get_recommended_portfolio(investingDuration, investmentAmount, risk, investi
     portfolio_builder = PortfolioBuilder()
 
     # Build data structures
-    try:
-        customer_metrics = CustomerMetrics(investingDuration, investmentAmount, risk, investingExperienceLevel)
-        stock_info_container = StockInfoContainer()
-    except:
-        return "EXCEPTION in: Build data structures"
+    stock_info_container = StockInfoContainer()
+    customer_metrics = CustomerMetrics(investingDuration, investmentAmount, risk, investingExperienceLevel)
 
     # Retrieve stock list
     try:

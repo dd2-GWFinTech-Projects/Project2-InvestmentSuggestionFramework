@@ -4,6 +4,7 @@ from main.lib.datastructures.AnalysisMethod import AnalysisMethod
 
 
 class IndustryInfo:
+
     def __init__(self, has_dividend, use_dcf, use_cap_rate_market_model, sum_of_the_parts_SoTP, comparables):
         self.has_dividend = has_dividend
         self.use_dcf = use_dcf
@@ -13,7 +14,6 @@ class IndustryInfo:
 
 
 class ValuationCalculator(AnalysisMethod):
-
 
     def __init__(self, debug_level=0):
         super().__init__("Valuation")
@@ -169,10 +169,18 @@ class ValuationCalculator(AnalysisMethod):
     
 
     def compute_cost_of_equity(self,
-        beta, # beta from financial data
-        risk_free_rate=0.2,  # interest rate from data source - quandl (https://www.quandl.com/data/USTREASURY-US-Treasury?utm_campaign=&utm_content=api-for-interest-rate-data&utm_medium=organic&utm_source=google)
-        market_rate_of_return=0.8  # fixed
+        beta,
+        risk_free_rate=0.2,
+        market_rate_of_return=0.8
     ):
+        """
+        Computes the cost of equity
+        :param beta: Stock price beta from financial data.
+        :param risk_free_rate: Current interest rate.
+            Available through Quandl (https://www.quandl.com/data/USTREASURY-US-Treasury?utm_campaign=&utm_content=api-for-interest-rate-data&utm_medium=organic&utm_source=google)
+        :param market_rate_of_return: Fixed average market rate of return.
+        :return: Cost of equity.
+        """
         return risk_free_rate + beta * (market_rate_of_return - risk_free_rate)
 
     # def compute_cost_of_debt(self,
@@ -192,6 +200,16 @@ class ValuationCalculator(AnalysisMethod):
                      cost_of_debt,        #
                      corporate_tax_rate=0.21   # fixed from irs
     ):
+        """
+
+        :param cost_of_equity:
+        :param risk_free_rate:
+        :param equity:
+        :param debt:
+        :param cost_of_debt:
+        :param corporate_tax_rate:
+        :return:
+        """
         wacc = (cost_of_equity) * ( (cost_of_equity) / (equity + debt) )
         wacc += (debt / (equity + debt)) * cost_of_debt * (1 - corporate_tax_rate)
         return wacc
@@ -199,15 +217,40 @@ class ValuationCalculator(AnalysisMethod):
 
     # Discount cashflow model
     def compute_value__dcf(self,
-        ebitda_projection_5year_list,  # 5-year projection # TODO use a moving average
+        ebitda_projection,  # 5-year projection # TODO use a moving average
         wacc,  # Discount rate r == wacc  #
         # cashflow_multiple,
         ):
+        """
+
+        Terms:
+            WACC: Weighted average cost of capital.
+            r: Discount rate - in the DCF model, WACC is used as the effective discount rate.
+
+            cost_of_equity,
+
+            risk_free_rate,
+
+            equity,              # totalStockholdersEquity
+            debt,                # totalDebt
+            cost_of_debt,        #
+            corporate_tax_rate=0.21   # fixed from irs
+
+
+
+
+
+
+
+        :param ebitda_projection:
+        :param wacc:
+        :return:
+        """
         
-        year_count = len(ebitda_projection_5year_list)
+        year_count = len(ebitda_projection)
         net_present_value = 0
         for y in range(0, year_count):
-            ebitda = ebitda_projection_5year_list[y]
+            ebitda = ebitda_projection[y]
             net_present_value += ebitda / (1 + wacc) ** (y+1)
         
         return net_present_value

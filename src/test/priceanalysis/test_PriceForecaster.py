@@ -1,10 +1,14 @@
 from unittest import TestCase
-from main.priceanalysis.PriceForecaster import PriceForecaster
+from main.analysis.priceanalysis.PriceForecaster import PriceForecaster
+from test.lib.CustomTestObject import CustomTestObject
 from test.lib.TestDataBuilder import TestDataBuilder
 
 
 class TestPriceForecaster(TestCase):
 
+    def test_inheritence(self):
+        price_forecaster = PriceForecaster()
+        self.assertEqual("PriceForecasting", price_forecaster.get_const_analysis_method_str())
 
     def test_price_forecaster_analyze(self):
 

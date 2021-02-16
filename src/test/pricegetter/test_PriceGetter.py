@@ -1,5 +1,5 @@
 from unittest import TestCase
-from main.pricegetter.PriceGetter import PriceGetter
+from main.externalapi.pricegetter import PriceGetter
 from main.lib.datastructures.StockInfoContainer import StockInfoContainer
 
 class TestPriceGetter(TestCase):
