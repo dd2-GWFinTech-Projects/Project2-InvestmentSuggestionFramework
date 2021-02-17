@@ -55,16 +55,21 @@ class ValuationCalculator(AnalysisMethod):
 
     def analyze(self, stock_info_container):
 
+        # Grab price history data
         stock_price_history = stock_info_container.get_all_price_history()
 
+        # Drive analysis by stock info container's ticker list
         for stock_ticker in stock_info_container.get_all_tickers():
 
+            # Select valuation method
             stock_financial_metadata = stock_info_container.get_stock_financial_metadata(stock_ticker)
             analysis_submethod = self.__select_analysis_submethod(stock_financial_metadata)
 
+            # Compute valuation and grab current price
             valuation = self.__compute_valuation(stock_financial_metadata, analysis_submethod)
             current_price = stock_price_history[stock_ticker].tail(1).iloc[0]
 
+            # Compute score based on valuation and current price
             score = self.__compute_score(current_price, valuation)
             stock_info_container.add_stock_raw_score(stock_ticker, score, self.__const_analysis_method + "." + analysis_submethod)
 
@@ -85,20 +90,29 @@ class ValuationCalculator(AnalysisMethod):
 
     def __compute_valuation(self, stock_financial_metadata, analysis_submethod):
         industry = stock_financial_metadata.get_industry()
+
         if "DividendDiscountModel" == analysis_submethod:
             ticker = None
             r = None
             g = None
             return self.compute_value__dividend_discount_model(ticker, r, g)
+
         elif "DCF" == analysis_submethod:
-            ebitda_projection = [1e6, 1.2e6, 1.25e6]
-            wacc = 0.02
+            ebitda_projection = [1e6, 1.2e6, 1.25e6]  # TODO
+            beta = stock_financial_metadata.get_beta()
+            cost_of_equity = self.compute_cost_of_equity(beta)
+            wacc = self.compute_wacc(cost_of_equity,
+                equity=stock_financial_metadata.get_total_stockholders_equity(),
+                debt,
+                cost_of_debt)
             return self.compute_value__dcf(ebitda_projection, wacc)
+
         elif "CapRateMarketModel" == analysis_submethod:  # Need cap rate; prefer real estate industry
             industry_multiples = None
             market_cap = None
             capitalization_rate = None
             return self.compute_value__cap_rate_market_model(industry_multiples, market_cap, capitalization_rate)
+
         else:
             equity_value = None
             expected_ebitda = None
@@ -180,6 +194,7 @@ class ValuationCalculator(AnalysisMethod):
         :param risk_free_rate: Current interest rate.
             Available through Quandl (https://www.quandl.com/data/USTREASURY-US-Treasury?utm_campaign=&utm_content=api-for-interest-rate-data&utm_medium=organic&utm_source=google)
         :param market_rate_of_return: Fixed average market rate of return.
+
         :return: The effective opportunity cost of equity.
         """
         return risk_free_rate + beta * (market_rate_of_return - risk_free_rate)
@@ -193,63 +208,42 @@ class ValuationCalculator(AnalysisMethod):
 
     def compute_wacc(self,
                      cost_of_equity,
-
-                     risk_free_rate,
-
-                     equity,              # totalStockholdersEquity
-                     debt,                # totalDebt
-                     cost_of_debt,        #
-                     corporate_tax_rate=0.21   #
+                     equity,
+                     debt,
+                     cost_of_debt,
+                     corporate_tax_rate=0.21
     ):
         """
         Compute the weighted-average cost of capital.
 
         :param cost_of_equity: Cost of owning equity.
-        :param risk_free_rate: Current interest rate.
-            This is effectively the rate of return obtained without owning equity.
-        :param equity: Equity held by stockholders. (totalStockholdersEquity)
-        :param debt: (totalDebt)
+        :param equity: Equity held by the company (totalStockholdersEquity).
+        :param debt: Total outstanding debt held by the company (totalDebt).
         :param cost_of_debt: Opportunity cost of owning debt.
         :param corporate_tax_rate: Corporate tax rate, fixed value obtained from the IRS website.
-        :return:
+
+        :return: Weighted-average cost of capital.
         """
-        wacc = (cost_of_equity) * ( (cost_of_equity) / (equity + debt) )
+        wacc = cost_of_equity * ( cost_of_equity / (equity + debt) )
         wacc += (debt / (equity + debt)) * cost_of_debt * (1 - corporate_tax_rate)
         return wacc
 
 
-    # Discount cashflow model
     def compute_value__dcf(self,
-        ebitda_projection,  # 5-year projection # TODO use a moving average
-        wacc,  # Discount rate r == wacc  #
-        # cashflow_multiple,
+        ebitda_projection,
+        wacc
+        #TODO cashflow_multiple
         ):
         """
+        Compute the stock valuation using the Discounted Cashflow (DCF) model.
 
-        Terms:
-            WACC: Weighted average cost of capital.
-            r: Discount rate - in the DCF model, WACC is used as the effective discount rate.
+        :param ebitda_projection: 5-year forward EBITDA projection as a list of double-precision values.
+            TODO Enforce 5-years and use a moving average
+        :param wacc: Weighted average cost of capital.
+            In the DCF model, WACC is used as the effective discount rate.
 
-            cost_of_equity,
-
-            risk_free_rate,
-
-            equity,              # totalStockholdersEquity
-            debt,                # totalDebt
-            cost_of_debt,        #
-            corporate_tax_rate=0.21   # fixed from irs
-
-
-
-
-
-
-
-        :param ebitda_projection:
-        :param wacc:
-        :return:
+        :return: Stock valuation using the Discounted Cashflow (DCF) model.
         """
-        
         year_count = len(ebitda_projection)
         net_present_value = 0
         for y in range(0, year_count):

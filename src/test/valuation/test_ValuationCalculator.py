@@ -66,8 +66,6 @@ class TestValuationCalculator(TestCase):
     # --------------------------------------------------------------------------
 
 
-    # TODO This is the main one.
-
     def test_compute_cost_of_equity(self):
         CustomTestObject().failNotImplemented()
 
