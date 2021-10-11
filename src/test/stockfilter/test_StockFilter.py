@@ -1,5 +1,5 @@
 from unittest import TestCase
-from test.lib.TestDataBuilder import TestDataBuilder
+from test.lib.test.TestDataBuilder import TestDataBuilder
 from main.stockfilter.StockFilter import StockFilter
 
 

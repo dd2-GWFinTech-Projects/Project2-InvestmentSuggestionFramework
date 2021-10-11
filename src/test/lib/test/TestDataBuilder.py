@@ -138,7 +138,7 @@ class TestDataBuilder:
     def build_financial_metadata(self, stock_info_container=None):
         if stock_info_container is None:
             stock_info_container = StockInfoContainer()
-        file_path = Path("../lib/data/fmpcloud_sample_aapl.json")
+        file_path = Path("data/fmpcloud_sample_aapl.json")
         with open(file_path, "r") as json_file:
             expected_financial_metadata_str = json_file.read()
             expected_financial_metadata = json.loads(expected_financial_metadata_str)

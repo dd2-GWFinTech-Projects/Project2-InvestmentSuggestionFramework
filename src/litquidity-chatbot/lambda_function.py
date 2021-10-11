@@ -1,15 +1,15 @@
 ### Required Libraries ###
+from main.pricegetter.PriceGetter import PriceGetter
+from main.balancesheetgetter.BalanceSheetGetter import BalanceSheetGetter
+from main.stockfilter.StockFilter import StockFilter
+from main.priceanalysis.PriceForecaster import PriceForecaster
+from main.valuation.ValuationCalculator import ValuationCalculator
+from main.portfoliobuilder.PortfolioBuilder import PortfolioBuilder
+from main.datastructures.CustomerMetrics import CustomerMetrics
+from main.datastructures.StockInfoContainer import StockInfoContainer
 
 
 ### Main Handler ###
-from main.analysis.priceanalysis.PriceForecaster import PriceForecaster
-from main.analysis.valuation.ValuationCalculator import ValuationCalculator
-from main.externalapi.balancesheetgetter.BalanceSheetGetter import BalanceSheetGetter
-from main.externalapi.pricegetter.PriceGetter import PriceGetter
-from main.portfoliobuilder.PortfolioBuilder import PortfolioBuilder
-from main.stockfilter.StockFilter import StockFilter
-
-
 def lambda_handler(event, context):
     """
     Route the incoming request based on intent.
@@ -79,7 +79,7 @@ def get_recommended_portfolio_intent_handler(intent_request):
 
     # Get the initial investment recommendation
 
-    recommended_portfolio = get_recommended_portfolio(investingDuration, investmentAmount, risk, investingExperienceLevel, use_test_data=True)
+    recommended_portfolio = get_recommended_portfolio(investingDuration, investmentAmount, risk, investingExperienceLevel)
 
     # Return a message with the initial recommendation based on the risk level.
     return close(
@@ -134,7 +134,7 @@ def validate_data(investmentAmount):
 
         # Validate investmentAmount
 
-        # TODO Sanitize - remove "$"
+        # TODO Remove "$"
 
         if float(investmentAmount) is None:
             return build_validation_result(
@@ -198,7 +198,12 @@ def delegate(session_attributes, slots):
     }
 
 
-def get_recommended_portfolio(investingDuration, investmentAmount, risk, investingExperienceLevel, use_test_data=False):
+# Option 1: Build portfolio.
+# Option 2: Modify portfolio based on: Filter output; combine with pre-defined sectors; or pre-defined map.
+
+
+
+def get_recommended_portfolio(investingDuration, investmentAmount, risk, investingExperienceLevel):
 
     # Construct helper objects
     price_getter = PriceGetter()
@@ -209,67 +214,38 @@ def get_recommended_portfolio(investingDuration, investmentAmount, risk, investi
     portfolio_builder = PortfolioBuilder()
 
     # Build data structures
-    stock_info_container = StockInfoContainer()
     customer_metrics = CustomerMetrics(investingDuration, investmentAmount, risk, investingExperienceLevel)
+    stock_info_container = StockInfoContainer()
 
     # Retrieve stock list
-    try:
-        stock_ticker_list = price_getter.get_tickers(use_test_data=True)
-        stock_info_container.add_ticker_list(stock_ticker_list)
-    except:
-        return "EXCEPTION in: Retrieve stock list"
+    stock_ticker_list = price_getter.get_tickers()
+    # stock_ticker_list = ["AAPL", "BNGO", "CIIC"]
+    stock_info_container.add_ticker_list(stock_ticker_list)
 
     # Retrieve price histories
-    try:
-        price_getter.get_prices(stock_info_container, trailing_n_days=100)
-    except:
-        return "EXCEPTION in: Retrieve price histories"
+    price_getter.get_prices(stock_info_container, trailing_n_days=100)
 
     # Retrieve company financial information (and metadata)
-    try:
-        balance_sheet_getter.load_financial_info(stock_info_container)
-    except:
-        return "EXCEPTION in: Retrieve company financial information"
+    balance_sheet_getter.load_financial_info(stock_info_container)
 
     # Apply filter
-    try:
-        stock_filter.filter(stock_info_container)
-    except:
-        return "EXCEPTION in: Apply filter"
+    stock_filter.filter(stock_info_container)
 
     # Call price and volatility analysis/prediction code
-    try:
-        price_forecaster.analyze(stock_info_container)
-    except:
-        return "EXCEPTION in: Call price and volatility analysis/prediction code"
+    price_forecaster.analyze(stock_info_container)
 
     # Call company valuation prediction
-    try:
-        valuation_calculator.analyze(stock_info_container)
-    except:
-        return "EXCEPTION in: Call company valuation prediction"
+    valuation_calculator.analyze(stock_info_container)
 
     # Call portfolio builder to assemble information into coherent portfolio
-    try:
-        portfolio_builder.build_suggested_portfolio(customer_metrics, stock_info_container)
-    except:
-        return "EXCEPTION in: Call portfolio builder"
+    portfolio_builder.build_suggested_portfolio(customer_metrics, stock_info_container)
 
     # Call function to add hedge positions
-    try:
-        portfolio_builder.add_hedge_positions(stock_info_container)
-    except:
-        return "EXCEPTION in: Call function to add hedge positions"
+    portfolio_builder.add_hedge_positions(stock_info_container)
 
     # Generate string portfolio representation
-    suggested_portfolio_str = "ERROR - Portfolio string not initialized"
-    try:
-        suggested_portfolio = stock_info_container.get_portfolio()
-        suggested_portfolio_str = portfolio_builder.transform_portfolio_to_str(suggested_portfolio)
-    except:
-        return "EXCEPTION in: Generate string portfolio representation"
-
-    return suggested_portfolio_str
+    suggested_portfolio = stock_info_container.get_portfolio()
+    return portfolio_builder.transform_portfolio_to_str(suggested_portfolio)
 
 
 # Service functions

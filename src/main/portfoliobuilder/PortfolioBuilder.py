@@ -1,5 +1,6 @@
 import numpy as np
-from PortfolioBuilderTool import PortfolioBuilderTool
+
+from main.portfoliobuilder.PortfolioBuilderTool import PortfolioBuilderTool
 
 
 class PortfolioBuilder:

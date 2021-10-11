@@ -1,6 +1,6 @@
 from unittest import TestCase
 from main.lib.datastructures.StockInfoContainer import StockInfoContainer
-from test.lib.TestDataBuilder import TestDataBuilder
+from test.lib.test.TestDataBuilder import TestDataBuilder
 
 
 # NOTE: Fails unless run from this file due to reading data from relative directory.

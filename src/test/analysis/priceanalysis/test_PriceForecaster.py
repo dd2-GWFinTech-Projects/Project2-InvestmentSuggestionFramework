@@ -1,7 +1,6 @@
 from unittest import TestCase
 from main.analysis.priceanalysis.PriceForecaster import PriceForecaster
-from test.lib.CustomTestObject import CustomTestObject
-from test.lib.TestDataBuilder import TestDataBuilder
+from test.lib.test.TestDataBuilder import TestDataBuilder
 
 
 class TestPriceForecaster(TestCase):

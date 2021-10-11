@@ -1,8 +1,8 @@
 from main.analysis.valuation.ValuationCalculator import ValuationCalculator
 from unittest import TestCase
 
-from test.lib.CustomTestObject import CustomTestObject
-from test.lib.TestDataBuilder import TestDataBuilder
+from test.lib.test.CustomTestObject import CustomTestObject
+from test.lib.test.TestDataBuilder import TestDataBuilder
 
 class TestValuationCalculator(TestCase):
 

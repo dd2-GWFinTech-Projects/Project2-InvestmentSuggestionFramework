@@ -9,6 +9,9 @@ import warnings
 import pandas as pd
 from statsmodels.tsa.arima_model import ARIMA
 from statsmodels.tsa.arima_model import ARMA
+from tensorflow.python.keras.layers import LSTM
+from tensorflow.python.keras.models import Sequential
+from tensorflow.python.layers.core import Dense
 
 warnings.filterwarnings('ignore')
 
@@ -20,7 +23,6 @@ class PriceForecaster(AnalysisMethod):
 
     def __init__(self):
         super().__init__("PriceForecasting")
-        self.__const_analysis_method = "PriceForecasting"
 
         # Load environment variables
         self.__kraken_public_key = "/v0eRFBimcTXNmjv5vUdNlppVKdcdlWCvxFNubBSmnlkttijwqwodoyM"
@@ -66,6 +68,21 @@ class PriceForecaster(AnalysisMethod):
         except:
             print("ERROR - ARIMA calculation threw an exception.")
 
+
+        # --------------------------------------------------------------------------
+        # LSTM prediction and compute score
+        # --------------------------------------------------------------------------
+
+        try:
+            # LSTM prediction and compute score
+            predicted_values_lstm = self.__compute_forecast_lstm(stock_info_container)
+
+            # Compute score
+            stock_info_container = self.__compute_score_from_prediction(stock_info_container, stock_price_history, predicted_values_lstm, "LSTM")
+        except:
+            print("ERROR - LSTM calculation threw an exception.")
+
+
         return stock_info_container
 
 
@@ -89,6 +106,27 @@ class PriceForecaster(AnalysisMethod):
             results = model.fit()
             results_df[stock_ticker] = results.forecast(steps=num_steps)[0]
         return results_df
+
+    # --------------------------------------------------------------------------
+    # LSTM
+    # --------------------------------------------------------------------------
+
+    # def compute_forecast_lstm(self, stock_info_container, stock_price_history):
+    #     results_df = pd.DataFrame()
+    #     for stock_ticker in stock_info_container.get_all_tickers():
+    #
+    #         stock_price_history_individual = stock_price_history[stock_ticker].dropna()
+    #
+    #         model = Sequential()
+    #         model.add(LSTM(50, return_sequences=True, input_shape= (x_train.shape[1], 1)))
+    #         model.add(LSTM(50, return_sequences=False))
+    #         model.add(Dense(25))
+    #         model.add(Dense(1))
+    #
+    #         results = model.fit()
+    #         results_df[stock_ticker] = results.forecast(steps=num_steps)[0]
+    #
+    #     return results_df
 
 
     # --------------------------------------------------------------------------
